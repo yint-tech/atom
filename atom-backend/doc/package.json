@@ -1,0 +1,17 @@
+{
+  "name": "atom-doc",
+  "version": "1.0",
+  "description": "atom document",
+  "main": "index.js",
+  "author": "iinti",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "packageManager": "yarn@4.0.2",
+  "devDependencies": {
+    "vuepress": "^2.0.0-rc.0",
+    "vuepress-theme-hope": "2.0.0-rc.0"
+  }
+}
