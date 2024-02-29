@@ -1,5 +1,5 @@
 # 开始
-
+本章节指导用户快速启动开发环境
 ## 前置条件
 
 ### 系统条件
@@ -9,8 +9,9 @@
 
 - java jdk：请安装jdk1.8以上，可以支持最新版本jdk，如jdk21。
 - docker：测试环境使用docker创建mysql数据库服务，如没有docker，则需要手动指定mysql配置。所以建议用户安装docker
-- node: 前端工具编译需要，建议选择新版本node，如node V20.0.0
 - idea：java 编译器
+- node: 前端工具编译需要，建议选择新版本node，如node V20.0.0
+  - yarn：推荐使用yarn替代node内置的npm，因为npm的构建速度实在太慢
 - webstorm：前端编译器（您也可以根据自己的需要，选择vscode）
 
 ## 启动后端

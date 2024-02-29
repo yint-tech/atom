@@ -40,9 +40,6 @@ highlights:
 ---
 <div id="docNotice"></div>
 
-## 简单脚本完成安装
+## 开源地址
 
-```bash
-# 服务器:启动服务器
-curl "https://xxx.xxx.com/atom/quickstart.sh" | bash
-```
+- [github](https://github.com/yint-tech/atom)

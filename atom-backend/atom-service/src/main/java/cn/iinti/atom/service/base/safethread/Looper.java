@@ -27,7 +27,6 @@ public class Looper implements Executor {
      * 以下为监控指标
      */
     private final Counter monitorExecuteCounter;
-    private final Timer monitorTimer;
     private final AtomicInteger monitorLooperQueueSize;
 
     /**
@@ -51,13 +50,9 @@ public class Looper implements Executor {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public Looper(String looperName) {
-
-        Tags tags = Tags.of("name", looperName);
-
-        monitorExecuteCounter = Monitor.counter("looper.execute", tags);
-        monitorTimer = Monitor.timer("looper.time", tags);
+        monitorExecuteCounter = Monitor.counter("looper.execute." + looperName);
         monitorLooperQueueSize = new AtomicInteger(0);
-        Monitor.gauge("looper.taskQueueSize", tags, monitorLooperQueueSize);
+        Monitor.gauge("looper.taskQueueSize." + looperName, monitorLooperQueueSize);
 
         loopThread = new LoopThread(looperName);
         loopThread.setDaemon(true);
@@ -183,10 +178,10 @@ public class Looper implements Executor {
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    Runnable take = taskQueue.take();
+                    Runnable runnable = taskQueue.take();
                     monitorExecuteCounter.increment();
                     monitorLooperQueueSize.set(taskQueue.size());
-                    monitorTimer.wrap(take).run();
+                    runnable.run();
                 } catch (InterruptedException interruptedException) {
                     return;
                 } catch (Throwable throwable) {

@@ -14,8 +14,8 @@ export const zhNavbar = navbar([
                 text: "技术选型",
                 link: "02_lectotype.md",
             }, {
-                text: "安装",
-                link: "代码范式.md",
+                text: "范式",
+                link: "03_paradigm.md",
             }
         ]
     },
@@ -26,7 +26,19 @@ export const zhNavbar = navbar([
         children: [
             {
                 text: "开始",
-                link: "01_startup/",
+                link: "01_startup.md",
+            }, {
+                text: "编码",
+                link: "02_coding.md",
+            }, {
+                text: "构建",
+                link: "03_build.md",
+            }, {
+                text: "项目转换",
+                link: "04_project_transform.md",
+            }, {
+                text: "内置中间件",
+                link: "05_middleware.md",
             }
         ]
     }

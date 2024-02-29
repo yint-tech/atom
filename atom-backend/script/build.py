@@ -137,18 +137,21 @@ def run_deploy(deploy_args):
 
     if deploy_args.doc:
         run_doc_build()
-        doc_build_output = op.join(doc_code_dir, "src/.vuepress/dist")
+        doc_build_output = op.join(doc_code_dir, "src/.vuepress/dist/.")
+        print("begin deploy doc")
         for server_node in deploy_server_list:
-            server_config = f"{deploy_remote_user}@{server_node}:{deploy_path}/config/static/atom-doc/"
-            execv(['scp', doc_build_output, server_config])
+            print("deploy "+server_node)
+            server_config = f"{deploy_remote_user}@{server_node}:{deploy_path}/conf/static/atom-doc/"
+            execv(['scp','-r', doc_build_output, server_config])
+        print("done")
         return
     if deploy_args.frontend:
         run_frontend_build()
         frontend_code_dir = config['frontend_project']
-        frontend_build_output = op.join(frontend_code_dir, 'build')
+        frontend_build_output = op.join(frontend_code_dir, 'build/.')
         for server_node in deploy_server_list:
-            server_config = f"{deploy_remote_user}@{server_node}:{deploy_path}/config/static/"
-            execv(['scp', frontend_build_output, server_config])
+            server_config = f"{deploy_remote_user}@{server_node}:{deploy_path}/conf/static/"
+            execv(['scp','-r', frontend_build_output, server_config])
         return
 
     global assemble_archive_file
