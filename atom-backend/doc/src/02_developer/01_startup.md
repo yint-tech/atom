@@ -1,5 +1,9 @@
 # 开始
 本章节指导用户快速启动开发环境
+
+- **本项目开源地址[github](https://github.com/yint-tech/atom)**
+- **更多项目，请移步因体主页：[iinti.cn](https://iinti.cn/)**
+
 ## 前置条件
 
 ### 系统条件

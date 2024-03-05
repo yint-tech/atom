@@ -48,6 +48,7 @@ pkg:cn.iinti.atom->com.custom.bar
 
 # 关键字替换规则
 key:Atom->FooBar
+key:atom->bar
 
 
 # 忽略文件
@@ -60,6 +61,7 @@ ignore:.git/
 ignore:.gitmodules/
 ignore:node_modules
 ignore:target/
+ignore:.vuepress/dist/
 
 
 # 如果存在，则不执行替换规则，团队定制化的配置文件
@@ -83,9 +85,8 @@ keep:*.eot
 
 # 文件内容keep,这是是暂时不方便替换的内容
 keepContent:com.yint.cannotEdit
-keepContent:AtomicInteger
-keepContent:AtomicReference
-keepContent:AtomicDouble
+keepContent:Atomic
+keepContent:atomic
 
 # 生成文件之后执行的命令
 #cmd:chmod +x gradlew

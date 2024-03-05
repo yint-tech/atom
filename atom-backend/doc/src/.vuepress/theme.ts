@@ -20,7 +20,7 @@ export default hopeTheme({
                  | <a href="http://sekiro.iinti.cn/sekiro-doc" target="_blank">Sekiro</a>
                  | <a href="https://malenia.iinti.cn/malenia-doc/index.html" target="_blank">Malenia</a>
 `,
-            copyright: "版权所有 © 2022-至今 iinti",
+            copyright: "版权所有 © 2022-至今 <a href=\"https://iinti.cn\" target=\"_blank\">iinti</a>",
             displayFooter: true,
             // page meta
             metaLocales: {
