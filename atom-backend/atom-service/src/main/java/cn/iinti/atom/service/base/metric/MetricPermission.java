@@ -1,6 +1,6 @@
 package cn.iinti.atom.service.base.metric;
 
-import cn.iinti.atom.entity.Metric;
+import cn.iinti.atom.entity.metric.MetricDay;
 import cn.iinti.atom.service.base.perm.Permission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Function;
@@ -17,12 +17,12 @@ import java.util.Set;
  * 只是一个demo，实际上不应该让普通用户有查看指标的权限
  */
 @Component
-public class MetricPermission extends Permission<Metric> {
+public class MetricPermission extends Permission<MetricDay> {
     private final Set<String> categoryRegistry = new HashSet<>();
     private final Multimap<String, String> metricMapRegistry = HashMultimap.create();
 
     public MetricPermission() {
-        super(Metric.class);
+        super(MetricDay.class);
         addDefault("订单模块", "atom.order.create");
         addDefault("订单模块", "atom.order.cancel");
 
@@ -46,9 +46,9 @@ public class MetricPermission extends Permission<Metric> {
     }
 
     @Override
-    public void filter(Collection<String> perms, QueryWrapper<Metric> sql) {
+    public void filter(Collection<String> perms, QueryWrapper<MetricDay> sql) {
         if (perms.isEmpty()) {
-            sql.eq(Metric.ID, -1);
+            sql.eq(MetricDay.ID, -1);
             return;
         }
         Set<String> hasPermsMetrics = new HashSet<>();
@@ -57,19 +57,19 @@ public class MetricPermission extends Permission<Metric> {
             hasPermsMetrics.addAll(metricNames);
         }
         if (hasPermsMetrics.isEmpty()) {
-            sql.eq(Metric.ID, -1);
+            sql.eq(MetricDay.ID, -1);
             return;
         }
 
-        sql.and((Function<QueryWrapper<Metric>, QueryWrapper<Metric>>) input -> {
-            input.in(Metric.NAME, hasPermsMetrics);
+        sql.and((Function<QueryWrapper<MetricDay>, QueryWrapper<MetricDay>>) input -> {
+            input.in(MetricDay.NAME, hasPermsMetrics);
             return input;
         });
     }
 
 
     @Override
-    public boolean hasPermission(Collection<String> perms, Metric metric) {
+    public boolean hasPermission(Collection<String> perms, MetricDay metric) {
         return perms.stream().anyMatch(s -> metric.getName().startsWith(s));
     }
 }

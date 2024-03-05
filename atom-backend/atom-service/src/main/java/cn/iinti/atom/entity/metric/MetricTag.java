@@ -1,4 +1,4 @@
-package cn.iinti.atom.entity;
+package cn.iinti.atom.entity.metric;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

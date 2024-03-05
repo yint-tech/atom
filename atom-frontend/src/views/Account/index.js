@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/styles';
 import {OpeDialog, SimpleTable} from "components";
 import {AppContext} from "adapter";
 import {Button, Grid, TextField, Typography} from "@material-ui/core";
-import {AttachMoney, DirectionsRailway, PermIdentity, SupervisorAccount} from "@material-ui/icons";
+import {DirectionsRailway, PermIdentity, SupervisorAccount} from "@material-ui/icons";
 import config from "../../config";
 import moment from "moment/moment";
 import {useHistory} from "react-router-dom";

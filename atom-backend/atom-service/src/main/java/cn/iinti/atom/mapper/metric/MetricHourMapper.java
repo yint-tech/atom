@@ -1,6 +1,6 @@
-package cn.iinti.atom.mapper;
+package cn.iinti.atom.mapper.metric;
 
-import cn.iinti.atom.entity.Metric;
+import cn.iinti.atom.entity.metric.MetricHour;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author iinti
  * @since 2023-03-13
  */
-public interface MetricMapper extends BaseMapper<Metric> {
+public interface MetricHourMapper extends BaseMapper<MetricHour> {
 
 }

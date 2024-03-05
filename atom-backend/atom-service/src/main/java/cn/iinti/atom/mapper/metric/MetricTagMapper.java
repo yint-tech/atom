@@ -1,6 +1,6 @@
-package cn.iinti.atom.mapper;
+package cn.iinti.atom.mapper.metric;
 
-import cn.iinti.atom.entity.MetricTag;
+import cn.iinti.atom.entity.metric.MetricTag;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

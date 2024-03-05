@@ -2,14 +2,14 @@ package cn.iinti.atom.controller;
 
 import cn.iinti.atom.AtomMain;
 import cn.iinti.atom.entity.CommonRes;
-import cn.iinti.atom.entity.Metric;
-import cn.iinti.atom.entity.MetricTag;
-import cn.iinti.atom.mapper.MetricMapper;
-import cn.iinti.atom.mapper.MetricTagMapper;
+import cn.iinti.atom.entity.metric.Metric;
+import cn.iinti.atom.entity.metric.MetricDay;
+import cn.iinti.atom.entity.metric.MetricTag;
+import cn.iinti.atom.mapper.metric.MetricTagMapper;
 import cn.iinti.atom.service.base.BroadcastService;
+import cn.iinti.atom.service.base.env.Constants;
 import cn.iinti.atom.service.base.metric.*;
 import cn.iinti.atom.service.base.metric.mql.MQL;
-import cn.iinti.atom.service.base.env.Constants;
 import cn.iinti.atom.system.LoginRequired;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
@@ -38,9 +38,6 @@ public class MetricController {
     @Resource
     private MetricTagService metricTagService;
 
-
-    @Resource
-    private MetricMapper metricMapper;
 
     @Resource
     private MetricTagMapper metricTagMapper;
@@ -95,7 +92,7 @@ public class MetricController {
     @LoginRequired
     public CommonRes<String> deleteMetric(@NotBlank String metricName) {
         AtomMain.getShardThread().post(() -> {
-            metricMapper.delete(new QueryWrapper<Metric>().eq(Metric.NAME, metricName));
+            metricService.eachDao(mapper -> mapper.delete(new QueryWrapper<Metric>().eq(MetricDay.NAME, metricName)));
             metricTagMapper.delete(new QueryWrapper<MetricTag>().eq(MetricTag.NAME, metricName));
             BroadcastService.triggerEvent(BroadcastService.Topic.METRIC_TAG);
             try {
@@ -103,7 +100,7 @@ public class MetricController {
             } catch (InterruptedException e) {
                 return;
             }
-            metricMapper.delete(new QueryWrapper<Metric>().eq(Metric.NAME, metricName));
+            metricService.eachDao(mapper -> mapper.delete(new QueryWrapper<Metric>().eq(MetricDay.NAME, metricName)));
         });
         return CommonRes.success("ok");
     }

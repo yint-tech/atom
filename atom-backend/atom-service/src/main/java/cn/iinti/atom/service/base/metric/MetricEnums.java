@@ -16,6 +16,7 @@ public class MetricEnums {
         MetricAccuracy(DateTimeFormatter timePattern) {
             this.timePattern = timePattern;
         }
+
     }
 
     @Keep

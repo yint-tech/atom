@@ -1,14 +1,18 @@
 package cn.iinti.atom.service.base.metric;
 
-import cn.iinti.atom.entity.Metric;
-import cn.iinti.atom.entity.MetricTag;
-import cn.iinti.atom.mapper.MetricMapper;
+import cn.iinti.atom.entity.metric.Metric;
+import cn.iinti.atom.entity.metric.MetricDay;
+import cn.iinti.atom.entity.metric.MetricTag;
+import cn.iinti.atom.mapper.metric.MetricDayMapper;
+import cn.iinti.atom.mapper.metric.MetricHourMapper;
+import cn.iinti.atom.mapper.metric.MetricMinuteMapper;
 import cn.iinti.atom.service.base.env.Environment;
 import cn.iinti.atom.service.base.perm.PermsService;
 import cn.iinti.atom.service.base.safethread.Looper;
 import cn.iinti.atom.system.AppContext;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.micrometer.core.instrument.*;
@@ -26,6 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,9 +40,14 @@ import java.util.stream.Stream;
 public class MetricService {
     private final Looper metricHandleLooper = new Looper("metric_handler").startLoop();
 
+    @Resource
+    private MetricDayMapper metricDayMapper;
 
     @Resource
-    private MetricMapper metricMapper;
+    private MetricHourMapper metricHourMapper;
+
+    @Resource
+    private MetricMinuteMapper metricMinuteMapper;
 
     @Resource
     private MetricTagService metricTagService;
@@ -105,7 +115,7 @@ public class MetricService {
     @Scheduled(cron = "0 4 4 14 * ?")
     public void scheduleCleanDays() {
         // 最多保留3年的指标数据，超过3年的直接删除
-        metricMapper.delete(new QueryWrapper<Metric>()
+        chooseDao(MetricEnums.MetricAccuracy.days).delete(new QueryWrapper<Metric>()
                 .le(Metric.CREATE_TIME, LocalDateTime.now().minusDays(1000))
         );
     }
@@ -122,17 +132,16 @@ public class MetricService {
         if (metricTag == null) {
             return Collections.emptyList();
         }
-        QueryWrapper<Metric> queryWrapper = metricTagService.wrapQueryWithTags(new QueryWrapper<Metric>()
-                        .eq(Metric.ACCURACY, accuracy)
-                        .eq(Metric.NAME, name),
-                query, metricTag);
+        QueryWrapper<Metric> queryWrapper = metricTagService
+                .wrapQueryWithTags(new QueryWrapper<Metric>().eq(MetricDay.NAME, name),
+                        query, metricTag);
 
         if (AppContext.getUser() != null) {
             permsService.filter(Metric.class, queryWrapper);
         }
 
 
-        Stream<MetricVo> metricRet = metricMapper.selectList(queryWrapper.orderByAsc(Metric.TIME_KEY))
+        Stream<MetricVo> metricRet = chooseDao(accuracy).selectList(queryWrapper.orderByAsc(MetricDay.TIME_KEY))
                 .stream()
                 .map(metric -> mapMetric(metric, metricTag));
 
@@ -177,9 +186,8 @@ public class MetricService {
         metricTagService.metricNames().forEach(metricName -> {
             LocalDateTime scanStart_;
             if (scanStart == null) {
-                Metric first = metricMapper.selectOne(new QueryWrapper<Metric>()
+                Metric first = chooseDao(fromAccuracy).selectOne(new QueryWrapper<Metric>()
                         .eq(Metric.NAME, metricName)
-                        .eq(Metric.ACCURACY, fromAccuracy)
                         .orderByAsc(Metric.TIME_KEY)
                         .last("limit 1"));
                 if (first == null) {
@@ -197,9 +205,8 @@ public class MetricService {
                 scanStart_ = end.plusMinutes(30);
             }
             // clean metric data which has been merged and produced for a long time
-            metricMapper.delete(new QueryWrapper<Metric>()
+            chooseDao(fromAccuracy).delete(new QueryWrapper<Metric>()
                     .eq(Metric.NAME, metricName)
-                    .eq(Metric.ACCURACY, fromAccuracy)
                     .lt(Metric.CREATE_TIME, cleanBefore)
             );
         });
@@ -216,10 +223,9 @@ public class MetricService {
 
         // 一个指标，可能存在很多tag，tag分维如果有上千之后，再加上时间维度，数据量级就可能非常大，所以我们在数据库中先根据tag分组一下
         // 这样驻留在内存中的数据就没有tag维度，避免内存中数据量过大
-        List<String> tags = metricMapper.selectObjs(new QueryWrapper<Metric>()
+        List<String> tags = chooseDao(from).selectObjs(new QueryWrapper<Metric>()
                 .select(Metric.TAGS_MD5)
                 .eq(Metric.NAME, metricName)
-                .eq(Metric.ACCURACY, from)
                 .ge(Metric.CREATE_TIME, startTime)
                 .lt(Metric.CREATE_TIME, endTime)
                 .groupBy(Metric.TAGS_MD5)
@@ -229,15 +235,16 @@ public class MetricService {
             return;
         }
 
-        tags.forEach(tagsMd5 -> mergeTimesSpaceWithTag(startTime, endTime, from, to, metricName, tagsMd5, timeKey, cleanBefore));
+        tags.forEach(tagsMd5 -> mergeTimesSpaceWithTag(
+                startTime, endTime, from, to, metricName, tagsMd5, timeKey, cleanBefore
+        ));
     }
 
     private void mergeTimesSpaceWithTag(LocalDateTime startTime, LocalDateTime endTime,
                                         MetricEnums.MetricAccuracy from, MetricEnums.MetricAccuracy to,
                                         String metricName, String tagsMd5, String timeKey, LocalDateTime cleanBefore) {
-        List<Metric> metrics = metricMapper.selectList(new QueryWrapper<Metric>()
+        List<Metric> metrics = chooseDao(from).selectList(new QueryWrapper<Metric>()
                 .eq(Metric.NAME, metricName)
-                .eq(Metric.ACCURACY, from)
                 .eq(Metric.TAGS_MD5, tagsMd5)
                 .ge(Metric.CREATE_TIME, startTime)
                 .lt(Metric.CREATE_TIME, endTime)
@@ -283,22 +290,20 @@ public class MetricService {
 
         mergedList.forEach(mergedMetric -> {
             mergedMetric.setTimeKey(timeKey);
-            mergedMetric.setAccuracy(to);
             mergedMetric.setCreateTime(first.getCreateTime());
             log.info("merged metric: {}", JSONObject.toJSONString(mergedMetric));
             try {
-                metricMapper.insert(mergedMetric);
+                chooseDao(to).insert(mergedMetric);
             } catch (DuplicateKeyException ignore) {
                 // update on duplicate
                 // for newer data, I will merge many times
-                Metric old = metricMapper.selectOne(new QueryWrapper<Metric>()
+                Metric old = chooseDao(to).selectOne(new QueryWrapper<Metric>()
                         .eq(Metric.NAME, mergedMetric.getName())
-                        .eq(Metric.ACCURACY, mergedMetric.getAccuracy())
                         .eq(Metric.TAGS_MD5, mergedMetric.getTagsMd5())
                         .eq(Metric.TIME_KEY, mergedMetric.getTimeKey())
                 );
                 mergedMetric.setId(old.getId());
-                metricMapper.updateById(mergedMetric);
+                chooseDao(to).updateById(mergedMetric);
             }
         });
 
@@ -308,7 +313,7 @@ public class MetricService {
                 .collect(Collectors.toList());
 
         if (!needRemoveIds.isEmpty()) {
-            metricMapper.deleteBatchIds(needRemoveIds);
+            chooseDao(from).deleteBatchIds(needRemoveIds);
         }
 
 
@@ -414,7 +419,7 @@ public class MetricService {
     private void saveMetric(Metric metric) {
         try {
             metric.setCreateTime(LocalDateTime.now());
-            metricMapper.insert(metric);
+            chooseDao(MetricEnums.MetricAccuracy.minutes).insert(metric);
         } catch (DuplicateKeyException ignore) {
         }
     }
@@ -428,7 +433,6 @@ public class MetricService {
         metricTagService.setupTag(metricTag, meter, metric, timerType);
         metric.setType(meter.getId().getType());
         metric.setTimeKey(timeKey);
-        metric.setAccuracy(MetricEnums.MetricAccuracy.minutes);
         return metric;
     }
 
@@ -456,5 +460,23 @@ public class MetricService {
             lastFull = now;
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Metric> BaseMapper<T> chooseDao(MetricEnums.MetricAccuracy accuracy) {
+        switch (accuracy) {
+            case days:
+                return (BaseMapper<T>) metricDayMapper;
+            case hours:
+                return (BaseMapper<T>) metricHourMapper;
+            default:
+                return (BaseMapper<T>) metricMinuteMapper;
+        }
+    }
+
+    public void eachDao(Consumer<BaseMapper<Metric>> consumer) {
+        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.days));
+        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.hours));
+        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.minutes));
     }
 }

@@ -1,10 +1,11 @@
 package cn.iinti.atom.service.base.metric;
 
-import cn.iinti.atom.entity.Metric;
-import cn.iinti.atom.entity.MetricTag;
+import cn.iinti.atom.entity.metric.Metric;
+import cn.iinti.atom.entity.metric.MetricDay;
+import cn.iinti.atom.entity.metric.MetricTag;
 import cn.iinti.atom.utils.Md5Utils;
 import cn.iinti.atom.utils.ServerIdentifier;
-import cn.iinti.atom.mapper.MetricTagMapper;
+import cn.iinti.atom.mapper.metric.MetricTagMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.iinti.atom.service.base.BroadcastService;
 import com.google.common.collect.Lists;
@@ -84,40 +85,40 @@ public class MetricTagService {
         return ret;
     }
 
-    public QueryWrapper<Metric> wrapQueryWithTags(QueryWrapper<Metric> queryWrapper,
-                                                  Map<String, String> tags,
-                                                  MetricTag metricTag) {
+    public <T extends Metric> QueryWrapper<T> wrapQueryWithTags(QueryWrapper<T> queryWrapper,
+                                                                Map<String, String> tags,
+                                                                MetricTag metricTag) {
         if (tags == null || tags.isEmpty()) {
             return queryWrapper;
         }
         String tag1Name = metricTag.getTag1Name();
         String s = tags.get(tag1Name);
         if (s != null) {
-            queryWrapper.eq(Metric.TAG1, s);
+            queryWrapper.eq(MetricDay.TAG1, s);
         }
 
         String tag2Name = metricTag.getTag2Name();
         s = tags.get(tag2Name);
         if (s != null) {
-            queryWrapper.eq(Metric.TAG2, s);
+            queryWrapper.eq(MetricDay.TAG2, s);
         }
 
         String tag3Name = metricTag.getTag3Name();
         s = tags.get(tag3Name);
         if (s != null) {
-            queryWrapper.eq(Metric.TAG3, s);
+            queryWrapper.eq(MetricDay.TAG3, s);
         }
 
         String tag4Name = metricTag.getTag4Name();
         s = tags.get(tag4Name);
         if (s != null) {
-            queryWrapper.eq(Metric.TAG4, s);
+            queryWrapper.eq(MetricDay.TAG4, s);
         }
 
         String tag5Name = metricTag.getTag5Name();
         s = tags.get(tag5Name);
         if (s != null) {
-            queryWrapper.eq(Metric.TAG5, s);
+            queryWrapper.eq(MetricDay.TAG5, s);
         }
         return queryWrapper;
     }
