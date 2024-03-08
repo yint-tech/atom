@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
@@ -26,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
+@Slf4j
 public class Environment {
     private static final Properties buildProperties = new Properties() {
         {
@@ -176,5 +178,15 @@ public class Environment {
         private int fromVersionCode;
         private int toVersionCode;
         private UpgradeHandler upgradeHandler;
+    }
+
+
+    public static void registerShutdownHook(Runnable runnable) {
+        ShutdownHook.registerShutdownHook(runnable);
+    }
+
+
+    public static int prepareShutdown() {
+        return ShutdownHook.prepareShutdown();
     }
 }

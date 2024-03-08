@@ -195,33 +195,4 @@ public class AdminController {
         queryWrapper.orderByDesc(SysLog.ID);
         return CommonRes.success(sysLogMapper.selectPage(new Page<>(page, pageSize), queryWrapper));
     }
-
-    // todo，开源后需要考虑安全，此接口需要做内部鉴权
-    @ApiOperation(value = "内部接口,获取当前设备的clientId")
-    @GetMapping("/exchangeClientId")
-    public CommonRes<String> exchangeClientId() {
-        return CommonRes.success(ServerIdentifier.id());
-    }
-
-    // todo，开源后需要考虑安全，此接口需要做内部鉴权
-    @ApiOperation(value = "内部接口，触发广播")
-    @GetMapping("/triggerBroadcast")
-    public CommonRes<String> triggerBroadcast(String topic) {
-        return CommonRes.success(BroadcastService.callListener(topic));
-    }
-
-
-    @ApiOperation(value = "系统信息")
-    @GetMapping("/systemInfo")
-    public CommonRes<JSONObject> systemInfo() {
-        return Environment.buildInfo();
-    }
-
-    public static String baseApiEntry() {
-        RequestMapping requestMapping = AdminController.class.getAnnotation(RequestMapping.class);
-        if (requestMapping == null) {
-            throw new IllegalStateException("can not find RequestMapping annotation");
-        }
-        return requestMapping.value()[0];
-    }
 }

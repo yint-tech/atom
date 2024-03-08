@@ -149,16 +149,4 @@ public class UserInfoController {
         return permsService.perms(scope);
     }
 
-    @ApiOperation(value = "系统通告信息")
-    @LoginRequired
-    @GetMapping("/systemNotice")
-    public CommonRes<String> systemNotice() {
-        return CommonRes.success(Settings.systemNotice.value);
-    }
-
-    @ApiOperation(value = "文档首页通告信息")
-    @GetMapping("/docNotice")
-    public CommonRes<String> docNotice() {
-        return CommonRes.success(Settings.docNotice.value);
-    }
 }

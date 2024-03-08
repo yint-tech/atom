@@ -23,6 +23,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -55,8 +56,13 @@ public class MetricService {
     @Resource
     private PermsService permsService;
 
+    @PostConstruct
+    public void registerShutdownHook() {
+        Environment.registerShutdownHook(this::publishMetrics);
+    }
+
     @Scheduled(cron = "5 * * * * ?")
-    private void publishMetrics() {
+    public void publishMetrics() {
         if (Environment.isLocalDebug) {
             return;
         }

@@ -38,20 +38,15 @@ public class SysLogAspect {
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        try {
-            Object result = point.proceed();
-            // 保存日志
-            saveLog(point);
-            return result;
-        } catch (Throwable e) {
-            throw e;
-        }
+        Object result = point.proceed();
+        // 保存日志
+        saveLog(point);
+        return result;
     }
 
     private static final Set<String> blackList = new HashSet<String>() {
         {
             add(UserInfoController.class.getName() + "#userInfo");
-            add(UserInfoController.class.getName() + "#systemNotice");
         }
     };
 

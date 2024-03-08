@@ -3,6 +3,13 @@ import config from "config";
 const api_prefix = config.api_prefix;
 
 export default {
+    // system
+    systemInfo: api_prefix + "/system/systemInfo", // 系统信息，后台系统配置，页面加载加载一次
+    notice: api_prefix + "/system/systemNotice",//系统通告信息
+    getIntPushMsg: "/yint-stub/certificate/getIntPushMsg", // 授权信息(仅限因体加密环境)
+    getNowCertificate: "/yint-stub/certificate/getNowCertificate", // 授权证书(仅限因体加密环境)
+
+
     // admin
     userLogin: api_prefix + "/admin-op/travelToUser", // 模拟登录
     userAdd: api_prefix + "/admin-op/createUser", // 创建用户
@@ -15,7 +22,7 @@ export default {
     setServerStatus: api_prefix + "/admin-op/setServerStatus", // 设置服务器状态
     grantAdmin: api_prefix + "/admin-op/grantAdmin", // 授权
     logList: api_prefix + "/admin-op/listSystemLog", // 日志
-    systemInfo: api_prefix + "/admin-op/systemInfo", // 构建信息
+
 
     // user
     login: api_prefix + "/user-info/login post query", // 登录
@@ -27,7 +34,7 @@ export default {
     permScopes: api_prefix + "/user-info/permScopes",
     permItemsOfScope: api_prefix + "/user-info/permItemsOfScope",
     editUserPerm: api_prefix + "/user-info/editUserPerm post query",
-    notice: api_prefix + "/user-info/systemNotice",
+
 
     // metric
     queryMetric: api_prefix + "/metric/queryMetric",// 查询指标
@@ -37,8 +44,6 @@ export default {
     mqlQuery: api_prefix + "/metric/mqlQuery post query",// 使用mql查询指标数据，mql支持指标内容的加工
     allMetricConfig: api_prefix + "/metric/allMetricConfig",
 
-    // 授权信息
-    getIntPushMsg: "/yint-stub/certificate/getIntPushMsg", // 授权信息
-    getNowCertificate: "/yint-stub/certificate/getNowCertificate" // 授权证书
+
     // 下列为各业务自定义接口
 };
