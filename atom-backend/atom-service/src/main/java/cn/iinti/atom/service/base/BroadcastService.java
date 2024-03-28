@@ -6,6 +6,7 @@ import cn.iinti.atom.controller.AdminController;
 import cn.iinti.atom.entity.ServerNode;
 import cn.iinti.atom.mapper.ServerNodeMapper;
 import cn.iinti.atom.service.base.config.Configs;
+import cn.iinti.atom.service.base.env.Constants;
 import cn.iinti.atom.service.base.env.Environment;
 import cn.iinti.atom.service.base.safethread.Looper;
 import cn.iinti.atom.utils.IpUtil;
@@ -258,13 +259,8 @@ public class BroadcastService implements ApplicationListener<WebServerInitialize
 
     private static String buildOtherNodeURL(String ip, int port, String api) {
         String protocol = Configs.getConfig("website.protocol", "http");
-        String baseApiEntry = AdminController.baseApiEntry();
-        String ret = protocol + "://" + ip + ":" + port;
-        if (!baseApiEntry.startsWith("/")) {
-            ret += "/";
-        }
-        ret += baseApiEntry;
-        boolean skipSlash = (baseApiEntry.endsWith("/") || api.startsWith("/"));
+        String ret = protocol + "://" + ip + ":" + port + Constants.RESTFULL_API_PREFIX + "/system";
+        boolean skipSlash = api.startsWith("/");
         return ret + (skipSlash ? "" : "/") + api;
     }
 
