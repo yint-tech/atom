@@ -56,11 +56,19 @@ public class Environment {
 
     public static CommonRes<JSONObject> buildInfo() {
         return CommonRes.success(new JSONObject()
-                .fluentPut("versionCode", versionCode)
-                .fluentPut("versionName", versionName)
-                .fluentPut("buildTime", buildTime)
-                .fluentPut("buildUser", buildUser)
-                .fluentPut("gitId", gitId)
+                .fluentPut("buildInfo",
+                        new JSONObject()
+                                .fluentPut("versionCode", versionCode)
+                                .fluentPut("versionName", versionName)
+                                .fluentPut("buildTime", buildTime)
+                                .fluentPut("buildUser", buildUser)
+                                .fluentPut("gitId", gitId)
+                ).fluentPut("env",
+                        new JSONObject()
+                                .fluentPut("demoSite", isDemoSite)
+                                .fluentPut("debug", isLocalDebug)
+                )
+
         );
     }
 

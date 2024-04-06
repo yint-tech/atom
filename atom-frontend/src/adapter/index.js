@@ -11,6 +11,20 @@ const Adapter = (props) => {
     const [user, setUser] = useState({});
     const [api, setApi] = useState({});
     const [notice, setNotice] = useState('');
+    const [systemInfo, setSystemInfo] = useState({
+        "buildInfo": {
+            versionCode: 1,
+            versionName: "1.0",
+            buildTime: "2024-01-00_00:00:00",
+            buildUser: "yint",
+            gitId: "458baa545ae941239cb62fec359a911c44cbfa3a"
+        },
+        "env": {
+            demoSite: true,
+            debug: true
+        }
+    });
+    // 在调用任何业务代码之前，确保了完成第一次的登录token刷新，避免到业务模块的时候，token刷新还未完成，产生鉴权失败问题
     const [firstLogin, setFirstLogin] = useState(false);
 
     useEffect(() => {
@@ -95,6 +109,11 @@ const Adapter = (props) => {
         refreshUserInfo().then((res) => {
             setFirstLogin(true);
         });
+        apis.systemInfo().then(res => {
+            if (res.status === 0) {
+                setSystemInfo(res.data)
+            }
+        });
         let timer = setInterval(() => {
             refreshUserInfo();
         }, 60 * 1000);
@@ -105,7 +124,13 @@ const Adapter = (props) => {
 
     return (
         <AppContext.Provider
-            value={{user, api, setUser, notice}}
+            value={{
+                user,// 你可以在全局访问到用户信息
+                api,// 挂载到全局的，支持react特性的一些API
+                setUser,// 登录，注销，穿越等功能需要修改用户内容
+                notice,// 给用户推送的消息
+                systemInfo// 后端的服务器配置信息，目前主要包括后端构建数据，后端系统系统配置等，一般来说前端根据这些配置进行一些功能性质的开关选型
+            }}
         >
             {firstLogin ? props.children : <Loading/>}
         </AppContext.Provider>

@@ -1,42 +1,31 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import {AppContext} from "adapter";
 import {Card, CardContent, Divider, Typography} from "@material-ui/core";
 
-
-const BuildInfo = (pros) => {
-    const [data, setData] = useState({});
-    const {api} = useContext(AppContext);
-
-    useEffect(() => {
-        api.systemInfo().then(res => {
-            if (res.status === 0) {
-                setData(res.data)
-            }
-        });
-    }, [api])
-
+const BuildInfo = () => {
+    const {systemInfo} = useContext(AppContext);
+    const buildInfo = systemInfo.buildInfo;
     return (<Card>
-
         <CardContent>
             <Typography gutterBottom variant="h4">
                 构建时间
             </Typography>
             <Typography gutterBottom variant="subtitle2">
-                {data.buildTime}
+                {buildInfo.buildTime}
             </Typography>
             <Divider/>
             <Typography gutterBottom variant="h4">
                 编译主机
             </Typography>
             <Typography gutterBottom variant="subtitle2">
-                {data.buildUser}
+                {buildInfo.buildUser}
             </Typography>
             <Divider/>
             <Typography gutterBottom variant="h4">
                 gitId
             </Typography>
             <Typography gutterBottom variant="subtitle2">
-                {data.gitId}
+                {buildInfo.gitId}
             </Typography>
 
             <Divider/>
@@ -44,7 +33,7 @@ const BuildInfo = (pros) => {
                 版本
             </Typography>
             <Typography gutterBottom variant="subtitle2">
-                {data.versionName}
+                {buildInfo.versionName}
             </Typography>
 
             <Divider/>
@@ -52,7 +41,7 @@ const BuildInfo = (pros) => {
                 版本号
             </Typography>
             <Typography gutterBottom variant="subtitle2">
-                {data.versionCode}
+                {buildInfo.versionCode}
             </Typography>
         </CardContent>
     </Card>);
