@@ -8,8 +8,6 @@ import {
     Card,
     Divider,
     Grid,
-    MenuItem,
-    Select,
     Switch,
     TextField,
     Typography
@@ -70,9 +68,7 @@ function SingleInputItem({
                              placeholder = "",
                              initValue = "",
                              initKey = "",
-                             type = "input",
-                             options = [],
-                             multiline = false,
+                             type = "String",
                              reload = () => {
                              }
                          }) {
@@ -92,14 +88,16 @@ function SingleInputItem({
         })
     };
 
+    let multiLine = type === "multiLine";
+
     return (
         <Grid item xs={12} className={classes.input}>
             {
-                type === "input" ? (
+                type === "String" || multiLine ? (
                     <TextField
                         className={classes.inputItem}
-                        multiline={multiline}
-                        rows={multiline ? 4 : undefined}
+                        multiline={multiLine}
+                        minRows={multiLine ? 4 : undefined}
                         size="small"
                         variant="outlined"
                         placeholder={placeholder}
@@ -108,28 +106,24 @@ function SingleInputItem({
                 ) : null
             }
             {
-                type === "switch" ? (
+                type === "Integer" ? (
+                    <TextField
+                        className={classes.inputItem}
+                        type={"number"}
+                        size="small"
+                        variant="outlined"
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}/>
+                ) : null
+            }
+            {
+                type === "Boolean" ? (
                     <Switch
                         checked={value || false}
                         onChange={(e) => setValue(e.target.checked)}
                         inputProps={{"aria-label": "secondary checkbox"}}
                     />
-                ) : null
-            }
-            {
-                type === "select" ? (
-                    <Select
-                        className={classes.inputItem}
-                        variant="outlined"
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                    >
-                        {options.map(item => (
-                            <MenuItem key={item} value={item}>
-                                {item}
-                            </MenuItem>
-                        ))}
-                    </Select>
                 ) : null
             }
             <Button className={classes.inputBtn} variant="contained" color="primary" onClick={doSave}>保存</Button>
@@ -166,7 +160,7 @@ const Form = () => {
                                     <Divider className={classes.divider}/>
                                     <Grid container spacing={6} wrap="wrap">
                                         <SingleInputItem
-                                            type={item.type === 'Boolean' ? "switch" : "input"}
+                                            type={item.type}
                                             placeholder={item.desc}
                                             initKey={item.key}
                                             initValue={item.value}

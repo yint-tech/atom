@@ -165,7 +165,7 @@ public class Configs {
         }
 
         if (valueType.equals(Object.class) && transformer != null) {
-            valueType = (Class<T>) getSuperClassGenericType(transformer.getClass());
+            valueType = getSuperClassGenericType(transformer.getClass());
         }
 
         ConfigChangeListener configChangeListener = new MonitorConfigChangeListener<>(
@@ -272,8 +272,20 @@ public class Configs {
                 registerConfigValueRecord.put(configKey, defaultValue);
             }
             Class<V> superClassGenericType = getSuperClassGenericType(getClass());
-            addConfigFetcher(value -> ConfigValue.this.value = value, configKey, defaultValue, null, superClassGenericType);
+            TransformFunc<V> transformer = transformer();
+            addConfigFetcher(value -> ConfigValue.this.value = value,
+                    configKey, defaultValue, transformer, superClassGenericType
+            );
         }
+
+        protected String configType() {
+            return value.getClass().getSimpleName();
+        }
+
+        protected TransformFunc<V> transformer() {
+            return null;
+        }
+
     }
 
 
@@ -281,6 +293,18 @@ public class Configs {
 
         public StringConfigValue(String configKey, String defaultValue) {
             super(configKey, defaultValue);
+        }
+    }
+
+    public static class MultiLineStrConfigValue extends ConfigValue<String> {
+
+        public MultiLineStrConfigValue(String configKey, String defaultValue) {
+            super(configKey, defaultValue);
+        }
+
+        @Override
+        protected String configType() {
+            return "multiLine";
         }
     }
 

@@ -21,7 +21,7 @@ public class Settings {
         ret.put("normal", allSettings.stream().map(settingConfig ->
                         new JSONObject().fluentPut("key", settingConfig.getKey())
                                 .fluentPut("value", settingConfig.getSupplier().value)
-                                .fluentPut("type", settingConfig.getSupplier().value.getClass().getSimpleName())
+                                .fluentPut("type", settingConfig.getSupplier().configType())
                                 .fluentPut("desc", settingConfig.desc)
                                 .fluentPut("detailDesc", settingConfig.detailDesc))
                 .collect(Collectors.toList()));
@@ -30,6 +30,7 @@ public class Settings {
 
     private static final List<SettingConfig> allSettings = Lists.newArrayList();
 
+    @SuppressWarnings("unused")
     private static Configs.BooleanConfigValue newBooleanConfig(String key, boolean defaultValue, String desc) {
         return newBooleanConfig(key, defaultValue, desc, desc);
     }
@@ -40,6 +41,7 @@ public class Settings {
         return configValue;
     }
 
+    @SuppressWarnings("unused")
     private static Configs.IntegerConfigValue newIntConfig(String key, int defaultValue, String desc) {
         return newIntConfig(key, defaultValue, desc, desc);
     }
@@ -51,6 +53,7 @@ public class Settings {
     }
 
 
+    @SuppressWarnings("unused")
     private static Configs.StringConfigValue newStringConfig(String key, String defaultValue, String desc) {
         return newStringConfig(key, defaultValue, desc, desc);
     }
@@ -60,6 +63,18 @@ public class Settings {
         allSettings.add(new SettingConfig(key, configValue, desc, detailDesc));
         return configValue;
     }
+
+    @SuppressWarnings("unused")
+    private static Configs.MultiLineStrConfigValue newMultilineStrConfig(String key, String defaultValue, String desc) {
+        return newMultilineStrConfig(key, defaultValue, desc, desc);
+    }
+
+    private static Configs.MultiLineStrConfigValue newMultilineStrConfig(String key, String defaultValue, String desc, String detailDesc) {
+        Configs.MultiLineStrConfigValue configValue = new Configs.MultiLineStrConfigValue(key, defaultValue);
+        allSettings.add(new SettingConfig(key, configValue, desc, detailDesc));
+        return configValue;
+    }
+
 
     @Getter
     @AllArgsConstructor
@@ -92,7 +107,6 @@ public class Settings {
             Constants.appName + ".docNotice", "",
             "文档首页通告信息", "在框架文档系统中，将会推送一段消息展示在文档中（此配置是html片段，故支持任意）"
     );
-
 
 
     /**
