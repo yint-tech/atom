@@ -3,6 +3,7 @@ package cn.iinti.atom.system;
 import cn.iinti.atom.entity.CommonRes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -47,6 +48,9 @@ public class GlobalExceptionHandler {
             return false;
         }
         if (e instanceof ClientAbortException) {
+            return true;
+        }
+        if (e instanceof HttpMessageNotReadableException) {
             return true;
         }
 
