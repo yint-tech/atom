@@ -461,6 +461,10 @@ public class ProjectMaker {
             }
 
             private static int specialPriority(String str) {
+                // java文件路径：src/main/java/cn/iinti/atom/service/base/env/Constants.java
+                if (str.contains("/")) {
+                    return str.split("/").length + 500;
+                }
                 // 包名需要高优先级替换
                 if (str.contains(".")) {
                     return str.split("\\.").length + 1000;
