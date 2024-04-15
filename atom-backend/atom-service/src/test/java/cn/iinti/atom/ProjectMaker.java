@@ -67,7 +67,8 @@ public class ProjectMaker {
             genRule.root.doClean();
 
             for (String cmd : genRule.cmds) {
-                Shell.execute(cmd, null, genRule.outputRootDir);
+                String rewriteCmd = contentReplace(cmd);
+                Shell.execute(rewriteCmd, null, genRule.outputRootDir);
             }
         }
 

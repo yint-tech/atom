@@ -49,3 +49,5 @@ keepContent:atomic
 # 生成文件之后执行的命令
 #cmd:chmod +x gradlew
 #cmd:chmod +x script/startup.sh
+cmd:chmod +x atom-backend/mvnw
+cmd:chmod +x atom-backend/script/build.py
