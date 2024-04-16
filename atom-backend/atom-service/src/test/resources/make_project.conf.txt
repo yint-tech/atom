@@ -28,12 +28,9 @@ notOverwrite:/xxx-module/build.gradle.kts
 # keep文件
 keep:*.jar
 keep:*.aar
-# md是文档，我们就不替换他了
-keep:*.md
 keep:*.png
 keep:*.jpg
 keep:*.ico
-keep:*.svg
 keep:*.otf
 keep:*.woff2
 keep:*.ttf

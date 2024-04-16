@@ -3,3 +3,4 @@ node_modules/
 .temp/
 yarn.lock
 src/.vuepress/dist/
+.yarn/
