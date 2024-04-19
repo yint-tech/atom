@@ -60,10 +60,13 @@ const OpeDialog = props => {
                     }
                     if (dialogActionRet['then'] && typeof dialogActionRet['then'] === 'function') {
                         dialogActionRet.then((message) => {
-                            if (typeof message === "string") {
+                            if (message && typeof message === 'string') {
                                 api.successToast(message);
                             }
-                            setOpenDialog(false);
+                            let failed = typeof message === 'boolean' && !message;
+                            if (!failed) {
+                                setOpenDialog(false);
+                            }
                         }).catch((e) => {
                             api.errorToast(e.message);
                         }).finally(() => {
