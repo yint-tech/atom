@@ -157,6 +157,12 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
                 }
             }
         }
-        SpringApplication.run(AtomMain.class, argList.toArray(new String[]{}));
+        try {
+            SpringApplication.run(AtomMain.class, argList.toArray(new String[]{}));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace(System.err);
+            // 如果启动失败，必须退出，否则docker的进程守护无法感知到服务启动失败
+            System.exit(1);
+        }
     }
 }
