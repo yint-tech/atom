@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Button, CardContent, CardHeader, Divider, Grid, TextField,} from '@material-ui/core';
+import {Button, CardContent, CardHeader, Divider, Grid, TextField,} from '@mui/material';
 import {AppContext} from "adapter";
 
 const SetLoginPassword = () => {

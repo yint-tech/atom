@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/styles";
 import {
     Accordion,
     AccordionDetails,
@@ -11,14 +10,15 @@ import {
     Switch,
     TextField,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {Loading} from "components";
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         margin: theme.spacing(4)
     },

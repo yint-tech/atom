@@ -1,7 +1,8 @@
-import {colors} from '@material-ui/core';
+import {colors} from '@mui/material';
 
-export default {
+const MuiTableHead = {
     root: {
         backgroundColor: colors.grey[50]
     }
 };
+export default MuiTableHead;

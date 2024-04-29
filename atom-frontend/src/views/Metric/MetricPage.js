@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Card, CardContent, CardHeader, MenuItem, Select} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import {Card, CardContent, CardHeader, MenuItem, Select} from "@mui/material";
 import MetricCharsV2 from "components/MetricCharts";
 import PropTypes from "prop-types";
+import {createUseStyles} from "react-jss";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     item: {
         marginTop: theme.spacing(5)
     }

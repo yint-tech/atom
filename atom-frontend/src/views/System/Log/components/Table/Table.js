@@ -1,13 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import Pagination from '@material-ui/lab/Pagination';
 import moment from 'moment';
-import {makeStyles} from '@material-ui/styles';
 import {Table} from "components";
-import {Card, CardActions, CardContent,} from '@material-ui/core';
+import {Card, CardActions, CardContent, Pagination,} from '@mui/material';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {},
     content: {
         padding: 0

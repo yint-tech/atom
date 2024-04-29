@@ -1,14 +1,14 @@
 import React, {useContext} from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {AccountBox, Home, SettingsApplications, ShowChart} from "@material-ui/icons"
+import {AccountBox, Home, SettingsApplications, ShowChart} from "@mui/icons-material"
 import {AppContext} from "adapter";
-import {makeStyles} from "@material-ui/styles";
-import {Divider, Drawer} from "@material-ui/core";
+import {Divider, Drawer} from "@mui/material";
 
 import {Profile, SidebarNav} from "./components";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     drawer: {
         width: 240,
         [theme.breakpoints.up("lg")]: {

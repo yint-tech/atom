@@ -1,8 +1,8 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/styles';
-import {Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@mui/material';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(4)
     },

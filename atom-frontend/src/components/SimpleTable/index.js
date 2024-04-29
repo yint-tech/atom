@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/styles";
 
 import clsx from "clsx";
 import {SearchInput} from "../index";
-import {Card, CardActions, CardContent} from "@material-ui/core";
-import Pagination from "@material-ui/lab/Pagination";
+import {Card, CardActions, CardContent, Pagination} from "@mui/material";
 import Table from "../Table";
 import PropTypes from "prop-types";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(3)
     },

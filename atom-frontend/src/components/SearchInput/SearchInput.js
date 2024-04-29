@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {makeStyles} from '@material-ui/styles';
-import {IconButton, Input, MenuItem, Paper} from '@material-ui/core';
+import {IconButton, Input, MenuItem, Paper} from '@mui/material';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Select from '@material-ui/core/Select';
-import SearchIcon from '@material-ui/icons/Search';
+import Select from '@mui/material/Select';
+import {Search} from '@mui/icons-material';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         borderRadius: '4px',
         alignItems: 'center',
@@ -67,7 +67,7 @@ const SearchInput = props => {
                 disableUnderline
             />
             <IconButton size="small" color="primary" onClick={() => onChange(value)}>
-                <SearchIcon style={{fontSize: 22}}/>
+                <Search style={{fontSize: 22}}/>
             </IconButton>
         </Paper>
     );

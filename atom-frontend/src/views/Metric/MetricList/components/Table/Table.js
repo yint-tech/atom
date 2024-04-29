@@ -1,15 +1,24 @@
 import React, {useContext, useEffect, useState} from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import Pagination from "@material-ui/lab/Pagination";
-import DetailsIcon from "@material-ui/icons/Details";
-import DeleteIcon from '@material-ui/icons/Delete';
-import {Button, Card, CardActions, CardContent, CardHeader, MenuItem, Select, Typography} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import DetailsIcon from "@mui/icons-material/Details";
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    MenuItem,
+    Pagination,
+    Select,
+    Typography
+} from "@mui/material";
 import {MetricCharsV2, OpeDialog, Table} from "components";
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {},
     content: {
         padding: 0

@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {makeStyles} from '@material-ui/styles';
 
 import {Table, Toolbar} from './components';
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(3)
     },

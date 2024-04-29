@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import {Box, Checkbox, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import {Box, Checkbox, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 
 import Empty from '../Empty';
 import Loading from 'components/Loading';

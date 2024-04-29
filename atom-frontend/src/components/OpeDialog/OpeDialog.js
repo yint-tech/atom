@@ -1,11 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {makeStyles} from '@material-ui/styles';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import Loading from '../Loading';
 import PropTypes from "prop-types";
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     dialog: {
         minWidth: theme.spacing(70)
     },

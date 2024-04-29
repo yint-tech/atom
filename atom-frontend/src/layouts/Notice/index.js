@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/styles";
 import moment from "moment";
 import apis from "apis";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(() => ({
+const useStyles = createUseStyles(() => ({
     flexGrow: {
         flexGrow: 1
     },

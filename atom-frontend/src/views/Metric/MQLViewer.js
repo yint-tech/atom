@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, CardContent, CardHeader, Divider, MenuItem, Select} from "@material-ui/core";
+import {Button, Card, CardContent, CardHeader, Divider, MenuItem, Select} from "@mui/material";
 import MetricCharsV2 from "components/MetricCharts";
-import {makeStyles} from "@material-ui/styles";
 import CodeMirror from "@uiw/react-codemirror";
+import {createUseStyles} from "react-jss";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(3)
     },

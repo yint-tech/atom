@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {makeStyles} from '@material-ui/styles';
-import {Grid} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import {Table, Toolbar} from './components';
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(2)
     },
@@ -61,7 +61,6 @@ const ServerNode = () => {
                             total={showTable1.length}
                             rowsPerPage={limit}
                             pageState={[page1, setPage1]}
-                            changeStatus="serverStatus"
                             setRefresh={setRefresh1}/>
                     </Grid>
                 </Grid>

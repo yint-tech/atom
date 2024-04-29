@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {makeStyles} from '@material-ui/styles';
 import {useHistory} from 'react-router-dom';
-import {CardHeader, Grid, IconButton, Popover} from '@material-ui/core';
-import DehazeIcon from '@material-ui/icons/Dehaze';
-import PropTypes from 'prop-types';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import {CardHeader, Grid, IconButton, Popover} from '@mui/material';
+import {ArrowBackIos, Dehaze} from '@mui/icons-material';
 
-const useStyles = makeStyles((theme) => ({
+import PropTypes from 'prop-types';
+import {createUseStyles} from "react-jss";
+
+const useStyles = createUseStyles((theme) => ({
     header: {
         flexDirection: 'row-reverse',
         alignItems: 'center',
@@ -46,7 +46,7 @@ const Goback = ({title, subheader, extra}) => {
                     color="primary"
                     aria-label="back"
                     className={classes.backIcon}>
-                    <ArrowBackIosIcon style={{fontSize: 20}}/>
+                    <ArrowBackIos style={{fontSize: 20}}/>
                 </IconButton>
             }
             title={title}
@@ -59,7 +59,7 @@ const Goback = ({title, subheader, extra}) => {
             <Grid className={classes.headerButton}>
                 {selfHeader}
                 <IconButton onClick={handleClick}>
-                    <DehazeIcon/>
+                    <Dehaze/>
                 </IconButton>
                 <Popover
                     open={Boolean(anchorEl)}

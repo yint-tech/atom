@@ -1,17 +1,28 @@
 import React, {useContext} from "react";
-import {makeStyles} from "@material-ui/styles";
-import {Button, Card, CardContent, CardHeader, Divider, Grid, IconButton, Popover, Typography} from "@material-ui/core";
-import {Alert, AlertTitle} from "@material-ui/lab";
+import {
+    Alert,
+    AlertTitle,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    Grid,
+    IconButton,
+    Popover,
+    Typography
+} from "@mui/material";
 import {AppContext} from "adapter";
 import {CopyToClipboard} from "react-copy-to-clipboard";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
-import CachedIcon from "@material-ui/icons/Cached";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import CachedIcon from "@mui/icons-material/Cached";
 import moment from "moment";
 import configs from 'config'
 import clsx from "clsx";
+import {createUseStyles} from "react-jss";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         height: "100%"
     },

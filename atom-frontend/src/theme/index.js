@@ -1,5 +1,5 @@
-import {createTheme} from '@material-ui/core';
-import {zhCN} from '@material-ui/core/locale';
+import {createTheme} from '@mui/material';
+import {zhCN} from '@mui/material/locale';
 import palette from './palette';
 
 import typography from './typography';

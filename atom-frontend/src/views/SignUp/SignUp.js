@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Link as RouterLink, withRouter} from 'react-router-dom';
-import {makeStyles} from '@material-ui/styles';
-import {Button, Checkbox, Grid, Link, TextField, Typography} from '@material-ui/core';
+import {Button, Checkbox, Grid, Link, TextField, Typography} from '@mui/material';
 import {AppContext} from 'adapter';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import moment from 'moment';
 import configs from 'config';
+import {createUseStyles} from "react-jss";
 
 const schema = {
     oa: {
@@ -27,8 +27,7 @@ const schema = {
     }
 };
 
-const useStyles = makeStyles(theme => ({
-
+const useStyles = createUseStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.default,
         height: '100%'

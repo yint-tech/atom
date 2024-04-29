@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/styles";
-import {Button, Card, CardContent, CardHeader, Grid} from "@material-ui/core";
+import {Button, Card, CardContent, CardHeader, Grid} from "@mui/material";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(2)
     },

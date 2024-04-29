@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 
 import {Table} from './components';
-import {Card} from '@material-ui/core';
+import {Card} from '@mui/material';
 
 import {AppContext} from "adapter";
 

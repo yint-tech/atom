@@ -1,9 +1,9 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import ReactEcharts from 'echarts-for-react';
 import PropTypes from "prop-types";
-import {makeStyles} from "@material-ui/styles";
 import clsx from "clsx";
 import {AppContext} from "adapter";
+import {createUseStyles} from "react-jss";
 
 const buildEchartOption = (title, legends, x, series, bottomLegend) => {
     for (let i = 0; i < series.length; i++) {
@@ -41,7 +41,7 @@ const buildEchartOption = (title, legends, x, series, bottomLegend) => {
             textStyle: {
                 fontSize: 12,
                 color: '#fff',
-                align:'left'
+                align: 'left'
             }
         },
         legend: bottomLegend ? {
@@ -78,11 +78,10 @@ const buildEchartOption = (title, legends, x, series, bottomLegend) => {
 };
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         textAlign: "center"
     },
-
 }));
 
 const MetricCharsV2 = (props) => {

@@ -1,12 +1,11 @@
 import React, {useContext} from 'react';
-import {makeStyles} from '@material-ui/styles';
 import {AppContext} from 'adapter';
-import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
-import {Avatar, Typography} from "@material-ui/core";
+import {Alert, Avatar, Typography} from "@mui/material";
 import {Link as RouterLink} from 'react-router-dom';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     avatar: {
         width: 60,
         height: 60

@@ -1,10 +1,10 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/styles';
 import {UserDashboard,} from './components';
-import {Divider} from "@material-ui/core";
+import {Divider} from "@mui/material";
 import SetLoginPassword from "./components/SetLoginPassword";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         padding: theme.spacing(4)
     }

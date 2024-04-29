@@ -4,10 +4,10 @@ import React, {forwardRef} from 'react';
 import {NavLink as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/styles';
-import {Button, colors, List, ListItem} from '@material-ui/core';
+import {Button, colors, List, ListItem} from '@mui/material';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {},
     item: {
         display: 'flex',

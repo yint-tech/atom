@@ -1,10 +1,10 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/styles';
 import {SearchInput} from 'components';
 
 import clsx from 'clsx';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {},
     row: {
         height: '42px',

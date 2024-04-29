@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/styles';
 import {Topbar} from './components';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(() => ({
+const useStyles = createUseStyles(() => ({
     root: {
         paddingTop: 64,
         height: '100%'

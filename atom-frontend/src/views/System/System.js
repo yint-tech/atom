@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/styles";
 
-import {Paper, Tab, Tabs} from "@material-ui/core";
+import {Paper, Tab, Tabs} from "@mui/material";
 import Config from "./Config";
 import Log from "./Log";
 import ProxyNode from "./ServerNode";
 import BuildInfo from "./BuildInfo"
 import configs from "config";
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(3)
@@ -54,7 +54,6 @@ function System() {
                     <Tab label="构建信息"/>
                 </Tabs>
                 <div className={classes.content}>
-
                     <TabPanel value={value} index={0}>
                         <Config/>
                     </TabPanel>

@@ -1,11 +1,11 @@
 import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import {makeStyles} from '@material-ui/styles';
-import {AppBar, Toolbar} from '@material-ui/core';
+import {AppBar, Toolbar} from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(() => ({
+const useStyles = createUseStyles(() => ({
     root: {
         boxShadow: 'none'
     },

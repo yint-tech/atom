@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Link as RouterLink, withRouter} from 'react-router-dom';
-import {makeStyles} from '@material-ui/styles';
-import {Button, Grid, Link, TextField, Typography} from '@material-ui/core';
+import {Button, Grid, Link, TextField, Typography} from '@mui/material';
 import {AppContext} from 'adapter';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import configs from 'config'
+import {createUseStyles} from "react-jss";
 
 const schema = {
     oa: {
@@ -23,9 +23,9 @@ const schema = {
     }
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.background,
         height: '100%'
     },
     grid: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     quote: {
-        backgroundColor: theme.palette.neutral,
+        backgroundColor: theme.neutral,
         height: '100%',
         width: '100%',
         overflow: 'hidden',
@@ -57,15 +57,15 @@ const useStyles = makeStyles(theme => ({
         flexBasis: '600px'
     },
     quoteText: {
-        color: theme.palette.white,
+        color: theme.white,
         fontWeight: 300
     },
     name: {
         marginTop: theme.spacing(3),
-        color: theme.palette.white
+        color: theme.white
     },
     bio: {
-        color: theme.palette.white
+        color: theme.white
     },
     content: {
         height: '100%',

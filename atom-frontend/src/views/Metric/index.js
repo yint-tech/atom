@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/styles";
-import {Paper, Tab, Tabs} from "@material-ui/core";
+import {Paper, Tab, Tabs} from "@mui/material";
 
 import GlobalMetric from "./GlobalMetric";
 import SystemMetrics from "./SystemMetric";
 import MQLViewer from "./MQLViewer";
 import MetricList from "./MetricList";
 import configs from 'config'
+import {createUseStyles} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(3)

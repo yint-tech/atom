@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {AppContext} from "adapter";
-import {Card, CardContent, Divider, Typography} from "@material-ui/core";
+import {Card, CardContent, Divider, Typography} from "@mui/material";
 
 const BuildInfo = () => {
     const {systemInfo} = useContext(AppContext);

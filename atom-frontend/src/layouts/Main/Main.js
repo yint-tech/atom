@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {makeStyles, useTheme} from '@material-ui/styles';
-import {useMediaQuery} from '@material-ui/core';
+import {useMediaQuery} from '@mui/material';
 
 import {Footer, Sidebar, Topbar} from './components';
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles(theme => ({
     root: {
         paddingTop: 56,
         height: '100%',
