@@ -129,22 +129,10 @@
             <artifactId>commons-io</artifactId>
             <version>2.10.0</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.79</version>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
-            <version>3.14.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.196</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/net.sf.proguard/proguard-annotations -->
         <dependency>
