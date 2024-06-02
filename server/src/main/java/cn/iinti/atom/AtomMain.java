@@ -103,7 +103,11 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
         // setup log dir
         boolean hasSetupLogDir = argList.stream().anyMatch(s -> s.contains("--LogbackDir"));
         if (!hasSetupLogDir) {
-            argList.add("--LogbackDir=" + new File(Environment.runtimeClassPathDir, "logs").getAbsolutePath());
+            File logBase = Environment.runtimeClassPathDir;
+            if (logBase.getName().equals("conf")) {
+                logBase = logBase.getParentFile();
+            }
+            argList.add("--LogbackDir=" + new File(logBase, "logs").getAbsolutePath());
         }
 
         //减少对用户的打扰，各组件大概率不会需要配置的参数，直接硬编码到源码中

@@ -54,7 +54,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(group = "org.apache.logging.log4j", module = "log4j-to-slf4j")
     }
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -114,10 +113,10 @@ application {
         into("conf/")
     }
 
-    applicationDistribution.from("${projectDir}/frontend/build") {
+    applicationDistribution.from("${rootProject.projectDir}/frontend/build") {
         into("conf/static/")
     }
-    applicationDistribution.from("${projectDir}/doc/src/.vuepress/dist") {
+    applicationDistribution.from("${rootProject.projectDir}/doc/src/.vuepress/dist") {
         into("conf/static/atom-doc")
     }
 }
@@ -131,7 +130,14 @@ tasks.getByPath("startScripts").doFirst {
         fun wrapScriptGenerator(delegate: ScriptGenerator): ScriptGenerator {
             return ScriptGenerator { details, destination ->
                 // 增加一个conf的目录，作为最终目标的classPath，在最终发布的时候，我们需要植入静态资源
-                (details as DefaultJavaAppStartScriptGenerationDetails).classpath.add(0, "conf")
+                (details as DefaultJavaAppStartScriptGenerationDetails)
+                    .apply {
+                        classpath.removeIf {
+                            // fix, why this fuck dependency present?
+                            it.contains("spring-boot-docker-compose")
+                        }
+                        classpath.add(0, "conf")
+                    }
                 delegate.generateScript(details, destination)
             }
         }

@@ -7,6 +7,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import proguard.annotation.Keep;
 
 /**
@@ -33,7 +34,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {Exception.class})
-    public CommonRes<String> handleUncaughtException(Exception exception) {
+    public CommonRes<String> handleUncaughtException(Exception exception) throws Exception {
+        if (exception instanceof NoResourceFoundException) {
+            throw exception;
+        }
         if (isClientAbortException(exception)) {
             // ClientAbortException不打印异常级别日志
             log.info("client abort", exception);
