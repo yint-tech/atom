@@ -1,4 +1,8 @@
 import org.gradle.api.internal.plugins.DefaultJavaAppStartScriptGenerationDetails
+import org.hidetake.groovy.ssh.connection.AllowAnyHosts
+import org.hidetake.groovy.ssh.core.Remote
+import org.hidetake.groovy.ssh.core.RunHandler
+import org.hidetake.groovy.ssh.session.SessionHandler
 
 plugins {
     java
@@ -6,6 +10,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
+    id("org.hidetake.ssh") version "2.11.2"
     application
 }
 
@@ -24,6 +29,9 @@ var userLoginTokenKey: String by rootProject.extra
 var restfulApiPrefix: String by rootProject.extra
 var appName: String by rootProject.extra
 
+var deployServerList: List<String> by rootProject.extra
+var deployRemoteUser: String by rootProject.extra
+var deployPath: String by rootProject.extra
 
 group = applicationId
 version = versionName
@@ -85,26 +93,26 @@ tasks.test {
     useJUnitPlatform()
 }
 
+distributions {
+    main {
+        contents {
+            // https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
+            // reset parent
+            into("/")
+        }
+    }
+}
 
 application {
     mainClass = "cn.iinti.atom.AtomMain"
-    applicationName = "Atom"
+    applicationName = "AtomMain"
     applicationDefaultJvmArgs = listOf(
         "-Dfile.encoding=utf-8", "-Duser.timezone=GMT+08", "-XX:-OmitStackTraceInFastThrow"
     )
-    applicationDistribution.from("${projectDir}/src/main/resources") {
-        include("application.properties")
-        into("conf/")
-    }
     applicationDistribution.from("${projectDir}/src/main/resources/develop") {
         include("ddl.sql")
         into("conf/")
     }
-    applicationDistribution.from("${projectDir}/assets") {
-        include("startup.sh")
-        into("bin/")
-    }
-
 
     applicationDistribution.from("${projectDir}/frontend/build") {
         into("conf/static/")
@@ -114,13 +122,16 @@ application {
     }
 }
 
+tasks.named<Jar>("jar") {
+    archiveBaseName.set("atom-server")
+}
+
 tasks.getByPath("startScripts").doFirst {
-    (this as CreateStartScripts).let {
+    (this as CreateStartScripts).apply {
         fun wrapScriptGenerator(delegate: ScriptGenerator): ScriptGenerator {
             return ScriptGenerator { details, destination ->
                 // 增加一个conf的目录，作为最终目标的classPath，在最终发布的时候，我们需要植入静态资源
-                (details as DefaultJavaAppStartScriptGenerationDetails).classpath
-                    .add(0, "conf")
+                (details as DefaultJavaAppStartScriptGenerationDetails).classpath.add(0, "conf")
                 delegate.generateScript(details, destination)
             }
         }
@@ -129,29 +140,17 @@ tasks.getByPath("startScripts").doFirst {
     }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir("build/generated/java")
-        }
-    }
-}
 
+val generateJavaCode = tasks.register("generateJavaCode") {
+    val genTarget = "build/generated/java"
+    sourceSets.main.get().java.srcDir(genTarget)
+    val generatedDir = file(genTarget).resolve(applicationId.replace('.', '/')).apply { mkdirs() }
 
+    val className = "BuildInfo"
+    val sourceFile = File(generatedDir, "$className.java")
 
-tasks.register("generateJavaCode") {
-    doLast {
-        val generatedDir = file("build/generated/java").resolve(
-            applicationId.replace('.', '/')
-        )
-        generatedDir.mkdirs()
-        val className = "BuildInfo"
-        val sourceFile = File(generatedDir, "$className.java")
-
-
-        //public static final String gitId ="${rootProject.property("git.commit.id")}";
-        sourceFile.writeText(
-            """
+    sourceFile.writeText(
+        """
             package ${applicationId};
 
             public class $className {
@@ -165,16 +164,57 @@ tasks.register("generateJavaCode") {
                     public static final String appName ="$appName";
             }
         """.trimIndent()
-        )
+    )
+}
+
+if (deployServerList.isNotEmpty()) {
+    var outputZipFile: File? = null
+    val dipZipTask = tasks.distZip.get()
+
+    dipZipTask.outputs.upToDateWhen { false }
+    dipZipTask.doLast {
+        outputZipFile = outputs.files.singleFile
+    }
+
+    tasks.register("deploy") {
+        dependsOn(tasks.distZip)
+        val remoteList = deployServerList.map {
+            Remote(
+                mutableMapOf(
+                    "host" to it,
+                    "user" to deployRemoteUser,
+                    "knownHosts" to AllowAnyHosts.instance,
+                    "identity" to File(System.getProperty("user.home"), ".ssh/id_rsa")
+                )
+            )
+        }
+        doLast {
+            val copyCmd = hashMapOf(
+                "from" to outputZipFile, "into" to deployPath
+            )
+
+            val zipFileInServer = File(deployPath, outputZipFile!!.name).absolutePath
+
+            remoteList.forEach {
+                ssh.run(delegateClosureOf<RunHandler> {
+                    println("begin deploy server:$it")
+                    session(it, delegateClosureOf<SessionHandler> {
+                        execute("if [[ ! -d $deployPath ]] ; then mkdir  $deployPath ; fi")
+                        put(copyCmd)
+                        execute("unzip -q -o -d $deployPath $zipFileInServer")
+                        execute("${deployPath}bin/startup.sh")
+                    })
+                })
+            }
+        }
     }
 }
 
 
-tasks.named("compileJava") {
-    dependsOn("generateJavaCode")
-}
-
 afterEvaluate {
+    tasks.compileJava {
+        dependsOn(generateJavaCode)
+    }
     tasks.startScripts {
         dependsOn(":frontend:yarnBuild")
         dependsOn(":doc:yarnBuild")

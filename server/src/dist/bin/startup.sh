@@ -43,7 +43,7 @@ if [[ -f ../conf/AtomMain.rc ]] ;then
     source ../conf/AtomMain.rc
 fi
 
-nohup sh AtomMain.sh -DLogbackDir=${std_log}  ${addition}  >> ${std_log}/std.log  2>&1 &
+nohup sh AtomMain -DLogbackDir=${std_log}  ${addition}  >> ${std_log}/std.log  2>&1 &
 
 sleep 2
 
