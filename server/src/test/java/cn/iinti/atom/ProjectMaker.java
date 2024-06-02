@@ -25,11 +25,8 @@ public class ProjectMaker {
     public static void main(String[] args) throws Throwable {
         // 此代码在idea软件中执行
         List<String> configRules = ResourceUtil.readLines("make_project.conf.txt");
-        // 指向java后端根目录：atom-backend
         String backendProjectRoot = System.getProperty("user.dir");
-
-        File myProjectRoot = new File(backendProjectRoot).getParentFile();
-        Maker.doMake(configRules, myProjectRoot);
+        Maker.doMake(configRules, new File(backendProjectRoot));
     }
 
     static class Maker {

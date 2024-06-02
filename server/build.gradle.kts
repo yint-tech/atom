@@ -55,9 +55,11 @@ dependencies {
     testImplementation("com.baomidou:mybatis-plus-generator:3.5.3.2")
 
     compileOnly("org.projectlombok:lombok")
-    testImplementation("org.projectlombok:lombok")
-    compileOnly("net.sf.proguard:proguard-annotations:6.2.2")
     annotationProcessor("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+
+    compileOnly("net.sf.proguard:proguard-annotations:6.2.2")
 
     testImplementation("org.apache.velocity:velocity-engine-core:2.3")
     implementation("mysql:mysql-connector-java:8.0.28")
