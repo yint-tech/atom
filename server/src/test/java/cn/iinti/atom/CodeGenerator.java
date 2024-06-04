@@ -25,7 +25,7 @@ public class CodeGenerator {
                 properties.getProperty("spring.datasource.password")
         ).build();
 
-        String currentModule = "im";
+        String currentModule = "";
 
         PackageConfig pc = new PackageConfig.Builder()
                 .parent("cn.iinti.atom")
