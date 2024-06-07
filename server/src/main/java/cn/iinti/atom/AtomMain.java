@@ -9,10 +9,6 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import io.micrometer.core.instrument.util.IOUtils;
-import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -24,7 +20,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -74,19 +69,6 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
         // 让业务模块在运行的时候就拿到数据库的配置项
         reloadConfig();
         BroadcastService.register(BroadcastService.Topic.CONFIG, this::reloadConfig);
-    }
-
-    @Bean
-    public OpenAPI springShopOpenAPI() {
-        return new OpenAPI()
-                .info(new Info().title("Atom")
-                        .description("atom系统")
-                        .version("v" + BuildInfo.versionName)
-                        .license(new License().name("Apache 2.0")
-                                .url("https://atom.iinti.cn/atom-doc")))
-                .externalDocs(new ExternalDocumentation()
-                        .description("iinti")
-                        .url("https://iinti.cn"));
     }
 
     @Override
