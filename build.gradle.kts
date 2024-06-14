@@ -32,9 +32,6 @@ val nodeVersionStr by extra("20.10.0")
 var nodeDistMirror by extra("https://mirrors.ustc.edu.cn/node")
 
 // 发布相关，每个新项目核心需要关注这里的配置
-var deployServerList by extra(listOf("atom.iinti.cn"))
-var deployRemoteUser by extra("root")
-var deployPath by extra("/opt/atom/")
 var deployFileServer by extra("oss.iinti.cn")
 var deployFileAssetPath by extra("/root/local-deplpy/gohttpserver/data/atom/")
 var deployDockerRegistry by extra("registry.cn-beijing.aliyuncs.com/iinti/common")

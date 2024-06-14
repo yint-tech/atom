@@ -1,8 +1,10 @@
+import org.apache.hc.core5.function.Supplier
 import org.gradle.api.internal.plugins.DefaultJavaAppStartScriptGenerationDetails
 import org.hidetake.groovy.ssh.connection.AllowAnyHosts
 import org.hidetake.groovy.ssh.core.Remote
 import org.hidetake.groovy.ssh.core.RunHandler
 import org.hidetake.groovy.ssh.session.SessionHandler
+import java.util.*
 
 plugins {
     java
@@ -29,9 +31,6 @@ var userLoginTokenKey: String by rootProject.extra
 var restfulApiPrefix: String by rootProject.extra
 var appName: String by rootProject.extra
 
-var deployServerList: List<String> by rootProject.extra
-var deployRemoteUser: String by rootProject.extra
-var deployPath: String by rootProject.extra
 
 group = applicationId
 version = versionName
@@ -173,7 +172,85 @@ val generateJavaCode = tasks.register("generateJavaCode") {
     )
 }
 
-if (deployServerList.isNotEmpty()) {
+fun Properties.getConfig(key: String, defaultValue: String): String {
+    val value = getProperty(key)
+    if (value == null || value.isBlank()) {
+        return defaultValue
+    }
+    return value
+}
+
+fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
+    val config = Properties().apply {
+        load(presetFile.inputStream())
+    }
+
+    val defaultIdentifier = File(System.getProperty("user.home"), ".ssh/id_rsa").absolutePath
+
+    config.getProperty("deploy.host")?.trim()?.split(',')?.let { deployServerList ->
+        val name = presetFile.name
+        val preset = name.subSequence("app_".length, name.lastIndexOf("."))
+        val deployRemoteUser = config.getConfig("deploy.user", "root")
+        val deployPath = config.getConfig("deploy.workdir", "/opt/atom/")
+            .let {
+                if (it.endsWith("/")) {
+                    it
+                } else {
+                    "$it/"
+                }
+            }
+
+        val identity = config.getConfig("deploy.identity", defaultIdentifier)
+
+        tasks.register("deploy-${preset}") {
+            group = "deploy"
+            dependsOn(tasks.distZip)
+            val remoteList = deployServerList.map {
+                Remote(
+                    mutableMapOf(
+                        "host" to it,
+                        "user" to deployRemoteUser,
+                        "knownHosts" to AllowAnyHosts.instance,
+                        "identity" to File(identity)
+                    )
+                )
+            }
+            doLast {
+                val copyZipCmd = hashMapOf(
+                    "from" to outputZipFile.get(), "into" to deployPath
+                )
+
+                val copyPresetCmd = hashMapOf(
+                    "from" to presetFile,
+                    "into" to "${deployPath}conf/application.properties"
+                )
+
+                val zipFileInServer = File(deployPath, outputZipFile.get().name).absolutePath
+
+                remoteList.forEach {
+                    ssh.run(delegateClosureOf<RunHandler> {
+                        println("begin deploy server:$it")
+                        session(it, delegateClosureOf<SessionHandler> {
+                            execute("if [[ ! -d $deployPath ]] ; then mkdir  $deployPath ; fi")
+                            put(copyZipCmd)
+                            execute("unzip -q -o -d $deployPath $zipFileInServer")
+                            put(copyPresetCmd)
+                            execute("${deployPath}bin/startup.sh")
+                        })
+                    })
+                }
+            }
+        }
+    }
+}
+
+File(rootProject.projectDir, "deploy").listFiles { _, name ->
+    name.startsWith("app_") && name.endsWith(".properties")
+}?.apply {
+    if (isEmpty()) {
+        return@apply
+    }
+
     var outputZipFile: File? = null
     val dipZipTask = tasks.distZip.get()
 
@@ -182,36 +259,9 @@ if (deployServerList.isNotEmpty()) {
         outputZipFile = outputs.files.singleFile
     }
 
-    tasks.register("deploy") {
-        dependsOn(tasks.distZip)
-        val remoteList = deployServerList.map {
-            Remote(
-                mutableMapOf(
-                    "host" to it,
-                    "user" to deployRemoteUser,
-                    "knownHosts" to AllowAnyHosts.instance,
-                    "identity" to File(System.getProperty("user.home"), ".ssh/id_rsa")
-                )
-            )
-        }
-        doLast {
-            val copyCmd = hashMapOf(
-                "from" to outputZipFile, "into" to deployPath
-            )
-
-            val zipFileInServer = File(deployPath, outputZipFile!!.name).absolutePath
-
-            remoteList.forEach {
-                ssh.run(delegateClosureOf<RunHandler> {
-                    println("begin deploy server:$it")
-                    session(it, delegateClosureOf<SessionHandler> {
-                        execute("if [[ ! -d $deployPath ]] ; then mkdir  $deployPath ; fi")
-                        put(copyCmd)
-                        execute("unzip -q -o -d $deployPath $zipFileInServer")
-                        execute("${deployPath}bin/startup.sh")
-                    })
-                })
-            }
+    forEach { presetFile ->
+        configDeployTask4Preset(presetFile) {
+            outputZipFile
         }
     }
 }
