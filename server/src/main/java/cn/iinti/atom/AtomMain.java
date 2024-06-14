@@ -118,6 +118,7 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
     }
 
     private static void springContextParamSetup(List<String> argList) {
+        argList.add("--spring.main.allow-circular-references=true");
         // setup docker for development
         if (Environment.isIdeDevelopment) {
             argList.add("--spring.docker.compose.file=classpath:develop/docker-compose-local.yaml");
