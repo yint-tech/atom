@@ -6,6 +6,44 @@ import org.hidetake.groovy.ssh.core.RunHandler
 import org.hidetake.groovy.ssh.session.SessionHandler
 import java.util.*
 
+
+/////////////////////////////////////// helper function start //////////////////////////////////////////
+fun Properties.getConfig(key: String, defaultValue: String): String {
+    val value = getProperty(key)
+    if (value == null || value.isBlank()) {
+        return defaultValue
+    }
+    return value
+}
+
+fun String.ensureSlash(): String {
+    return if (endsWith("/")) {
+        this
+    } else {
+        "$this/"
+    }
+}
+
+val defaultIdentifier: String = File(System.getProperty("user.home"), ".ssh/id_rsa").absolutePath
+fun Properties.shellParam(prefix: String): MutableMap<String, Any> {
+    val deployRemoteUser = getConfig("${prefix}.user", "root")
+    val connectionParam = mutableMapOf(
+        "user" to deployRemoteUser,
+        "knownHosts" to AllowAnyHosts.instance,
+    )
+    getProperty("${prefix}.password").apply {
+        if (this == null) {
+            val identity = getConfig("${prefix}.identity", defaultIdentifier)
+            connectionParam["identity"] = File(identity)
+        } else {
+            connectionParam["password"] = this
+        }
+    }
+    return connectionParam
+}
+
+////////////////////////////////// helper function end /////////////////////////////////////
+
 plugins {
     java
     id("org.springframework.boot") version "3.2.5"
@@ -172,54 +210,33 @@ val generateJavaCode = tasks.register("generateJavaCode") {
     )
 }
 
-fun Properties.getConfig(key: String, defaultValue: String): String {
-    val value = getProperty(key)
-    if (value == null || value.isBlank()) {
-        return defaultValue
-    }
-    return value
-}
 
 fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
     val config = Properties().apply {
         load(presetFile.inputStream())
     }
 
-    val defaultIdentifier = File(System.getProperty("user.home"), ".ssh/id_rsa").absolutePath
-
     config.getProperty("deploy.host")?.trim()?.split(',')?.let { deployServerList ->
         val name = presetFile.name
         val preset = name.subSequence("app_".length, name.lastIndexOf("."))
-        val deployRemoteUser = config.getConfig("deploy.user", "root")
-        val deployPath = config.getConfig("deploy.workdir", "/opt/atom/")
-            .let {
-                if (it.endsWith("/")) {
-                    it
-                } else {
-                    "$it/"
-                }
-            }
+        val deployPath = config.getConfig("deploy.workdir", "/opt/zed/").ensureSlash()
+        val connParam = config.shellParam("deploy")
 
-        val identity = config.getConfig("deploy.identity", defaultIdentifier)
+        if (!config.getProperty("deploy.jump.host").isNullOrBlank()) {
+            // 支持通过跳板机进行发布
+            connParam["gateway"] = Remote(config.shellParam("deploy.jump"))
+        }
 
         tasks.register("deploy-${preset}") {
             group = "deploy"
             dependsOn(tasks.distZip)
             val remoteList = deployServerList.map {
-                Remote(
-                    mutableMapOf(
-                        "host" to it,
-                        "user" to deployRemoteUser,
-                        "knownHosts" to AllowAnyHosts.instance,
-                        "identity" to File(identity)
-                    )
-                )
+                Remote(connParam)
             }
             doLast {
                 val copyZipCmd = hashMapOf(
                     "from" to outputZipFile.get(), "into" to deployPath
                 )
-
                 val copyPresetCmd = hashMapOf(
                     "from" to presetFile,
                     "into" to "${deployPath}conf/application.properties"
