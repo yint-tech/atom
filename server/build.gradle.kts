@@ -222,9 +222,15 @@ fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
         val deployPath = config.getConfig("deploy.workdir", "/opt/zed/").ensureSlash()
         val connParam = config.shellParam("deploy")
 
-        if (!config.getProperty("deploy.jump.host").isNullOrBlank()) {
-            // 支持通过跳板机进行发布
-            connParam["gateway"] = Remote(config.shellParam("deploy.jump"))
+        config.getProperty("deploy.jump.host").apply {
+            if (!this.isNullOrBlank()) {
+                val host = this
+                // 支持通过跳板机进行发布
+                config.shellParam("deploy.jump").apply {
+                    this["host"] = host
+                    connParam["gateway"] = Remote(this)
+                }
+            }
         }
 
         tasks.register("deploy-${preset}") {
