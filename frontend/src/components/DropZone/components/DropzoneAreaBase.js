@@ -10,8 +10,13 @@ import {Fragment, useEffect, useState} from 'react';
 import Dropzone from 'react-dropzone';
 import {convertBytesToMbsOrKbs, isImage, readFile} from '../helpers';
 import PreviewList from './PreviewList';
-import SnackbarContentWrapper from './SnackbarContentWrapper';
-import {Button} from "@mui/material";
+import {Button, IconButton} from "@mui/material";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import ErrorIcon from '@mui/icons-material/Error';
+import InfoIcon from '@mui/icons-material/Info';
+import WarningIcon from '@mui/icons-material/Warning';
+import SnackbarContent from "@mui/material/SnackbarContent";
 
 const useStyles = createUseStyles(theme => ({
     '@keyframes progress': {
@@ -63,6 +68,31 @@ const useStyles = createUseStyles(theme => ({
         display: 'block',
         margin: '10px 0',
     },
+    // snackbarContentWrapper
+    successAlert: {
+        backgroundColor: theme.palette.success.main,
+    },
+    errorAlert: {
+        backgroundColor: theme.palette.error.main,
+    },
+    infoAlert: {
+        backgroundColor: theme.palette.info.main,
+    },
+    warningAlert: {
+        backgroundColor: theme.palette.warning.main,
+    },
+    message: {
+        display: 'flex',
+        alignItems: 'center',
+        '& > svg': {
+            marginRight: theme.spacing(1),
+        },
+    },
+    iconSnackContent: {
+        fontSize: 20,
+        opacity: 0.9,
+    },
+    closeButton: {},
 }));
 
 const defaultSnackbarAnchorOrigin = {
@@ -72,49 +102,79 @@ const defaultSnackbarAnchorOrigin = {
 
 const defaultGetPreviewIcon = (fileObject, classes) => {
     if (isImage(fileObject.file)) {
-        return (<img
-            className={classes.image}
-            role="presentation"
-            src={fileObject.data}
+        return (<img className={classes.image}
+                     role="presentation"
+                     src={fileObject.data}
         />);
     }
 
     return <AttachFileIcon className={classes.image}/>;
 };
 
+const variantIcon = {
+    success: CheckCircleIcon,
+    warning: WarningIcon,
+    error: ErrorIcon,
+    info: InfoIcon,
+};
+
+
 /**
  * This components creates a Material-UI Dropzone, with previews and snackbar notifications.
  */
 const DropzoneAreaBase = props => {
     const {
-        acceptedFiles,
-        alertSnackbarProps,
-        disableRejectionFeedback,
+        acceptedFiles = [],
+        filesLimit = 3,
+        fileObjects = [],
+        maxFileSize = 3000000,
+        dropzoneText = 'Drag and drop a file here or click',
+        previewText = 'Preview:',
+        disableRejectionFeedback = false,
+        showPreviews = false,// By default previews show up under in the dialog and inside in the standalone
+        showPreviewsInDropzone = true,
+        showFileNames = false,
+        showFileNamesInPreview = false,
+        useChipsForPreview = false,
+        previewChipProps = {},
+        previewGridClasses = {},
+        previewGridProps = {},
+        reset,
+        showAlerts = true,
+        alertSnackbarProps = {
+            anchorOrigin: {
+                horizontal: 'left',
+                vertical: 'bottom',
+            },
+            autoHideDuration: 6000,
+        },
+        getFileLimitExceedMessage = (filesLimit) => (`Maximum allowed number of files exceeded. Only ${filesLimit} allowed`),
+        getFileAddedMessage = (fileName) => (`File ${fileName} successfully added.`),
+        getPreviewIcon = defaultGetPreviewIcon,
+        getFileRemovedMessage = (fileName) => (`File ${fileName} removed.`),
+        getDropRejectMessage = (rejectedFile, acceptedFiles, maxFileSize) => {
+            let message = `File ${rejectedFile.name} was rejected. `;
+            if (!acceptedFiles.includes(rejectedFile.type)) {
+                message += 'File type not supported. ';
+            }
+            if (rejectedFile.size > maxFileSize) {
+                message += 'File is too big. Size limit is ' + convertBytesToMbsOrKbs(maxFileSize) + '. ';
+            }
+            return message;
+        },
         dropzoneClass,
         dropzoneParagraphClass,
         dropzoneProps,
-        dropzoneText,
-        fileObjects,
-        filesLimit,
-        getPreviewIcon,
         Icon,
         inputProps,
-        maxFileSize,
-        previewChipProps,
-        previewGridClasses,
-        previewGridProps,
-        previewText,
-        showAlerts,
-        showFileNames,
-        showFileNamesInPreview,
-        showPreviews,
-        showPreviewsInDropzone,
-        useChipsForPreview,
-        reset,
+        onAdd,
+        onDrop,
+        onDropRejected,
+        onDelete,
     } = props;
 
 
-    const acceptFiles = acceptedFiles?.join(',');
+    const acceptFiles = acceptedFiles.join(',');
     const isMultiple = filesLimit > 1;
     const previewsVisible = showPreviews && fileObjects.length > 0;
     const previewsInDropzoneVisible = showPreviewsInDropzone && fileObjects.length > 0;
@@ -138,10 +198,8 @@ const DropzoneAreaBase = props => {
     }
 
     const handleDropAccepted = async (acceptedFiles, evt) => {
-        const {fileObjects, filesLimit, getFileAddedMessage, getFileLimitExceedMessage, onAdd, onDrop} = props;
-
         if (filesLimit > 1 && fileObjects.length + acceptedFiles.length > filesLimit) {
-            this.setState({
+            setState({
                 openSnackBar: true,
                 snackbarMessage: getFileLimitExceedMessage(filesLimit),
                 snackbarVariant: 'error',
@@ -171,7 +229,10 @@ const DropzoneAreaBase = props => {
         }
 
         // Display message
-        const message = fileObjs.reduce((msg, fileObj) => msg + getFileAddedMessage(fileObj.file.name), '');
+        const message = fileObjs
+            .reduce((msg, fileObj) =>
+                    msg + getFileAddedMessage(fileObj.file.name),
+                '');
         setState({
             openSnackBar: true,
             snackbarMessage: message,
@@ -180,16 +241,6 @@ const DropzoneAreaBase = props => {
     }
 
     const handleDropRejected = (rejectedFiles, evt) => {
-        const {
-            acceptedFiles,
-            filesLimit,
-            fileObjects,
-            getDropRejectMessage,
-            getFileLimitExceedMessage,
-            maxFileSize,
-            onDropRejected,
-        } = props;
-
         let message = '';
         if (fileObjects.length + rejectedFiles.length > filesLimit) {
             message = getFileLimitExceedMessage(filesLimit);
@@ -213,8 +264,6 @@ const DropzoneAreaBase = props => {
     const handleRemove = (fileIndex) => (event) => {
         event.stopPropagation();
 
-        const {fileObjects, getFileRemovedMessage, onDelete} = this.props;
-
         // Find removed fileObject
         const removedFileObj = fileObjects[fileIndex];
 
@@ -231,12 +280,14 @@ const DropzoneAreaBase = props => {
     };
 
     const handleCloseSnackbar = () => {
-        this.setState({
+        setState({
             openSnackBar: false,
         });
     };
+    const SnackIcon = variantIcon[state.snackbarVariant];
+
     return (
-        <Fragment>
+        <>
             <Dropzone
                 {...dropzoneProps}
                 accept={acceptFiles}
@@ -304,7 +355,7 @@ const DropzoneAreaBase = props => {
             }
 
             {previewsVisible &&
-                <Fragment>
+                <>
                     <Typography variant="subtitle1" component="span">
                         {previewText}
                     </Typography>
@@ -319,12 +370,12 @@ const DropzoneAreaBase = props => {
                         previewGridClasses={previewGridClasses}
                         previewGridProps={previewGridProps}
                     />
-                </Fragment>
+                </>
             }
 
             {
                 ((typeof showAlerts === 'boolean' && showAlerts) ||
-                    (Array.isArray(showAlerts) && showAlerts.includes(state.snackbarVariant)))?
+                    (Array.isArray(showAlerts) && showAlerts.includes(state.snackbarVariant))) ?
                     (<Snackbar
                         anchorOrigin={defaultSnackbarAnchorOrigin}
                         autoHideDuration={6000}
@@ -332,57 +383,36 @@ const DropzoneAreaBase = props => {
                         open={state.openSnackBar}
                         onClose={handleCloseSnackbar}
                     >
-                        <SnackbarContentWrapper
-                            onClose={handleCloseSnackbar}
-                            variant={state.snackbarVariant}
-                            message={state.snackbarMessage}
+                        <SnackbarContent
+                            className={clsx(classes[`${state.snackbarVariant}Alert`])}
+                            aria-describedby="client-snackbar"
+                            message={
+                                state.snackbarMessage
+                                // todo 感觉有bug，DropZone的代码是下面的逻辑，
+                                // 但是在渲染过程可能触发错误：Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+                                // <span className={classes.message}>
+                                //     <SnackIcon className={classes.icon}/>
+                                //     {state.snackbarMessage}
+                                // </span>
+                            }
+                            action={[
+                                <IconButton
+                                    key="close"
+                                    aria-label="Close"
+                                    color="inherit"
+                                    className={classes.closeButton}
+                                    onClick={handleCloseSnackbar}
+                                >
+                                    <CloseIcon className={classes.iconSnackContent}/>
+                                </IconButton>,
+                            ]}
                         />
-                    </Snackbar>):<></>
+                    </Snackbar>) : <></>
             }
-        </Fragment>
+        </>
     );
 }
 
-DropzoneAreaBase.defaultProps = {
-    acceptedFiles: [],
-    filesLimit: 3,
-    fileObjects: [],
-    maxFileSize: 3000000,
-    dropzoneText: 'Drag and drop a file here or click',
-    previewText: 'Preview:',
-    disableRejectionFeedback: false,
-    showPreviews: false, // By default previews show up under in the dialog and inside in the standalone
-    showPreviewsInDropzone: true,
-    showFileNames: false,
-    showFileNamesInPreview: false,
-    useChipsForPreview: false,
-    previewChipProps: {},
-    previewGridClasses: {},
-    previewGridProps: {},
-    reset: undefined,
-    showAlerts: true,
-    alertSnackbarProps: {
-        anchorOrigin: {
-            horizontal: 'left',
-            vertical: 'bottom',
-        },
-        autoHideDuration: 6000,
-    },
-    getFileLimitExceedMessage: (filesLimit) => (`Maximum allowed number of files exceeded. Only ${filesLimit} allowed`),
-    getFileAddedMessage: (fileName) => (`File ${fileName} successfully added.`),
-    getPreviewIcon: defaultGetPreviewIcon,
-    getFileRemovedMessage: (fileName) => (`File ${fileName} removed.`),
-    getDropRejectMessage: (rejectedFile, acceptedFiles, maxFileSize) => {
-        let message = `File ${rejectedFile.name} was rejected. `;
-        if (!acceptedFiles.includes(rejectedFile.type)) {
-            message += 'File type not supported. ';
-        }
-        if (rejectedFile.size > maxFileSize) {
-            message += 'File is too big. Size limit is ' + convertBytesToMbsOrKbs(maxFileSize) + '. ';
-        }
-        return message;
-    },
-};
 
 export const FileObjectShape = PropTypes.shape({
     file: PropTypes.object,
@@ -395,7 +425,7 @@ DropzoneAreaBase.propTypes = {
     /** A list of file types to accept.
      * @see See [here](https://react-dropzone.js.org/#section-accepting-specific-file-types) for more details.
      */
-    acceptedFiles: PropTypes.arrayOf(PropTypes.string),
+    // acceptedFiles: PropTypes.arrayOf(PropTypes.string),
     /** Maximum number of files that can be loaded into the dropzone. */
     filesLimit: PropTypes.number,
     /** Icon to be displayed inside the dropzone area. */
