@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Typography} from '@mui/material';
 import config from 'config'
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(4)
+        padding: ({theme}) => theme.spacing(4)
     }
-}));
+});
 
 const Footer = props => {
     const {className, ...rest} = props;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <div

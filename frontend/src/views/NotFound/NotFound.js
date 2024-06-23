@@ -1,10 +1,10 @@
 import React from 'react';
 import {Grid, Typography} from '@mui/material';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(4)
+        padding: ({theme}) => theme.spacing(4)
     },
     content: {
         paddingTop: 150,
@@ -16,10 +16,11 @@ const useStyles = createUseStyles(theme => ({
         maxWidth: '100%',
         width: 560
     }
-}));
+});
 
 const NotFound = () => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <div className={classes.root}>

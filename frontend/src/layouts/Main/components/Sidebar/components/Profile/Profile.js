@@ -3,9 +3,9 @@ import {AppContext} from 'adapter';
 import PropTypes from 'prop-types';
 import {Alert, Avatar, Typography} from "@mui/material";
 import {Link as RouterLink} from 'react-router-dom';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     avatar: {
         width: 60,
         height: 60
@@ -14,26 +14,27 @@ const useStyles = createUseStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: theme.spacing(1),
+        marginBottom: ({theme}) => theme.spacing(1),
     },
     line: {
-        height: theme.spacing(2),
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1)
+        height: ({theme}) => theme.spacing(2),
+        marginLeft: ({theme}) => theme.spacing(1),
+        marginRight: ({theme}) => theme.spacing(1)
     },
     name: {
-        marginLeft: theme.spacing(1),
+        marginLeft: ({theme}) => theme.spacing(1),
     },
     setting: {
         fontSize: 14,
         display: 'flex',
         alignItems: 'center',
     }
-}));
+});
 
 const Profile = () => {
     const {user, notice} = useContext(AppContext);
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <div>

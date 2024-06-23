@@ -19,10 +19,9 @@ import CachedIcon from "@mui/icons-material/Cached";
 import moment from "moment";
 import configs from 'config'
 import clsx from "clsx";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
         height: "100%"
     },
@@ -34,7 +33,7 @@ const useStyles = createUseStyles(theme => ({
         fontWeight: 700
     },
     avatar: {
-        backgroundColor: theme.palette.success.main,
+        backgroundColor: ({theme}) => theme.palette.success.main,
         height: 56,
         width: 56
     },
@@ -43,14 +42,14 @@ const useStyles = createUseStyles(theme => ({
         width: 32
     },
     mt: {
-        marginTop: theme.spacing(4)
+        marginTop: ({theme}) => theme.spacing(4)
     },
     mr: {
-        marginRight: theme.spacing(6)
+        marginRight: ({theme}) => theme.spacing(6)
     },
     pd: {
-        width: theme.spacing(18),
-        paddingLeft: theme.spacing(1),
+        width: ({theme}) => theme.spacing(18),
+        paddingLeft: ({theme}) => theme.spacing(1),
         textAlign: "center"
     },
     url: {
@@ -62,21 +61,20 @@ const useStyles = createUseStyles(theme => ({
         cursor: "pointer"
     },
     padding: {
-        padding: theme.spacing(2)
+        padding: ({theme}) => theme.spacing(2)
     },
     formControl: {
-        width: theme.spacing(20),
-        margin: theme.spacing(2)
+        width: ({theme}) => theme.spacing(20),
+        margin: ({theme}) => theme.spacing(2)
     },
     pop: {
-        padding: theme.spacing(2)
+        padding: ({theme}) => theme.spacing(2)
     },
     popBtns: {
-        marginTop: theme.spacing(2),
+        marginTop: ({theme}) => theme.spacing(2),
         textAlign: "center"
     }
-}));
-
+});
 
 const UserDashboard = props => {
     const {className, ...rest} = props;
@@ -84,7 +82,8 @@ const UserDashboard = props => {
     const {api} = useContext(AppContext);
     const apiUrl = user.apiToken;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
 
     const [anchorEl, setAnchorEl] = React.useState(null);

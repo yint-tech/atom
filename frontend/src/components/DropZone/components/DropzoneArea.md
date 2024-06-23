@@ -87,7 +87,8 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }));
 
-const classes = useStyles();
+const theme = useTheme();
+    const classes = useStyles({ theme });
 
 <DropzoneArea
   showPreviews={true}

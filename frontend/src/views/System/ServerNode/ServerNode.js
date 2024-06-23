@@ -2,19 +2,20 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Grid} from '@mui/material';
 import {Table, Toolbar} from './components';
 import {AppContext} from "adapter";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(2)
+        padding: ({theme}) => theme.spacing(2)
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     }
-}));
+});
 
 const ServerNode = () => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const {api} = useContext(AppContext);
     const [keyword, setKeyword] = useState('');
     const [limit] = useState(10);

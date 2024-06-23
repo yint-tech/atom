@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import {Table} from "components";
 import {Card, CardActions, CardContent, Pagination,} from '@mui/material';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {},
     content: {
         padding: 0
@@ -16,23 +16,24 @@ const useStyles = createUseStyles(theme => ({
         alignItems: 'center'
     },
     avatar: {
-        marginRight: theme.spacing(2)
+        marginRight: ({theme}) => theme.spacing(2)
     },
     actions: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
+        paddingTop: ({theme}) => theme.spacing(2),
+        paddingBottom: ({theme}) => theme.spacing(2),
         justifyContent: 'center'
     },
     tableButton: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
-}));
+});
 
 const DataTable = props => {
     const {className, data, total, rowsPerPage, pageState, setRefresh, ...rest} = props;
     const [page, setPage] = pageState;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const handlePageChange = (event, page) => {
         setPage(page);

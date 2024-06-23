@@ -11,12 +11,12 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import config from 'config'
 import Notice from "../../../Notice";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
 
 const LOGIN_USER_MOCK_KEY = config.login_user_key + "-MOCK";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
         boxShadow: 'none'
     },
@@ -29,28 +29,29 @@ const useStyles = createUseStyles(theme => ({
         flexGrow: 1
     },
     signOutButton: {
-        marginLeft: theme.spacing(1)
+        marginLeft: ({theme}) => theme.spacing(1)
     },
     download: {
-        padding: theme.spacing(2),
+        padding: ({theme}) => theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
     },
     downloadA: {
-        color: theme.palette.primary.main,
+        color: ({theme}) => theme.palette.primary.main,
         fontSize: 12,
-        marginTop: theme.spacing(1),
-        marginBottom: -theme.spacing(1),
+        marginTop: ({theme}) => theme.spacing(1),
+        marginBottom: ({theme}) => -theme.spacing(1),
         textDecoration: 'none'
     }
-}));
+});
 
 const Topbar = props => {
     const {user, api, setUser} = useContext(AppContext);
     const {className, onSidebarOpen, ...rest} = props;
     const history = useHistory();
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const onLogout = () => {
         localStorage.removeItem(config.login_user_key);
@@ -135,7 +136,7 @@ const Topbar = props => {
                     <img
                         alt="Logo"
                         style={{height: 60}}
-                        src="/images/logos/logo.svg"
+                        src={process.env.PUBLIC_URL + "/images/logos/thanos2.png"}
                     />
                 </RouterLink>
                 <Hidden xsDown>

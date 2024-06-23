@@ -6,17 +6,17 @@ import Log from "./Log";
 import ProxyNode from "./ServerNode";
 import BuildInfo from "./BuildInfo"
 import configs from "config";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(3)
+        padding: ({theme}) => theme.spacing(3)
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     }
-}));
+});
 
 function TabPanel(props) {
     const {children, value, index} = props;
@@ -26,7 +26,8 @@ function TabPanel(props) {
 const systemDashboardConfigTabKey = configs.app + "-system-dashboard-tab";
 
 function System() {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     let initValue = Number(localStorage.getItem(systemDashboardConfigTabKey)) || 0;
     const [value, setValue] = useState(initValue);

@@ -1,4 +1,10 @@
+import com.github.gradle.node.NodeExtension
+import com.github.gradle.node.task.NodeSetupTask
+import com.github.gradle.node.variant.VariantComputer
+import com.github.gradle.node.yarn.task.YarnSetupTask
 import com.github.gradle.node.yarn.task.YarnTask
+import java.nio.file.Files
+import java.nio.file.Paths
 
 plugins {
     id("com.github.node-gradle.node") version "7.0.2"
@@ -23,39 +29,50 @@ node {
     yarnWorkDir = file("${project.projectDir}/.gradle/yarn")
 }
 
-
-class OSCompat {
-    companion object {
-        private val isWindows = org.gradle.internal.os.OperatingSystem.current().isWindows
-        var binExt = if (isWindows) {
-            ".cmd"
-        } else {
-            ""
-        }
-        var yarnDirName = if (isWindows) {
-            ""
-        } else {
-            "/bin"
-        }
-    }
-}
-
-// enable yarn 2
-val corepackTask = tasks.register("corepack") {
-    val dirPath = ".gradle/yarn/yarn-v${yarnVersionStr}/${OSCompat.yarnDirName}"
-    outputs.dir(dirPath)
+tasks.withType(NodeSetupTask::class.java).configureEach {
     doLast {
+        val nodeExtension = NodeExtension[project]
+        val variantComputer = VariantComputer()
+
+        val isWindows = nodeExtension.resolvedPlatform.get().isWindows()
+
+        // fix corepack symbolicLink
+        fun computeCorepackScriptFile(nodeDirProvider: Provider<Directory>): Provider<String> {
+            return nodeDirProvider.map { nodeDir ->
+                if (isWindows) nodeDir.dir("node_modules/corepack/dist/corepack.js").asFile.path
+                else nodeDir.dir("lib/node_modules/corepack/dist/corepack.js").asFile.path
+            }
+        }
+
+        val nodeDirProvider = nodeExtension.resolvedNodeDir
+        val nodeBinDirProvider = variantComputer.computeNodeBinDir(nodeDirProvider, nodeExtension.resolvedPlatform)
+        val nodeBinDirPath = nodeBinDirProvider.get().asFile.toPath()
+        val corepackScript = nodeBinDirPath.resolve("corepack")
+        val scriptFile =
+            computeCorepackScriptFile(nodeDirProvider)
+        if (Files.deleteIfExists(corepackScript)) {
+            Files.createSymbolicLink(
+                corepackScript,
+                nodeBinDirPath.relativize(Paths.get(scriptFile.get()))
+            )
+        }
+
+        val yarnDir = variantComputer.computeYarnDir(nodeExtension).get()
+        val dirPath = if (isWindows) yarnDir else yarnDir.dir("bin")
+
+        val nodeExecutable = nodeBinDirPath.resolve("node")
         mkdir(dirPath)
         exec {
-            commandLine("corepack${OSCompat.binExt}", "enable", "--install-directory", dirPath)
+            // actually YarnSetup execute here
+            commandLine(nodeExecutable, corepackScript, "enable", "--install-directory", dirPath)
         }
+
     }
 }
 
 
-tasks.named("yarnSetup").configure {
+tasks.withType(YarnSetupTask::class.java).configureEach {
     enabled = false
-    dependsOn(corepackTask)
 }
 
 task<YarnTask>("yarnBuild") {

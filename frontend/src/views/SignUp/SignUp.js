@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import moment from 'moment';
 import configs from 'config';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
 const schema = {
     oa: {
@@ -27,21 +27,21 @@ const schema = {
     }
 };
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: ({theme}) => theme.palette.background.default,
         height: '100%'
     },
     grid: {
         height: '100%'
     },
-    quoteContainer: {
+    quoteContainer: ({theme}) => ({
         [theme.breakpoints.down('md')]: {
             display: 'none'
         }
-    },
+    }),
     quote: {
-        backgroundColor: theme.palette.neutral,
+        backgroundColor: ({theme}) => theme.palette.neutral,
         height: '100%',
         width: '100%',
         overflow: 'hidden',
@@ -61,15 +61,15 @@ const useStyles = createUseStyles(theme => ({
         flexBasis: '600px'
     },
     quoteText: {
-        color: theme.palette.white,
+        color: ({theme}) => theme.palette.white,
         fontWeight: 300
     },
     name: {
-        marginTop: theme.spacing(3),
-        color: theme.palette.white
+        marginTop: ({theme}) => theme.spacing(3),
+        color: ({theme}) => theme.palette.white
     },
     bio: {
-        color: theme.palette.white
+        color: ({theme}) => theme.palette.white
     },
     contentContainer: {},
     content: {
@@ -80,65 +80,66 @@ const useStyles = createUseStyles(theme => ({
     contentHeader: {
         display: 'flex',
         alignItems: 'center',
-        paddingTop: theme.spacing(5),
-        paddingBototm: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2)
+        paddingTop: ({theme}) => theme.spacing(5),
+        paddingBototm: ({theme}) => theme.spacing(2),
+        paddingLeft: ({theme}) => theme.spacing(2),
+        paddingRight: ({theme}) => theme.spacing(2)
     },
     logoImage: {
-        marginLeft: theme.spacing(4)
+        marginLeft: ({theme}) => theme.spacing(4)
     },
-    contentBody: {
+    contentBody: ({theme}) => ({
         flexGrow: 1,
         display: 'flex',
         alignItems: 'center',
         [theme.breakpoints.down('md')]: {
             justifyContent: 'center'
         }
-    },
-    form: {
+    }),
+    form: ({theme}) => ({
         paddingLeft: 100,
         paddingRight: 100,
         paddingBottom: 125,
         flexBasis: 700,
         [theme.breakpoints.down('sm')]: {
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2)
+            paddingLeft: ({theme}) => theme.spacing(2),
+            paddingRight: ({theme}) => theme.spacing(2)
         }
-    },
+    }),
     title: {
-        marginTop: theme.spacing(3)
+        marginTop: ({theme}) => theme.spacing(3)
     },
     socialButtons: {
-        marginTop: theme.spacing(3)
+        marginTop: ({theme}) => theme.spacing(3)
     },
     socialIcon: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
     sugestion: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     },
     textField: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     },
     signInButton: {
-        margin: theme.spacing(2, 0)
+        margin: ({theme}) => theme.spacing(2, 0)
     },
     policy: {
-        marginTop: theme.spacing(1),
+        marginTop: ({theme}) => theme.spacing(1),
         display: 'flex',
         alignItems: 'center'
     },
     policyCheckbox: {
         marginLeft: '-14px'
     },
-}));
+});
 
 const SignIn = props => {
     const {history} = props;
     const {setUser, api} = useContext(AppContext);
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const [formState, setFormState] = useState({
         isValid: false,
@@ -210,7 +211,9 @@ const SignIn = props => {
                     lg={5}
                 >
                     <div className={classes.quote}>
-                        <img className={classes.quoteImg} src="/images/logos/logo.svg" alt=""/>
+                        <img className={classes.quoteImg}
+                             src={process.env.PUBLIC_URL + "/images/logos/thanos2.png"}
+                             alt=""/>
                     </div>
                 </Grid>
                 <Grid

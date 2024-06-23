@@ -2,23 +2,22 @@ import React, {useEffect, useState} from 'react';
 import {Button, Card, CardContent, CardHeader, Divider, MenuItem, Select} from "@mui/material";
 import MetricCharsV2 from "components/MetricCharts";
 import CodeMirror from "@uiw/react-codemirror";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(3)
+        padding: ({theme}) => theme.spacing(3)
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     },
     item: {
-        marginTop: theme.spacing(5)
+        marginTop: ({theme}) => theme.spacing(5)
     },
     tableButton: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     }
-}));
+});
 
 const demoMQL = `
 # 负载
@@ -31,7 +30,8 @@ show(系统CPU使用率,进程CPU使用率);
 `;
 
 const MQLViewer = () => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const [accuracy, setAccuracy] = useState("minutes");
 
     const [errMsg, setErrMsg] = useState("请输入MQL脚本");

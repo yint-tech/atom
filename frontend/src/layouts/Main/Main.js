@@ -6,14 +6,14 @@ import {useMediaQuery} from '@mui/material';
 import {Footer, Sidebar, Topbar} from './components';
 import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
-    root: {
+const useStyles = createUseStyles({
+    root: ({theme}) => ({
         paddingTop: 56,
         height: '100%',
         [theme.breakpoints.up('sm')]: {
             paddingTop: 64
         }
-    },
+    }),
     shiftContent: {
         paddingLeft: 240
     },
@@ -24,13 +24,13 @@ const useStyles = createUseStyles(theme => ({
     }, container: {
         flex: 1
     }
-}));
+});
 
 const Main = props => {
     const {children} = props;
 
-    const classes = useStyles();
     const theme = useTheme();
+    const classes = useStyles({theme});
     const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
         defaultMatches: true
     });

@@ -3,7 +3,7 @@ import ReactEcharts from 'echarts-for-react';
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import {AppContext} from "adapter";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
 const buildEchartOption = (title, legends, x, series, bottomLegend) => {
     for (let i = 0; i < series.length; i++) {
@@ -78,11 +78,11 @@ const buildEchartOption = (title, legends, x, series, bottomLegend) => {
 };
 
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
         textAlign: "center"
     },
-}));
+});
 
 const MetricCharsV2 = (props) => {
     const {
@@ -95,7 +95,8 @@ const MetricCharsV2 = (props) => {
         className
     } = props;
     const {api} = useContext(AppContext);
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const [echartOption, setEchartOption] = useState(buildEchartOption(title, [], [], [], bottomLegend));
 
     const fuckCacheEvent = useCallback(() => {

@@ -3,13 +3,13 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import Loading from '../Loading';
 import PropTypes from "prop-types";
 import {AppContext} from "adapter";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     dialog: {
-        minWidth: theme.spacing(70)
+        minWidth: ({theme}) => theme.spacing(70)
     },
-}));
+});
 
 const OpeDialog = props => {
     const {
@@ -28,7 +28,8 @@ const OpeDialog = props => {
 
     const {api} = useContext(AppContext);
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <Dialog

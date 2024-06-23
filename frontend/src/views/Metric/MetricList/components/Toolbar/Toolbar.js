@@ -2,38 +2,39 @@ import React from 'react';
 import {SearchInput} from 'components';
 
 import clsx from 'clsx';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {},
     row: {
         height: '42px',
         display: 'flex',
         alignItems: 'center',
-        marginTop: theme.spacing(1)
+        marginTop: ({theme}) => theme.spacing(1)
     },
     spacer: {
         flexGrow: 1
     },
     importButton: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
     exportButton: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
     searchInput: {},
     dialog: {
-        width: theme.spacing(60)
+        width: ({theme}) => theme.spacing(60)
     },
     dialogInput: {
         width: '100%',
-        marginBottom: theme.spacing(2)
+        marginBottom: ({theme}) => theme.spacing(2)
     },
-}));
+});
 
 const Toolbar = props => {
     const {className, onInputChange, setRefresh, ...rest} = props;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     return (
         <div
             {...rest}

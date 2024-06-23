@@ -120,13 +120,13 @@ CREATE TABLE `device` (
 ![](imgs/coding_frontend_view_page.png)
 ```javascript
 import React, {useContext, useState} from 'react';
-import {makeStyles} from '@material-ui/styles';
 import {OpeDialog, SimpleTable} from "components";
 import {AppContext} from "adapter";
-import {Button, Grid, TextField, Typography} from "@material-ui/core";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import {Button, Grid, TextField, Typography} from "@mui/material";
+import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createUseStyles({
   root: {},
   content: {
     padding: 0
@@ -136,24 +136,25 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   avatar: {
-    marginRight: theme.spacing(2)
+    marginRight:({theme}) =>  theme.spacing(2)
   },
   actions: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    paddingTop: ({theme}) => theme.spacing(2),
+    paddingBottom: ({theme}) => theme.spacing(2),
     justifyContent: "center"
   },
   tableButton: {
-    marginRight: theme.spacing(1)
+    marginRight:({theme}) =>  theme.spacing(1)
   },
   dialogInput: {
     width: "100%"
   }
-}));
+});
 
 const CreateDeviceDialog = (props) => {
   const {openDialog, setOpenDialog, setRefresh} = props;
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles({theme});
   const {api} = useContext(AppContext);
   const [edit, setEdit] = useState({});
 

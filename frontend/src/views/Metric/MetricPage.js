@@ -2,19 +2,18 @@ import React, {useState} from 'react';
 import {Card, CardContent, CardHeader, MenuItem, Select} from "@mui/material";
 import MetricCharsV2 from "components/MetricCharts";
 import PropTypes from "prop-types";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     item: {
-        marginTop: theme.spacing(5)
+        marginTop: ({theme}) => theme.spacing(5)
     }
-}));
-
+});
 
 const MetricPage = (props) => {
     const {configs, bottomLegend, ...rest} = props;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const [accuracy, setAccuracy] = useState("hours");
     return (<Card {...rest}>
             <CardHeader

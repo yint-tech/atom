@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 import {MetricCharsV2, OpeDialog, Table} from "components";
 import {AppContext} from "adapter";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {},
     content: {
         padding: 0
@@ -28,32 +28,33 @@ const useStyles = createUseStyles(theme => ({
         alignItems: "center"
     },
     avatar: {
-        marginRight: theme.spacing(2)
+        marginRight: ({theme}) => theme.spacing(2)
     },
     actions: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
+        paddingTop: ({theme}) => theme.spacing(2),
+        paddingBottom: ({theme}) => theme.spacing(2),
         justifyContent: "center"
     },
     tableButton: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
     groupButton: {
         border: '1px dashed #f0f0f0',
-        marginRight: theme.spacing(1),
+        marginRight: ({theme}) => theme.spacing(1),
         textTransform: "none"
     },
     groupButtonActive: {
         border: '1px dashed #2196f3',
         backgroundColor: '#2196f3',
-        marginRight: theme.spacing(1),
+        marginRight: ({theme}) => theme.spacing(1),
         textTransform: "none"
     },
-}));
+});
 
 const MetricChart = (props) => {
     const {showMetric, height} = props;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const [accuracy, setAccuracy] = useState("minutes");
     const [aggregateTags, setAggregateTags] = useState([]);
     const [availableTags, setAvailableTags] = useState([]);
@@ -130,7 +131,8 @@ const MetricChart = (props) => {
 const DataTable = props => {
     const {className, data, total, rowsPerPage, pageState, setRefresh, ...rest} = props;
     const [page, setPage] = pageState;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const {api} = useContext(AppContext);
     const [openDialog, setOpenDialog] = useState(false);
     const [showMetric, setShowMetric] = useState({});

@@ -11,33 +11,31 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
 import {Loading} from "components";
 import {AppContext} from "adapter";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        margin: theme.spacing(4)
+        margin: ({theme}) => theme.spacing(4)
     },
     heading: {
-        fontSize: theme.typography.pxToRem(15),
+        fontSize: ({theme}) => theme.typography.pxToRem(15),
         flexBasis: "33.33%",
         flexShrink: 0
     },
     secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
+        fontSize: ({theme}) => theme.typography.pxToRem(15),
+        color: ({theme}) => theme.palette.text.secondary,
         maxWidth: "300px",
         overflow: "hidden",
         whiteSpace: "nowrap",
         textOverflow: "ellipsis"
     },
     desc: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary
+        fontSize: ({theme}) => theme.typography.pxToRem(15),
+        color: ({theme}) => theme.palette.text.secondary
     },
     input: {
         display: "flex",
@@ -47,14 +45,14 @@ const useStyles = createUseStyles(theme => ({
         width: "100%"
     },
     inputBtn: {
-        marginLeft: theme.spacing(2)
+        marginLeft: ({theme}) => theme.spacing(2)
     },
     gutterTop: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     },
     divider: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(1),
+        marginBottom: ({theme}) => theme.spacing(2)
     },
     actions: {
         justifyContent: "center"
@@ -62,7 +60,7 @@ const useStyles = createUseStyles(theme => ({
     noMaxWidth: {
         maxWidth: "none"
     }
-}));
+});
 
 function SingleInputItem({
                              placeholder = "",
@@ -72,7 +70,8 @@ function SingleInputItem({
                              reload = () => {
                              }
                          }) {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const {api} = useContext(AppContext);
     const [value, setValue] = useState("");
     useEffect(() => {
@@ -132,7 +131,8 @@ function SingleInputItem({
 }
 
 const Form = () => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const [configs, setConfigs] = useState([]);
 
     const [refresh, setRefresh] = useState(+new Date());

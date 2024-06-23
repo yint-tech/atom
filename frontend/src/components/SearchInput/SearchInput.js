@@ -4,19 +4,19 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Select from '@mui/material/Select';
 import {Search} from '@mui/icons-material';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
         borderRadius: '4px',
         alignItems: 'center',
-        padding: theme.spacing(1, 2),
+        padding: ({theme}) => theme.spacing(1, 2),
         display: 'flex',
         flexBasis: 420
     },
     icon: {
-        marginRight: theme.spacing(1),
-        color: theme.palette.text.secondary
+        marginRight: ({theme}) => theme.spacing(1),
+        color: ({theme}) => theme.palette.text.secondary
     },
     input: {
         flexGrow: 1,
@@ -24,11 +24,12 @@ const useStyles = createUseStyles(theme => ({
         lineHeight: '16px',
         letterSpacing: '-0.05px'
     }
-}));
+});
 
 const SearchInput = props => {
     const {className, onChange, selects, select, setSelect, style, initValue, ...rest} = props;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const [value, setValue] = useState(initValue || '');
 
     return (

@@ -4,28 +4,29 @@ import {CardHeader, Grid, IconButton, Popover} from '@mui/material';
 import {ArrowBackIos, Dehaze} from '@mui/icons-material';
 
 import PropTypes from 'prop-types';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles((theme) => ({
+const useStyles = createUseStyles({
     header: {
         flexDirection: 'row-reverse',
         alignItems: 'center',
-        padding: theme.spacing(1),
+        padding: ({theme}) => theme.spacing(1),
     },
     backIcon: {
-        margin: theme.spacing(1, 2, 0, 0),
+        margin: ({theme}) => theme.spacing(1, 2, 0, 0),
     },
     headerButton: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingRight: theme.spacing(2),
+        paddingRight: ({theme}) => theme.spacing(2),
     }
-}));
+});
 
 const Goback = ({title, subheader, extra}) => {
     const history = useHistory();
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const [anchorEl, setAnchorEl] = useState(null);
 

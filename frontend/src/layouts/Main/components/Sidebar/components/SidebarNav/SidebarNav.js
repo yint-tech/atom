@@ -5,9 +5,9 @@ import {NavLink as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {Button, colors, List, ListItem} from '@mui/material';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {},
     item: {
         display: 'flex',
@@ -21,24 +21,24 @@ const useStyles = createUseStyles(theme => ({
         textTransform: 'none',
         letterSpacing: 0,
         width: '100%',
-        fontWeight: theme.typography.fontWeightMedium
+        fontWeight: ({theme}) => theme.typography.fontWeightMedium
     },
     icon: {
-        color: theme.palette.icon,
+        color: ({theme}) => theme.palette.icon,
         width: 24,
         height: 24,
         display: 'flex',
         alignItems: 'center',
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
     active: {
-        color: theme.palette.primary.main,
-        fontWeight: theme.typography.fontWeightMedium,
+        color: ({theme}) => theme.palette.primary.main,
+        fontWeight: ({theme}) => theme.typography.fontWeightMedium,
         '& $icon': {
-            color: theme.palette.primary.main
+            color: ({theme}) => theme.palette.primary.main
         }
     }
-}));
+});
 
 const CustomRouterLink = forwardRef((props, ref) => (
     <div
@@ -52,7 +52,8 @@ const CustomRouterLink = forwardRef((props, ref) => (
 const SidebarNav = props => {
     const {pages, className, ...rest} = props;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <List

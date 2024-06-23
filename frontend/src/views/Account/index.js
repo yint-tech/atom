@@ -8,11 +8,11 @@ import moment from "moment/moment";
 import {useHistory} from "react-router-dom";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import Permission from "./Permission";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
 const LOGIN_USER_MOCK_KEY = config.login_user_key + "-MOCK";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {},
     content: {
         padding: 0
@@ -22,24 +22,25 @@ const useStyles = createUseStyles(theme => ({
         alignItems: "center"
     },
     avatar: {
-        marginRight: theme.spacing(2)
+        marginRight: ({theme}) => theme.spacing(2)
     },
     actions: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
+        paddingTop: ({theme}) => theme.spacing(2),
+        paddingBottom: ({theme}) => theme.spacing(2),
         justifyContent: "center"
     },
     tableButton: {
-        marginRight: theme.spacing(1)
+        marginRight: ({theme}) => theme.spacing(1)
     },
     dialogInput: {
         width: "100%"
     }
-}));
+});
 
 const CreateUserDialog = (props) => {
     const {openCreateUserDialog, setOpenCreateUserDialog, setRefresh} = props;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const {api} = useContext(AppContext);
     const [account, setAccount] = useState("");
     const [password, setPassword] = useState("");
@@ -112,7 +113,8 @@ const AccountList = () => {
 
     const {api, setUser} = useContext(AppContext);
     const history = useHistory();
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const [openCreateUserDialog, setOpenCreateUserDialog] = useState(false);
 

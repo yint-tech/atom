@@ -3,9 +3,9 @@ import {Link as RouterLink} from 'react-router-dom';
 import {AppBar, Toolbar} from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(() => ({
+const useStyles = createUseStyles({
     root: {
         boxShadow: 'none'
     },
@@ -17,12 +17,13 @@ const useStyles = createUseStyles(() => ({
     flexGrow: {
         flexGrow: 1
     }
-}));
+});
 
 const Topbar = props => {
     const {className, ...rest} = props;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <AppBar
@@ -36,7 +37,7 @@ const Topbar = props => {
                     <img
                         alt="Logo"
                         style={{height: 60}}
-                        src="/images/logos/logo.svg"
+                        src={process.env.PUBLIC_URL + "/images/logos/thanos2.png"}
                     />
                 </RouterLink>
             </Toolbar>

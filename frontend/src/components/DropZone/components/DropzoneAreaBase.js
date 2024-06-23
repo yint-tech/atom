@@ -1,24 +1,20 @@
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState, useCallback} from 'react';
 import Dropzone from 'react-dropzone';
 import {convertBytesToMbsOrKbs, isImage, readFile} from '../helpers';
 import PreviewList from './PreviewList';
 import {Button, IconButton} from "@mui/material";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
-import ErrorIcon from '@mui/icons-material/Error';
-import InfoIcon from '@mui/icons-material/Info';
-import WarningIcon from '@mui/icons-material/Warning';
 import SnackbarContent from "@mui/material/SnackbarContent";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     '@keyframes progress': {
         '0%': {
             backgroundPosition: '0 0',
@@ -31,10 +27,10 @@ const useStyles = createUseStyles(theme => ({
         position: 'relative',
         width: '100%',
         minHeight: '250px',
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: ({theme}) => theme.palette.background.paper,
         border: 'dashed',
-        borderColor: theme.palette.divider,
-        borderRadius: theme.shape.borderRadius,
+        borderColor: ({theme}) => theme.palette.divider,
+        borderRadius: ({theme}) => theme.shape.borderRadius,
         boxSizing: 'border-box',
         cursor: 'pointer',
         overflow: 'hidden',
@@ -42,27 +38,27 @@ const useStyles = createUseStyles(theme => ({
     active: {
         animation: '$progress 2s linear infinite !important',
         // eslint-disable-next-line max-len
-        backgroundImage: `repeating-linear-gradient(-45deg, ${theme.palette.background.paper}, ${theme.palette.background.paper} 25px, ${theme.palette.divider} 25px, ${theme.palette.divider} 50px)`,
+        backgroundImage: ({theme}) => `repeating-linear-gradient(-45deg, ${theme.palette.background.paper}, ${theme.palette.background.paper} 25px, ${theme.palette.divider} 25px, ${theme.palette.divider} 50px)`,
         backgroundSize: '150% 100%',
         border: 'solid',
-        borderColor: theme.palette.primary.light,
+        borderColor: ({theme}) => theme.palette.primary.light,
     },
     invalid: {
         // eslint-disable-next-line max-len
-        backgroundImage: `repeating-linear-gradient(-45deg, ${theme.palette.error.light}, ${theme.palette.error.light} 25px, ${theme.palette.error.dark} 25px, ${theme.palette.error.dark} 50px)`,
-        borderColor: theme.palette.error.main,
+        backgroundImage: ({theme}) => `repeating-linear-gradient(-45deg, ${theme.palette.error.light}, ${theme.palette.error.light} 25px, ${theme.palette.error.dark} 25px, ${theme.palette.error.dark} 50px)`,
+        borderColor: ({theme}) => theme.palette.error.main,
     },
     textContainer: {
         textAlign: 'center',
     },
     text: {
-        marginBottom: theme.spacing(3),
-        marginTop: theme.spacing(3),
+        marginBottom: ({theme}) => theme.spacing(3),
+        marginTop: ({theme}) => theme.spacing(3),
     },
     icon: {
         width: 51,
         height: 51,
-        color: theme.palette.text.primary,
+        color: ({theme}) => theme.palette.text.primary,
     },
     resetButton: {
         display: 'block',
@@ -70,22 +66,22 @@ const useStyles = createUseStyles(theme => ({
     },
     // snackbarContentWrapper
     successAlert: {
-        backgroundColor: theme.palette.success.main,
+        backgroundColor: ({theme}) => theme.palette.success.main,
     },
     errorAlert: {
-        backgroundColor: theme.palette.error.main,
+        backgroundColor: ({theme}) => theme.palette.error.main,
     },
     infoAlert: {
-        backgroundColor: theme.palette.info.main,
+        backgroundColor: ({theme}) => theme.palette.info.main,
     },
     warningAlert: {
-        backgroundColor: theme.palette.warning.main,
+        backgroundColor: ({theme}) => theme.palette.warning.main,
     },
     message: {
         display: 'flex',
         alignItems: 'center',
         '& > svg': {
-            marginRight: theme.spacing(1),
+            marginRight: ({theme}) => theme.spacing(1),
         },
     },
     iconSnackContent: {
@@ -93,7 +89,7 @@ const useStyles = createUseStyles(theme => ({
         opacity: 0.9,
     },
     closeButton: {},
-}));
+});
 
 const defaultSnackbarAnchorOrigin = {
     horizontal: 'left',
@@ -105,19 +101,12 @@ const defaultGetPreviewIcon = (fileObject, classes) => {
         return (<img className={classes.image}
                      role="presentation"
                      src={fileObject.data}
+                     alt=""
         />);
     }
 
     return <AttachFileIcon className={classes.image}/>;
 };
-
-const variantIcon = {
-    success: CheckCircleIcon,
-    warning: WarningIcon,
-    error: ErrorIcon,
-    info: InfoIcon,
-};
-
 
 /**
  * This components creates a Material-UI Dropzone, with previews and snackbar notifications.
@@ -178,7 +167,8 @@ const DropzoneAreaBase = props => {
     const isMultiple = filesLimit > 1;
     const previewsVisible = showPreviews && fileObjects.length > 0;
     const previewsInDropzoneVisible = showPreviewsInDropzone && fileObjects.length > 0;
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const [state, setState] = useState({
         openSnackBar: false,
@@ -186,16 +176,16 @@ const DropzoneAreaBase = props => {
         snackbarVariant: 'success',
     });
 
-    useEffect(() => {
-        notifyAlert()
-    }, [state]);
-
-    const notifyAlert = () => {
+    const notifyAlert = useCallback(() => {
         const {onAlert} = props;
         if (state.openSnackBar && onAlert) {
             onAlert(state.snackbarMessage, state.snackbarVariant);
         }
-    }
+    }, [props, state])
+
+    useEffect(() => {
+        notifyAlert()
+    }, [notifyAlert, state]);
 
     const handleDropAccepted = async (acceptedFiles, evt) => {
         if (filesLimit > 1 && fileObjects.length + acceptedFiles.length > filesLimit) {
@@ -284,7 +274,6 @@ const DropzoneAreaBase = props => {
             openSnackBar: false,
         });
     };
-    const SnackIcon = variantIcon[state.snackbarVariant];
 
     return (
         <>

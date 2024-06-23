@@ -3,30 +3,29 @@ import {Button, Card, CardContent, CardHeader, Grid} from "@mui/material";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import {AppContext} from "adapter";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(2)
+        padding: ({theme}) => theme.spacing(2)
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     }, groupButton: {
         border: '1px dashed #f0f0f0',
         backgroundColor: '#F3AD21FF',
-        marginRight: theme.spacing(1),
-        marginTop: theme.spacing(1),
+        marginRight: ({theme}) => theme.spacing(1),
+        marginTop: ({theme}) => theme.spacing(1),
         textTransform: "none"
     },
     groupButtonActive: {
         border: '1px dashed #2196f3',
         backgroundColor: '#2196f3',
-        marginRight: theme.spacing(1),
-        marginTop: theme.spacing(1),
+        marginRight: ({theme}) => theme.spacing(1),
+        marginTop: ({theme}) => theme.spacing(1),
         textTransform: "none"
     },
-}));
+});
 
 const parsePermsExp = (exp) => {
     let scope;
@@ -60,7 +59,8 @@ function Permission(props) {
 
     const [userPermsExp, setUserPermExp] = useState("");
     const [userHoldPerms, setUserHolePerms] = useState([])
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
 
     useEffect(() => {

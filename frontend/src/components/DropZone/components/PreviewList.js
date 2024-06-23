@@ -6,9 +6,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import clsx from 'clsx';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {},
     imageContainer: {
         position: 'relative',
@@ -25,11 +25,11 @@ const useStyles = createUseStyles(theme => ({
         height: 100,
         width: 'initial',
         maxWidth: '100%',
-        color: theme.palette.text.primary,
+        color: ({theme}) => theme.palette.text.primary,
         transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
         boxSizing: 'border-box',
         boxShadow: 'rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px',
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: ({theme}) => theme.shape.borderRadius,
         zIndex: 5,
         opacity: 1,
     },
@@ -37,27 +37,28 @@ const useStyles = createUseStyles(theme => ({
         transition: '.5s ease',
         position: 'absolute',
         opacity: 0,
-        top: theme.spacing(-1),
-        right: theme.spacing(-1),
+        top: ({theme}) => theme.spacing(-1),
+        right: ({theme}) => theme.spacing(-1),
         width: 40,
         height: 40,
         '&:focus': {
             opacity: 1,
         },
     },
-}));
+});
 
 function PreviewList({
-    fileObjects,
-    handleRemove,
-    showFileNames,
-    useChipsForPreview,
-    previewChipProps,
-    previewGridClasses,
-    previewGridProps,
-    getPreviewIcon,
-}) {
-    const classes = useStyles();
+                         fileObjects,
+                         handleRemove,
+                         showFileNames,
+                         useChipsForPreview,
+                         previewChipProps,
+                         previewGridClasses,
+                         previewGridProps,
+                         getPreviewIcon,
+                     }) {
+    const theme = useTheme();
+    const classes = useStyles({theme});
     if (useChipsForPreview) {
         return (
             <Grid
@@ -117,7 +118,7 @@ function PreviewList({
                             aria-label="Delete"
                             className={classes.removeButton}
                         >
-                            <DeleteIcon />
+                            <DeleteIcon/>
                         </Fab>
                     </Grid>
                 );

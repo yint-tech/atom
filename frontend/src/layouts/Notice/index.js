@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import moment from "moment";
-import apis from "apis";
-import {createUseStyles} from "react-jss";
 
-const useStyles = createUseStyles(() => ({
+import {createUseStyles, useTheme} from "react-jss";
+
+const useStyles = createUseStyles({
     flexGrow: {
         flexGrow: 1
     },
@@ -17,11 +17,12 @@ const useStyles = createUseStyles(() => ({
         fontSize: 12,
         textAlign: "center"
     }
-}));
+});
 
 const Notice = () => {
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const [intPushMsg, setIntPushMsg] = useState("");
     const [certificate, setCertificate] = useState({});

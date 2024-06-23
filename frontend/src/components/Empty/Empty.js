@@ -1,10 +1,10 @@
 import React from 'react';
 import {Grid, Typography} from '@mui/material';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(4)
+        padding: ({theme}) => theme.spacing(4)
     },
     content: {
         display: 'flex',
@@ -12,14 +12,15 @@ const useStyles = createUseStyles(theme => ({
         alignItems: 'center'
     },
     image: {
-        margin: theme.spacing(4, 0, 2),
+        margin: ({theme}) => theme.spacing(4, 0, 2),
         display: 'inline-block',
-        width: theme.spacing(20)
+        width: ({theme}) => theme.spacing(20)
     }
-}));
+});
 
 const Empty = ({text}) => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <div className={classes.root}>

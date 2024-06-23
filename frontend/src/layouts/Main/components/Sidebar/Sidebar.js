@@ -6,36 +6,37 @@ import {AppContext} from "adapter";
 import {Divider, Drawer} from "@mui/material";
 
 import {Profile, SidebarNav} from "./components";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
-    drawer: {
+const useStyles = createUseStyles({
+    drawer: ({theme}) => ({
         width: 240,
         [theme.breakpoints.up("lg")]: {
             marginTop: 64,
             height: "calc(100% - 64px)"
         }
-    },
+    }),
     root: {
-        backgroundColor: theme.palette.white,
+        backgroundColor: ({theme}) => theme.palette.white,
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        padding: theme.spacing(2)
+        padding: ({theme}) => theme.spacing(2)
     },
     divider: {
-        margin: theme.spacing(2, 0)
+        margin: ({theme}) => theme.spacing(2, 0)
     },
     nav: {
-        marginBottom: theme.spacing(2)
+        marginBottom: ({theme}) => theme.spacing(2)
     }
-}));
+});
 
 const Sidebar = props => {
     const {user} = useContext(AppContext);
     const {open, variant, onClose, className, ...rest} = props;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     let pages = [
         {

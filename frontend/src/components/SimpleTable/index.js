@@ -5,21 +5,21 @@ import {SearchInput} from "../index";
 import {Card, CardActions, CardContent, Pagination} from "@mui/material";
 import Table from "../Table";
 import PropTypes from "prop-types";
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
-        padding: theme.spacing(3)
+        padding: ({theme}) => theme.spacing(3)
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     },
     row: {
         height: '100%',
         display: "flex",
         alignItems: "center",
         flexWrap: "wrap",
-        marginTop: theme.spacing(1)
+        marginTop: ({theme}) => theme.spacing(1)
     },
     spacer: {
         flexGrow: 1
@@ -29,20 +29,20 @@ const useStyles = createUseStyles(theme => ({
         padding: 0
     },
     searchInput: {
-        marginBottom: theme.spacing(2)
+        marginBottom: ({theme}) => theme.spacing(2)
     },
     actions: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
+        paddingTop: ({theme}) => theme.spacing(2),
+        paddingBottom: ({theme}) => theme.spacing(2),
         justifyContent: "center"
     },
-
-}));
+});
 
 const Toolbar = props => {
     const {onInputChange, ActionEl} = props;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     return (
         <div className={classes.row}>
@@ -60,7 +60,8 @@ const DataTable = props => {
     const {className, data, total, rowsPerPage, pageState, setRefresh, columns, renderCollapse, ...rest} = props;
     const [page, setPage] = pageState;
 
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
     const handlePageChange = (event, page) => {
         setPage(page);
@@ -92,7 +93,8 @@ const DataTable = props => {
 };
 
 const SimbleTable = (props) => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     const {loadDataFun, actionEl, columns, refresh, renderCollapse} = props;
 
     const [data, setData] = useState([]);

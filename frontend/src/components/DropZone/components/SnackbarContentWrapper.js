@@ -8,7 +8,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -17,24 +17,24 @@ const variantIcon = {
     info: InfoIcon,
 };
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     successAlert: {
-        backgroundColor: theme.palette.success.main,
+        backgroundColor: ({theme}) => theme.palette.success.main,
     },
     errorAlert: {
-        backgroundColor: theme.palette.error.main,
+        backgroundColor: ({theme}) => theme.palette.error.main,
     },
     infoAlert: {
-        backgroundColor: theme.palette.info.main,
+        backgroundColor: ({theme}) => theme.palette.info.main,
     },
     warningAlert: {
-        backgroundColor: theme.palette.warning.main,
+        backgroundColor: ({theme}) => theme.palette.warning.main,
     },
     message: {
         display: 'flex',
         alignItems: 'center',
         '& > svg': {
-            marginRight: theme.spacing(1),
+            marginRight: ({theme}) => theme.spacing(1),
         },
     },
     icon: {
@@ -42,19 +42,20 @@ const useStyles = createUseStyles(theme => ({
         opacity: 0.9,
     },
     closeButton: {},
-}));
+});
 
 function SnackbarContentWrapper(props) {
-    const {  message, onClose, variant, ...other} = props;
+    const {message, onClose, variant, ...other} = props;
     const Icon = variantIcon[variant];
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
     return (
         <SnackbarContent
             className={clsx(classes[`${variant}Alert`])}
             aria-describedby="client-snackbar"
             message={
                 <span id="client-snackbar" className={classes.message}>
-                    <Icon className={classes.icon} />
+                    <Icon className={classes.icon}/>
                     {message}
                 </span>
             }
@@ -66,7 +67,7 @@ function SnackbarContentWrapper(props) {
                     className={classes.closeButton}
                     onClick={onClose}
                 >
-                    <CloseIcon className={classes.icon} />
+                    <CloseIcon className={classes.icon}/>
                 </IconButton>,
             ]}
             {...other}

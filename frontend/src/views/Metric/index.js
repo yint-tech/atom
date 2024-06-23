@@ -6,17 +6,17 @@ import SystemMetrics from "./SystemMetric";
 import MQLViewer from "./MQLViewer";
 import MetricList from "./MetricList";
 import configs from 'config'
-import {createUseStyles} from "react-jss";
+import {createUseStyles, useTheme} from "react-jss";
 
-const useStyles = createUseStyles(theme => ({
+const useStyles = createUseStyles({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(3)
+        padding: ({theme}) => theme.spacing(3)
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: ({theme}) => theme.spacing(2)
     }
-}));
+});
 
 
 function TabPanel(props) {
@@ -27,7 +27,8 @@ function TabPanel(props) {
 const metricConfigTabKey = configs.app + "-metric-tab";
 
 function Metrics() {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles({theme});
 
 
     let initValue = Number(localStorage.getItem(metricConfigTabKey)) || 0;
