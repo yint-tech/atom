@@ -219,7 +219,7 @@ fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
     config.getProperty("deploy.host")?.trim()?.split(',')?.let { deployServerList ->
         val name = presetFile.name
         val preset = name.subSequence("app_".length, name.lastIndexOf("."))
-        val deployPath = config.getConfig("deploy.workdir", "/opt/zed/").ensureSlash()
+        val deployPath = config.getConfig("deploy.workdir", "/opt/atom/").ensureSlash()
         val connParam = config.shellParam("deploy")
 
         config.getProperty("deploy.jump.host").apply {
@@ -237,6 +237,7 @@ fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
             group = "deploy"
             dependsOn(tasks.distZip)
             val remoteList = deployServerList.map {
+                connParam["host"] = it
                 Remote(connParam)
             }
             doLast {

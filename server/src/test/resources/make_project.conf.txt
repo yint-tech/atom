@@ -20,6 +20,8 @@ ignore:.gitmodules/
 ignore:node_modules
 ignore:target/
 ignore:.vuepress/dist/
+ignore:yarn.lock
+ignore:package-lock.json
 
 
 # 如果存在，则不执行替换规则，团队定制化的配置文件
