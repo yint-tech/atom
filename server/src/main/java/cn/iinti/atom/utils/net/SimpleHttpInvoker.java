@@ -3,6 +3,7 @@ package cn.iinti.atom.utils.net;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,15 @@ public class SimpleHttpInvoker {
 
     public static String get(String url) {
         return asString(execute("GET", url, null));
+    }
+
+    public static String get(String url, Map<String, String> param) {
+        if (CollectionUtils.isEmpty(param)) {
+            return get(url);
+        }
+        String encodeParam = encodeURLParam(param);
+        String fullUrl = url.equals("?") ? url + encodeParam : url + "?" + encodeParam;
+        return get(fullUrl);
     }
 
     public static byte[] getEntity(String url) {
