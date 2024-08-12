@@ -200,7 +200,7 @@ const SignIn = props => {
                 >
                     <div className={classes.quote}>
                         <img className={classes.quoteImg}
-                             src={process.env.PUBLIC_URL + "/images/logos/thanos2.png"}
+                             src={process.env.PUBLIC_URL + "/images/logos/logo.svg"}
                              alt=""/>
                     </div>
                 </Grid>

@@ -37,7 +37,7 @@ const Topbar = props => {
                     <img
                         alt="Logo"
                         style={{height: 60}}
-                        src={process.env.PUBLIC_URL + "/images/logos/thanos2.png"}
+                        src={process.env.PUBLIC_URL + "/images/logos/logo.svg"}
                     />
                 </RouterLink>
             </Toolbar>
