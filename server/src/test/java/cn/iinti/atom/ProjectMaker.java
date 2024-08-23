@@ -96,8 +96,10 @@ public class ProjectMaker {
             if (genRule.keepFiles.match(file)) {
                 // 如果是keep文件，那么直接复制过去，这个行为主要为了应对二进制文件，避免对二进制执行replace操作
                 // 因为我们会把所有打算修改的文件使用文本方式载入到内存
-                File target = new File(genRule.outputRootDir, contentReplace(relativePath));
+                String relocatedKeepFile = contentReplace(relativePath);
+                File target = new File(genRule.outputRootDir, relocatedKeepFile);
                 FileUtils.copyFile(file, target);
+                genRule.root.remove(relocatedKeepFile);
                 return FileVisitResult.CONTINUE;
             }
 
