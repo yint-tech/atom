@@ -17,6 +17,7 @@ public class Looper implements Executor {
     private final LinkedBlockingDeque<Runnable> taskQueue = new LinkedBlockingDeque<>();
 
     private final LoopThread loopThread;
+    private final boolean metric;
     private final long createTimestamp = System.currentTimeMillis();
 
     private static Looper lowPriorityLooper;
@@ -24,8 +25,8 @@ public class Looper implements Executor {
     /**
      * 以下为监控指标
      */
-    private final Counter monitorExecuteCounter;
-    private final AtomicInteger monitorLooperQueueSize;
+    private Counter monitorExecuteCounter;
+    private AtomicInteger monitorLooperQueueSize;
 
     /**
      * 获取一个全局的低优looper
@@ -48,10 +49,16 @@ public class Looper implements Executor {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public Looper(String looperName) {
-        monitorExecuteCounter = Monitor.counter("looper.execute." + looperName);
-        monitorLooperQueueSize = new AtomicInteger(0);
-        Monitor.gauge("looper.taskQueueSize." + looperName, monitorLooperQueueSize);
+        this(looperName, true);
+    }
 
+    public Looper(String looperName, boolean metric) {
+        this.metric = metric;
+        if (metric) {
+            monitorExecuteCounter = Monitor.counter("looper.execute." + looperName);
+            monitorLooperQueueSize = new AtomicInteger(0);
+            Monitor.gauge("looper.taskQueueSize." + looperName, monitorLooperQueueSize);
+        }
         loopThread = new LoopThread(looperName);
         loopThread.setDaemon(true);
     }
@@ -177,8 +184,10 @@ public class Looper implements Executor {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Runnable runnable = taskQueue.take();
-                    monitorExecuteCounter.increment();
-                    monitorLooperQueueSize.set(taskQueue.size());
+                    if (metric) {
+                        monitorExecuteCounter.increment();
+                        monitorLooperQueueSize.set(taskQueue.size());
+                    }
                     runnable.run();
                 } catch (InterruptedException interruptedException) {
                     return;
