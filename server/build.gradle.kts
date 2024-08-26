@@ -145,7 +145,8 @@ application {
     applicationDefaultJvmArgs = listOf(
         "-Dfile.encoding=utf-8", "-Duser.timezone=GMT+08", "-XX:-OmitStackTraceInFastThrow"
     )
-    applicationDistribution.from("${projectDir}/src/main/resources/develop") {
+    // docker compose 使用文件夹名称来命名，未了避免冲突，这里将文件夹带上项目名称
+    applicationDistribution.from("${projectDir}/src/main/resources/develop-atom") {
         include("ddl.sql")
         into("conf/")
     }
