@@ -398,14 +398,25 @@ public class ProjectMaker {
             }
             boolean hasWildcardMatch = false;
             for (String config : rawRules) {
-                File newIgnoreFile = file.toPath().resolve(config).toFile();
-                if (newIgnoreFile.exists() || config.equals(file.getName())) {
-                    if (newIgnoreFile.isDirectory()) {
-                        runtimeMatchDirs.add(newIgnoreFile);
-                    } else {
-                        runtimeMatchFiles.add(newIgnoreFile);
+                boolean onlyDirectory = false;
+                if (config.endsWith("/")) {
+                    onlyDirectory = true;
+                    config = config.substring(0, config.length() - 1);
+                }
+                if (!onlyDirectory && file.isFile() && file.getName().equals(config)) {
+                    runtimeMatchFiles.add(file);
+                }
+                File parentFile = file.getParentFile();
+                while (parentFile != null) {
+                    File candidate = parentFile.toPath().resolve(config).toFile();
+                    if (candidate.exists()) {
+                        if (candidate.isDirectory()) {
+                            runtimeMatchDirs.add(candidate);
+                        } else {
+                            runtimeMatchFiles.add(candidate);
+                        }
                     }
-                    continue;
+                    parentFile = parentFile.getParentFile();
                 }
 
                 if (config.startsWith("*.")) {
@@ -694,6 +705,9 @@ public class ProjectMaker {
         }
 
         public String performShuffle(File path, String input) {
+            if (path.getName().equals("application.properties")) {
+                System.out.println("hint");
+            }
             if (fileMatcher.match(path)) {
                 return input.replaceAll(keywords, replace);
             }

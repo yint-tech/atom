@@ -50,5 +50,5 @@ cmd:chmod +x server/src/dist/bin/startup.sh
 cmd:chmod +x gradlew
 
 # 随机扰动，当完全创建一个项目的时候，对部分可能涉及到系统资源的配置进行扰动（如本地调试端口）
-shuffle:4416->/server/src/main/resources/develop-atom/docker-compose-local.yaml,/server/src/main/resources/application.properties
-shuffle:8081->/server/src/main/resources/application.properties,/frontend/src/setupProxy.js
+shuffle:4416->application.properties,docker-compose-local.yaml,make_project.conf.txt
+shuffle:8081->application.properties,setupProxy.js,make_project.conf.txt
