@@ -1,6 +1,8 @@
 package cn.iinti.atom;
 
+import cn.iinti.atom.utils.Md5Utils;
 import cn.iinti.atom.utils.ResourceUtil;
+import com.google.common.base.Splitter;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -121,6 +123,11 @@ public class ProjectMaker {
 
             // 执行内容的replace规则
             String content = contentReplace(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+
+            for (Shuffle shuffle : genRule.shuffles) {
+                content = shuffle.performShuffle(file, content);
+            }
+
             FileUtils.write(outFile, content, StandardCharsets.UTF_8);
             System.out.println("write file: " + outFile.getAbsolutePath());
             return FileVisitResult.CONTINUE;
@@ -486,6 +493,7 @@ public class ProjectMaker {
         public FileMatcher ignoreFiles = new FileMatcher();
         public FileMatcher keepFiles = new FileMatcher();
         public FileMatcher notOverwrite = new FileMatcher();
+        public List<Shuffle> shuffles = new ArrayList<>();
         public Map<String, String> keepContents = new HashMap<>();
         public List<String> cmds = new ArrayList<>();
 
@@ -508,7 +516,11 @@ public class ProjectMaker {
                     .accessValue("KEEP", item -> genRule.keepFiles.addRule(item.trim()))
                     .accessValue("NOTOVERWRITE", item -> genRule.notOverwrite.addRule(item.trim()))
                     .accessValue("KEEPCONTENT", item -> genRule.keepContents.put(item.trim(), UUID.randomUUID().toString()))
-                    .accessValue("CMD", item -> genRule.cmds.add(item));
+                    .accessValue("CMD", item -> genRule.cmds.add(item))
+                    .accessValue("SHUFFLE", item -> {
+                        String[] rule = item.split("->");
+                        genRule.shuffles.add(new Shuffle(rule[0], rule[1]));
+                    });
             return genRule;
         }
 
@@ -526,16 +538,20 @@ public class ProjectMaker {
             keepFiles.resolveRootDir(root);
             notOverwrite.resolveRootDir(root);
 
-
             // java的替换规则，需要产生对应的keyword规则
+            TreeSet<String> toPkgSet = new TreeSet<>();
             for (Map.Entry<String, String> pkgRule : pkgRenameRules.entrySet()) {
                 String from = pkgRule.getKey();
                 String to = pkgRule.getValue();
+                toPkgSet.add(to.trim());
 
                 keywordReplaceRules.put(KeywordString.valueOf(from), to);
                 keywordReplaceRules.put(KeywordString.valueOf(pkg2JniName(from)), pkg2JniName(to));
                 keywordReplaceRules.put(KeywordString.valueOf(pkg2PathName(from)), pkg2PathName(to));
             }
+
+            String genId = toPkgSet.isEmpty() ? outputRootDir.getName() : StringUtils.join(toPkgSet);
+            shuffles.forEach(shuffle -> shuffle.init(root, genId));
         }
 
         private static String pkg2PathName(String pkg) {
@@ -553,7 +569,7 @@ public class ProjectMaker {
             }
             // 所有已知文件，把他搞到内存中
             String rootDirStr = outputRootDir.getCanonicalPath();
-            Files.walkFileTree(outputRootDir.toPath(), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(outputRootDir.toPath(), new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     String relativePath = file.toFile().getCanonicalPath().substring(rootDirStr.length() + 1);
@@ -596,11 +612,7 @@ public class ProjectMaker {
                     String dir = path.substring(0, index);
                     String left = path.substring(index + 1);
 
-                    FSNode child = children.get(dir);
-                    if (child == null) {
-                        child = new FSNode(dir, true, null);
-                        children.put(dir, child);
-                    }
+                    FSNode child = children.computeIfAbsent(dir, d -> new FSNode(d, true, null));
                     child.addChild(left, isDir, file);
                 }
             }
@@ -659,6 +671,77 @@ public class ProjectMaker {
                     children.remove(dir);
                 }
             }
+        }
+    }
+
+    public static class Shuffle {
+        private final String keywords;
+        private String replace;
+        private final FileMatcher fileMatcher;
+
+        public Shuffle(String keywords, String patterns) {
+            this.keywords = keywords.trim();
+            this.fileMatcher = new FileMatcher();
+            for (String pattern : Splitter.on(',').trimResults()
+                    .omitEmptyStrings().split(patterns)) {
+                this.fileMatcher.addRule(pattern);
+            }
+        }
+
+        void init(File root, String id) {
+            this.replace = shuffle(keywords, id);
+            this.fileMatcher.resolveRootDir(root);
+        }
+
+        public String performShuffle(File path, String input) {
+            if (fileMatcher.match(path)) {
+                return input.replaceAll(keywords, replace);
+            }
+            return input;
+        }
+
+        public static String shuffle(String input, String key) {
+            byte[] digest = Md5Utils.md5Bytes(input);
+            long seedWithSalt = (digest[0] & 0xFFL) << 56
+                    | (digest[1] & 0xFFL) << 48
+                    | (digest[2] & 0xFFL) << 40
+                    | (digest[3] & 0xFFL) << 32
+                    | (digest[4] & 0xFFL) << 24
+                    | (digest[5] & 0xFFL) << 16
+                    | (digest[6] & 0xFFL) << 8
+                    | (digest[7] & 0xFFL);
+
+            Random random = new Random(seedWithSalt);
+            char[] output = input.toCharArray();
+            for (int i = 0; i < output.length; i++) {
+                if (Character.isDigit(output[i])) {
+                    char ch = (char) ('0' + random.nextInt(10));
+                    if (i == 0 && ch == '0') {
+                        // 如果是数字，那么第一位不能位0
+                        ch = '2';
+                    }
+                    output[i] = ch;
+                } else if (isHex(output[i])) {
+                    char ch = (char) ('a' + random.nextInt('f' - 'a'));
+                    output[i] = ch;
+                } else if (isUpperHex(output[i])) {
+                    output[i] = (char) ('A' + random.nextInt('F' - 'A'));
+                } else if (Character.isLetter(output[i])) {
+                    int aAStart = random.nextInt(2) % 2 == 0 ? 65 : 97; //取得大写字母还是小写字母
+                    char ch = (char) (aAStart + random.nextInt(26));
+                    output[i] = ch;
+                }
+                //其他字符串，不是数字或者字母。下划线，连接线，其他特殊字符保留原来的模样
+            }
+            return new String(output);
+        }
+
+        private static boolean isHex(char ch) {
+            return ch >= 'a' && ch <= 'f';
+        }
+
+        private static boolean isUpperHex(char ch) {
+            return ch >= 'A' && ch <= 'F';
         }
     }
 }
