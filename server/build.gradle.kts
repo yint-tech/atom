@@ -69,6 +69,7 @@ var userLoginTokenKey: String by rootProject.extra
 var restfulApiPrefix: String by rootProject.extra
 var appName: String by rootProject.extra
 
+var yIntProject: Boolean by rootProject.extra
 
 group = applicationId
 version = versionName
@@ -288,6 +289,25 @@ File(rootProject.projectDir, "deploy").listFiles { _, name ->
         configDeployTask4Preset(presetFile) {
             outputZipFile
         }
+    }
+}
+
+// 请注意，下面代码是给因体产品使用的，对于开源项目，本功能应该是关闭的
+// 开源用户打开开关也没有意义，因为他调用的是因体内部工具链
+val yIntReleaseShell = File(rootProject.projectDir, "server/assets/iinti_release.sh")
+val isWindows = System.getProperty("os.name").lowercase().contains("windows")
+if (yIntProject && !isWindows && yIntReleaseShell.exists()) {
+    var outputZipFile: File? = null
+    val dipZipTask = tasks.distZip.get()
+
+    dipZipTask.outputs.upToDateWhen { false }
+    dipZipTask.doLast {
+        outputZipFile = outputs.files.singleFile
+    }
+    tasks.register<Exec>("iinti-release") {
+        group = "deploy"
+        dependsOn(tasks.distZip)
+        commandLine(yIntReleaseShell, outputZipFile!!.absolutePath)
     }
 }
 
