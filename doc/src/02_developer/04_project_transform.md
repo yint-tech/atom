@@ -13,7 +13,7 @@
 
 
 ## 使用
-在idea中，执行文件：``atom-service/src/test/java/cn/iinti/atom/ProjectMaker.java``即可
+在idea中，执行文件：``server/src/test/java/cn/iinti/atom/ProjectMaker.java``即可
 
 ![](imgs/project_maker.png)
 运行完成后，可以看到在桌面产生了一个新的项目
@@ -35,7 +35,7 @@
   - 因为atom改名工具链处理好了Android项目的所有符号转移关系
 
 ## 规则和配置
-项目转换器规则配置文件在：``atom-service/src/test/resources/make_project.conf.txt``,
+项目转换器规则配置文件在：``server/src/test/resources/make_project.conf.txt``,
 - 你可以参考``ProjectMaker.java``入口函数了解如何指定配置文件
 - 你可以参考配置文件内容定制转换规则
 
