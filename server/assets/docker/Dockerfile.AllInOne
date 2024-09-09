@@ -1,12 +1,4 @@
-# FROM mysql:5.7
-# # 将 MySQL 的 apt 安装源替换为清华源
-# RUN sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list
-# RUN sed -i 's|security.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list
-
-
-# RUN apt-get update 
-# RUN apt-get install -y unzip openjdk-11-jdk supervisor
-FROM registry.cn-beijing.aliyuncs.com/iinti/jdk11-mysql57-base
+FROM registry.cn-beijing.aliyuncs.com/iinti/common:openjdk-17-jdk-mysql8
 WORKDIR /opt/atom
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./AtomMain.zip /opt/atom/

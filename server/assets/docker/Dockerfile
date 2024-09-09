@@ -1,4 +1,4 @@
-FROM openjdk:8-alpine
+FROM registry.cn-beijing.aliyuncs.com/iinti/common:openjdk-17
 ENV TZ=Asia/Shanghai
 WORKDIR /opt/atom
 COPY ./AtomMain.zip /opt/atom/
