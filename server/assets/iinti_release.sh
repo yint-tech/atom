@@ -14,7 +14,7 @@ shell_dir=`pwd`
 
 cd ${now_dir}
 
-echo "call init proguard toolkit"
+echo "call iinti proguard toolkit"
 IntTool.sh Protection --input-dist $1  \
  --proguard-config ${shell_dir}/iinti/proguard.pro \
  --main-jar atom-server \

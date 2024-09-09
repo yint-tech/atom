@@ -1,0 +1,11 @@
+# 本文件高度保密，如果有代码授权需求，请注意ignore这个文件，不能把这个文件下放到代码授权客户
+
+# 探针注入点
+inject-point:cn.iinti.atom.system.LoginInterceptor#preHandle
+
+# 项目名称，唯一一个
+project:atom
+
+# 开启字符串混淆的包，可以提供多个
+obfuscatePkg:cn.iinti.atom.controller
+obfuscatePkg:cn.iinti.atom.service.base

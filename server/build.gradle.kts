@@ -304,10 +304,14 @@ if (yIntProject && !isWindows && yIntReleaseShell.exists()) {
     dipZipTask.doLast {
         outputZipFile = outputs.files.singleFile
     }
-    tasks.register<Exec>("iinti-release") {
+    tasks.register("iinti-release") {
         group = "deploy"
         dependsOn(tasks.distZip)
-        commandLine(yIntReleaseShell, outputZipFile!!.absolutePath)
+        doLast {
+            exec {
+                commandLine(yIntReleaseShell, outputZipFile!!.absolutePath)
+            }
+        }
     }
 }
 
