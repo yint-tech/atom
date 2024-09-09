@@ -32,4 +32,4 @@ val nodeVersionStr by extra("20.10.0")
 var nodeDistMirror by extra("https://mirrors.ustc.edu.cn/node")
 
 // 因体产品开关
-var yIntProject by extra(true)
+var yIntProject by extra(false)
