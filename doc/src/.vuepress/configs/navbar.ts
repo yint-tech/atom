@@ -18,10 +18,22 @@ export const zhNavbar = navbar([
             }, {
                 text: "项目转换",
                 link: "04_project_transform.md",
-            }, {
-                text: "内置中间件",
-                link: "05_middleware.md",
             }
+        ]
+    },
+    {
+        text: "中间件",
+        icon: "fa6-solid:laptop-code",
+        prefix: "/03_middleware/",
+        children: [
+            {
+                text: "配置中心",
+                link: "01_config.md",
+            },
+            {
+                text: "监控",
+                link: "02_metric.md",
+            },
         ]
     }
 ]);
