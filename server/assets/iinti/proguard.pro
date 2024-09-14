@@ -5,6 +5,7 @@
 -keep @cn.iinti.atom.service.base.metric.mql.func.MQLFunction$MQL_FUNC class * {*;}
 # mbp
 -keep class com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean {*;}
+-keep class com.baomidou.mybatisplus.extension.ddl.IDdl
 
 # spring相关
 -keep @org.springframework.web.bind.annotation.RestController class * {*;}

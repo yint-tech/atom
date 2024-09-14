@@ -21,8 +21,8 @@ IntTool.sh Protection --input-dist $1  \
  --slave-jar mybatis-plus-extension \
  --insert-bin "${shell_dir}"/iinti/upgrade.sh.sh \
  --inject-rule "${shell_dir}"/iinti/inject_rule.txt \
- # --skip-proguard \
- --output-dist ${shell_dir}/docker/AtomMain.zip
+ --output-dist ${shell_dir}/docker/AtomMain.zip \
+ # --skip-proguard
 
 image_version=`date +%Y%m%d%H%M`;
 echo $image_version;
@@ -51,8 +51,8 @@ docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-latest;
 docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-$image_version;
 
 echo "upload to oss"
-scp ${shell_dir}/docker/AtomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
-scp ${shell_dir}/iinti/quickstart.sh  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
+scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
+scp -o StrictHostKeyChecking=no ${shell_dir}/iinti/quickstart.sh  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
 
 echo "clean file"
 rm -f ${shell_dir}/docker/AtomMain.zip
