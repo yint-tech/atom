@@ -152,6 +152,10 @@ application {
         into("conf/")
     }
 
+    applicationDistribution.from("${projectDir}/src/main/resources/application.properties") {
+        into("conf/")
+    }
+
     applicationDistribution.from("${rootProject.projectDir}/frontend/build") {
         into("conf/static/")
     }

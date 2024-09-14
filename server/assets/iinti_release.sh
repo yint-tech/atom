@@ -21,7 +21,7 @@ IntTool.sh Protection --input-dist $1  \
  --slave-jar mybatis-plus-extension \
  --insert-bin "${shell_dir}"/iinti/upgrade.sh.sh \
  --inject-rule "${shell_dir}"/iinti/inject_rule.txt \
- #--skip-proguard \
+ --skip-proguard \
  --output-dist ${shell_dir}/docker/AtomMain.zip
 
 image_version=`date +%Y%m%d%H%M`;
