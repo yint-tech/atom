@@ -19,7 +19,7 @@ IntTool.sh Protection --input-dist $1  \
  --proguard-config ${shell_dir}/iinti/proguard.pro \
  --main-jar atom-server \
  --slave-jar mybatis-plus-extension \
- --insert-bin "${shell_dir}"/iinti/upgrade.sh.sh \
+ --insert-bin "${shell_dir}"/iinti/upgrade.sh \
  --inject-rule "${shell_dir}"/iinti/inject_rule.txt \
  --output-dist ${shell_dir}/docker/AtomMain.zip \
  # --skip-proguard
