@@ -1,4 +1,4 @@
-FROM registry.cn-beijing.aliyuncs.com/iinti/common:openjdk-17
+FROM registry.cn-beijing.aliyuncs.com/iinti/ubuntu-openjdk:17
 ENV TZ=Asia/Shanghai
 WORKDIR /opt/atom
 COPY ./AtomMain.zip /opt/atom/
