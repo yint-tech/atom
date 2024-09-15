@@ -705,9 +705,6 @@ public class ProjectMaker {
         }
 
         public String performShuffle(File path, String input) {
-            if (path.getName().equals("application.properties")) {
-                System.out.println("hint");
-            }
             if (fileMatcher.match(path)) {
                 return input.replaceAll(keywords, replace);
             }
