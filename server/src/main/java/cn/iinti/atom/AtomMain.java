@@ -88,6 +88,8 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
             File logBase = Environment.runtimeClassPathDir;
             if (logBase.getName().equals("conf")) {
                 logBase = logBase.getParentFile();
+            } else if (logBase.toString().endsWith("build/resources/main")) {
+                logBase = logBase.getParentFile().getParentFile();
             }
             argList.add("--LogbackDir=" + new File(logBase, "logs").getAbsolutePath());
         }
