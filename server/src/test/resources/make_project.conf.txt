@@ -47,6 +47,7 @@ keepContent:atomic
 
 # 生成文件之后执行的命令
 cmd:chmod +x server/src/dist/bin/startup.sh
+cmd:chmod +x server/assets/iinti_release.sh
 cmd:chmod +x gradlew
 
 # 随机扰动，当完全创建一个项目的时候，对部分可能涉及到系统资源的配置进行扰动（如本地调试端口）
