@@ -54,6 +54,12 @@ echo "upload to oss"
 scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
 scp -o StrictHostKeyChecking=no ${shell_dir}/iinti/quickstart.sh  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
 
+echo "deploy demoSite"
+scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip root@atom.iinti.cn:/opt/atom/
+ssh -o StrictHostKeyChecking=no root@atom.iinti.cn "unzip -o -d /opt/atom /opt/atom/AtomMain.zip"
+scp -o StrictHostKeyChecking=no ${shell_dir}/../../deploy/app_demoSite.properties root@atom.iinti.cn:/opt/atom/conf/application.properties
+ssh -o StrictHostKeyChecking=no root@atom.iinti.cn "/opt/atom/bin/startup.sh"
+
 echo "clean file"
 rm -f ${shell_dir}/docker/AtomMain.zip
 
