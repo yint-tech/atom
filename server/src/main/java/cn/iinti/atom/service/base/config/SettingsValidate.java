@@ -33,6 +33,9 @@ public class SettingsValidate {
         put(Settings.outIpTestUrl.key, new URLValidator());
     }};
 
+    public static void registerValidator(String key, Validator validator) {
+        validatorMap.put(key, validator);
+    }
 
     public interface Validator {
         String doValidate(String value);
