@@ -265,7 +265,7 @@ public class BroadcastService implements ApplicationListener<WebServerInitialize
     @Override
     public void onApplicationEvent(WebServerInitializedEvent webServerInitializedEvent) {
         mPort = webServerInitializedEvent.getWebServer().getPort();
-        resolveAndHeartbeat();
+        post(this::resolveAndHeartbeat);
     }
 
 

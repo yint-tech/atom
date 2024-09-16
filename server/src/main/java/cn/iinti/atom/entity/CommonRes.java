@@ -77,6 +77,13 @@ public class CommonRes<T> {
         return this;
     }
 
+    public CommonRes<T> acceptIfOk(Consumer<CommonRes<T>> consumer) {
+        if (isOk()) {
+            consumer.accept(this);
+        }
+        return this;
+    }
+
     public <NT> CommonRes<NT> callIfOk(Callable<CommonRes<NT>> callable) {
         if (isOk()) {
             try {
