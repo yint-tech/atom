@@ -712,7 +712,7 @@ public class ProjectMaker {
         }
 
         public static String shuffle(String input, String key) {
-            byte[] digest = Md5Utils.md5Bytes(input);
+            byte[] digest = Md5Utils.md5Bytes(input + "_" + key);
             long seedWithSalt = (digest[0] & 0xFFL) << 56
                     | (digest[1] & 0xFFL) << 48
                     | (digest[2] & 0xFFL) << 40
