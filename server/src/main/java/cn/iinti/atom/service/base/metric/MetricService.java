@@ -308,8 +308,10 @@ public class MetricService {
                         .eq(Metric.TAGS_MD5, mergedMetric.getTagsMd5())
                         .eq(Metric.TIME_KEY, mergedMetric.getTimeKey())
                 );
-                mergedMetric.setId(old.getId());
-                chooseDao(to).updateById(mergedMetric);
+                if (old != null) {
+                    mergedMetric.setId(old.getId());
+                    chooseDao(to).updateById(mergedMetric);
+                }
             }
         });
 
