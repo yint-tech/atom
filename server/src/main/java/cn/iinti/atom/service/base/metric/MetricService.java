@@ -472,14 +472,11 @@ public class MetricService {
 
     @SuppressWarnings("unchecked")
     public <T extends Metric> BaseMapper<T> chooseDao(MetricEnums.MetricAccuracy accuracy) {
-        switch (accuracy) {
-            case days:
-                return (BaseMapper<T>) metricDayMapper;
-            case hours:
-                return (BaseMapper<T>) metricHourMapper;
-            default:
-                return (BaseMapper<T>) metricMinuteMapper;
-        }
+        return switch (accuracy) {
+            case days -> (BaseMapper<T>) metricDayMapper;
+            case hours -> (BaseMapper<T>) metricHourMapper;
+            default -> (BaseMapper<T>) metricMinuteMapper;
+        };
     }
 
     public void eachDao(Consumer<BaseMapper<Metric>> consumer) {
