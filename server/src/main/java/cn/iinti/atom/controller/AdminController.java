@@ -45,7 +45,7 @@ public class AdminController {
     private SysLogMapper sysLogMapper;
 
 
-    @Operation(summary = "(管理员专用)创建用户")
+    @Operation(summary = "创建用户")
     @LoginRequired(forAdmin = true, alert = true)
     @GetMapping("/createUser")
     public CommonRes<UserInfo> createUser(String userName, String password) {
@@ -132,7 +132,7 @@ public class AdminController {
     }
 
 
-    @Operation(summary = "(管理员专用)管理员穿越到普通用户，获取普通用户token")
+    @Operation(summary = "管理员穿越到普通用户，获取普通用户token")
     @LoginRequired(forAdmin = true)
     @GetMapping("/travelToUser")
     public CommonRes<UserInfo> travelToUser(Long id) {
@@ -144,7 +144,7 @@ public class AdminController {
         return CommonRes.success(toUser);
     }
 
-    @Operation(summary = "(管理员专用)用户列表")
+    @Operation(summary = "用户列表")
     @LoginRequired(forAdmin = true)
     @GetMapping("/listUser")
     public CommonRes<IPage<UserInfo>> listUser(int page, int pageSize) {

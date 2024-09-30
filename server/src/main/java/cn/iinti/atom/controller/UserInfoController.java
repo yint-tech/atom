@@ -126,21 +126,21 @@ public class UserInfoController {
         return CommonRes.success(mUser);
     }
 
-    @Operation(summary = "(管理员专用)给用户编辑权限")
+    @Operation(summary = "给用户编辑权限")
     @LoginRequired(forAdmin = true)
     @PostMapping("/editUserPerm")
     public CommonRes<UserInfo> editUserPerm(@NotBlank String userName, String permsConfig) {
         return userInfoService.editUserPerm(userName, permsConfig);
     }
 
-    @Operation(summary = "(管理员专用)所有的权限类型")
+    @Operation(summary = "所有的权限类型")
     @LoginRequired(forAdmin = true)
     @GetMapping("/permScopes")
     public CommonRes<List<String>> permScopes() {
         return CommonRes.success(permsService.permissionScopes());
     }
 
-    @Operation(summary = "(管理员专用)某个作用域下，权限授权范围枚举项")
+    @Operation(summary = "某个作用域下，权限授权范围枚举项")
     @LoginRequired(forAdmin = true)
     @GetMapping("/permItemsOfScope")
     public CommonRes<List<String>> permItemsOfScope(String scope) {
