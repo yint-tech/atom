@@ -3,6 +3,7 @@ package cn.iinti.atom.service.base.env;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -12,6 +13,9 @@ public class ShutdownHook {
     private static volatile boolean shutdownHookRunning = false;
 
     public static void registerShutdownHook(Runnable runnable) {
+        if (shutdownHookRunning) {
+            throw new IllegalStateException("ShutdownHook is already running");
+        }
         HookWrapper hookWrapper = new HookWrapper(runnable);
         shutdownHooks.add(hookWrapper);
         Runtime.getRuntime().addShutdownHook(new Thread(hookWrapper));
@@ -49,12 +53,15 @@ public class ShutdownHook {
             shutdownHookRunning = true;
         }
         new Thread(() -> {
-            while (!shutdownHooks.isEmpty()) {
-                Runnable next = shutdownHooks.iterator().next();
+            Iterator<Runnable> it = shutdownHooks.iterator();
+            while (it.hasNext()) {
+                Runnable next = it.next();
                 try {
                     next.run();
                 } catch (Throwable throwable) {
                     log.error("running shutdown hook failed", throwable);
+                } finally {
+                    it.remove();
                 }
             }
         }).start();

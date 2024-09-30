@@ -27,8 +27,11 @@ public class Context {
     private final Map<String, MQLVar> exportLines = Maps.newHashMap();
 
 
+    @Getter
     public static class MQLVar {
-        @Getter
+        /**
+         * key is time
+         */
         public TreeMap<String, List<MetricVo>> data;
 
         public static MQLVar newVar(TreeMap<String, List<MetricVo>> data) {

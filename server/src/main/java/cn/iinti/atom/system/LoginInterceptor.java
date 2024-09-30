@@ -107,10 +107,4 @@ public class LoginInterceptor implements HandlerInterceptor {
     public void postHandle(@Nullable HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable Object handler, ModelAndView modelAndView) {
         AppContext.removeUser();
     }
-
-    @Override
-    public void afterCompletion(@Nullable HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable Object handler, Exception ex) {
-
-    }
-
 }

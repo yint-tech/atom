@@ -11,7 +11,7 @@ import cn.iinti.atom.service.base.env.Environment;
 import cn.iinti.atom.service.base.perm.PermsService;
 import cn.iinti.atom.system.AppContext;
 import cn.iinti.atom.system.LoginRequired;
-import cn.iinti.atom.utils.CommonUtils;
+import cn.iinti.atom.utils.ServletUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
@@ -69,7 +69,7 @@ public class UserInfoController {
             httpServletResponse.sendRedirect("/");
             return;
         }
-        CommonUtils.writeRes(httpServletResponse, commonRes);
+        ServletUtil.writeRes(httpServletResponse, commonRes);
     }
 
     @Operation(summary = "注册")

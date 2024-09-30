@@ -7,6 +7,7 @@ import cn.iinti.atom.mapper.SysLogMapper;
 import cn.iinti.atom.mapper.UserInfoMapper;
 import cn.iinti.atom.service.base.BroadcastService;
 import cn.iinti.atom.service.base.UserInfoService;
+import cn.iinti.atom.service.base.alert.EventNotifierService;
 import cn.iinti.atom.service.base.config.ConfigService;
 import cn.iinti.atom.service.base.config.Settings;
 import cn.iinti.atom.service.base.config.SettingsValidate;
@@ -44,6 +45,8 @@ public class AdminController {
     @Resource
     private SysLogMapper sysLogMapper;
 
+    @Resource
+    private EventNotifierService eventNotifierService;
 
     @Operation(summary = "创建用户")
     @LoginRequired(forAdmin = true, alert = true)
@@ -193,4 +196,14 @@ public class AdminController {
         queryWrapper.orderByDesc(SysLog.ID);
         return CommonRes.success(sysLogMapper.selectPage(new Page<>(page, pageSize), queryWrapper));
     }
+
+
+    @Operation(summary = "触发指标告警事件任务")
+    @GetMapping("/triggerMetricEvent")
+    @LoginRequired(forAdmin = true, apiToken = true)
+    public CommonRes<String> triggerMetricEvent() {
+        eventNotifierService.scheduleMetricEvent(true);
+        return CommonRes.success("ok");
+    }
+
 }

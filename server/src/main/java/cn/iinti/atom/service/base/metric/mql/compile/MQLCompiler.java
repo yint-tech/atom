@@ -36,7 +36,7 @@ public class MQLCompiler {
     }
 
     @SneakyThrows
-    private static MQL doCompile(String script) {
+    public static MQL doCompile(String script) {
         WordReader tokenReader = new WordReader(
                 new LineNumberReader(new StringReader(script)), "mql main script"
         );

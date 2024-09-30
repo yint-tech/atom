@@ -186,6 +186,7 @@ public class Configs {
             monitorConfigChangeListener.transform(value);
             return null;
         } catch (Throwable throwable) {
+            log.warn("config validation error", throwable);
             return CommonUtils.throwableToString(throwable);
         }
     }
@@ -236,7 +237,7 @@ public class Configs {
         }
     }
 
-    private interface TransformFunc<T> {
+    public interface TransformFunc<T> {
         T apply(String value, Class<T> type);
     }
 
@@ -253,9 +254,10 @@ public class Configs {
 
     private static final Map<String, Object> registerConfigValueRecord = Maps.newConcurrentMap();
 
-    public abstract static class ConfigValue<V> {
+    public static class ConfigValue<V> {
         public V value;
         public final String key;
+        public String sValue;
 
         public ConfigValue(String configKey, V defaultValue) {
             this.key = configKey;
@@ -273,8 +275,10 @@ public class Configs {
             }
             Class<V> superClassGenericType = getSuperClassGenericType(getClass());
             TransformFunc<V> transformer = transformer();
-            addConfigFetcher(value -> ConfigValue.this.value = value,
-                    configKey, defaultValue, transformer, superClassGenericType
+            addConfigFetcher(value -> {
+                        ConfigValue.this.value = value;
+                        ConfigValue.this.sValue = getConfig(configKey);
+                    }, configKey, defaultValue, transformer, superClassGenericType
             );
         }
 

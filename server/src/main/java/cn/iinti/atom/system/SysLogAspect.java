@@ -5,6 +5,7 @@ import cn.iinti.atom.controller.UserInfoController;
 import cn.iinti.atom.entity.SysLog;
 import cn.iinti.atom.entity.UserInfo;
 import cn.iinti.atom.mapper.SysLogMapper;
+import cn.iinti.atom.service.base.alert.EventNotifierService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +30,8 @@ public class SysLogAspect {
     @Resource
     private SysLogMapper sysLogMapper;
 
-//    @Resource
-//    private AlertService alertService;
+    @Resource
+    private EventNotifierService eventNotifierService;
 
     @Pointcut("@annotation(cn.iinti.atom.system.LoginRequired)")
     public void pointcut() {
@@ -76,17 +77,15 @@ public class SysLogAspect {
         sysLog.setParams(StringUtils.substring(params, 0, 50));
 
         sysLog.setMethodName(target);
-        log.info("record sys log:" + sysLog);
+        log.info("record sys log:{}", sysLog);
         sysLogMapper.insert(sysLog);
 
         // alert
         LoginRequired loginAnnotation = AppContext.getLoginAnnotation();
         if (loginAnnotation.alert()) {
-            String message = "系统敏感操作:\n" +
-                    "操作人:" + AppContext.getUser().getUserName() + "\n" +
-                    "操作接口: " + target + "\n" +
-                    "操作参数：" + sysLog.getParams();
-            // alertService.sendMessage(message);
+            eventNotifierService.notifySensitiveOperation(sysLog.getUsername(),
+                    target, sysLog.getParams()
+            );
         }
     }
 

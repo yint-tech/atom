@@ -1,11 +1,16 @@
 package cn.iinti.atom.service.base.config;
 
 import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.service.base.alert.EventScript;
+import cn.iinti.atom.service.base.env.Environment;
+import cn.iinti.atom.utils.CommonUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -20,7 +25,7 @@ public class Settings {
         JSONObject ret = new JSONObject();
         ret.put("normal", allSettings.stream().map(settingConfig ->
                         new JSONObject().fluentPut("key", settingConfig.getKey())
-                                .fluentPut("value", settingConfig.getSupplier().value)
+                                .fluentPut("value", settingConfig.valueVo())
                                 .fluentPut("type", settingConfig.getSupplier().configType())
                                 .fluentPut("desc", settingConfig.desc)
                                 .fluentPut("detailDesc", settingConfig.detailDesc))
@@ -75,6 +80,33 @@ public class Settings {
         return configValue;
     }
 
+    public static <T> Configs.ConfigValue<T> newCustomConfig(CustomConfigBuilder<T> builder) {
+        Configs.ConfigValue<T> configValue = new Configs.ConfigValue<>(builder.configKey, builder.defaultValue) {
+            @Override
+            protected Configs.TransformFunc<T> transformer() {
+                return builder.transformFunc;
+            }
+
+            @Override
+            protected String configType() {
+                return builder.configType;
+            }
+        };
+        allSettings.add(new SettingConfig(builder.configKey, configValue, builder.desc, builder.detailDesc));
+        return configValue;
+    }
+
+    @Builder
+    public static class CustomConfigBuilder<T> {
+        @NotBlank
+        private String configKey;
+        private T defaultValue;
+        @NotBlank
+        private String desc;
+        private String detailDesc;
+        private Configs.TransformFunc<T> transformFunc;
+        private String configType;
+    }
 
     @Getter
     @AllArgsConstructor
@@ -83,6 +115,11 @@ public class Settings {
         private Configs.ConfigValue<?> supplier;
         private String desc;
         private String detailDesc;
+
+        public Object valueVo() {
+            return StringUtils.isNotBlank(supplier.sValue) ? supplier.sValue :
+                    supplier.value;
+        }
     }
 
 
@@ -108,25 +145,29 @@ public class Settings {
             "文档首页通告信息", "在框架文档系统中，将会推送一段消息展示在文档中（此配置是html片段，故支持任意）"
     );
 
+    public static Configs.ConfigValue<EventScript> eventNotifyScript = newCustomConfig(CustomConfigBuilder.<EventScript>builder()
+            .configKey(BuildInfo.appName + ".eventNotifyScript")
+            .transformFunc((value, type) -> {
+                if (StringUtils.isNotBlank(value)) {
+                    return EventScript.compileScript(value);
+                }
+                return null;
+
+            })
+            .desc("事件通知处理脚本")
+            .detailDesc("内部事件，通过调用脚本的方式通知到外部系统")
+            .configType("multiLine")
+            .build()
+    );
+
 
     /**
      * 目前不可以使用接口内部类和接口常量，目前这可能和因体的基础工具链冲突
      */
     public static class Storage {
-        public static final File root = makeSure(new File(FileUtils.getUserDirectory(), BuildInfo.appName));
+        public static final File root = Environment.storageRoot;
 
         // 本地存储方案资源目录，如果用户没有配置任何云存储方案，那么系统默认是使用本地存储方案
-        public static final File localStorage = makeSure(new File(root, "storage"));
-
-
-        static File makeSure(File dir) {
-            if (!dir.exists()) {
-                if (!dir.mkdirs()) {
-                    throw new IllegalStateException("can not create dir: " + dir.getAbsolutePath());
-                    //log.warn("can not create dir:{}", dir.getAbsolutePath());
-                }
-            }
-            return dir;
-        }
+        public static final File localStorage = CommonUtils.forceMkdir(new File(root, "storage"));
     }
 }

@@ -235,7 +235,7 @@ public class MetricService {
                 .ge(Metric.CREATE_TIME, startTime)
                 .lt(Metric.CREATE_TIME, endTime)
                 .groupBy(Metric.TAGS_MD5)
-        ).stream().map(o -> (String) o).collect(Collectors.toList());
+        ).stream().map(o -> (String) o).toList();
 
         if (tags.isEmpty()) {
             return;

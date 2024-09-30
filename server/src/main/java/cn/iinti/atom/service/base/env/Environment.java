@@ -3,6 +3,7 @@ package cn.iinti.atom.service.base.env;
 import cn.iinti.atom.BuildInfo;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.service.base.config.Configs;
+import cn.iinti.atom.utils.CommonUtils;
 import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,6 +41,8 @@ public class Environment {
     public static final File runtimeClassPathDir = resolveClassPathDir();
 
     public static final boolean isIdeDevelopment = !runtimeClassPathDir.getName().equals("conf");
+
+    public static final File storageRoot = CommonUtils.forceMkdir(resolveStorageRoot());
 
 
     public static CommonRes<JSONObject> buildInfo() {
@@ -148,6 +151,13 @@ public class Environment {
             }
         }
         throw new IllegalStateException("can not resolve env: " + configURL);
+    }
+
+    private static File resolveStorageRoot() {
+        if (isIdeDevelopment) {
+            return new File(FileUtils.getUserDirectory(), BuildInfo.appName);
+        }
+        return new File(runtimeClassPathDir.getParent(), "data");
     }
 
     private static final List<UpgradeRuleHolder> upgradeRuleHolders = new ArrayList<>();

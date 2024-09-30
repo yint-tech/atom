@@ -32,6 +32,7 @@ keep:*.jar
 keep:*.aar
 keep:*.png
 keep:*.jpg
+keep:*.jpeg
 keep:*.ico
 keep:*.otf
 keep:*.woff2
@@ -39,6 +40,8 @@ keep:*.ttf
 keep:*.woff
 keep:*.p12
 keep:*.eot
+keep:*.webp
+keep:*.bin
 
 # 文件内容keep,这是是暂时不方便替换的内容
 keepContent:com.yint.cannotEdit

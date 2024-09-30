@@ -104,6 +104,9 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 
+    implementation("org.apache.groovy:groovy:4.0.23")
+    implementation("org.apache.groovy:groovy-json:4.0.23")
+
     compileOnly("net.sf.proguard:proguard-annotations:6.2.2")
 
     testImplementation("org.apache.velocity:velocity-engine-core:2.3")

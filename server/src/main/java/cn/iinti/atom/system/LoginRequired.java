@@ -16,5 +16,8 @@ public @interface LoginRequired {
 
     boolean apiToken() default false;
 
+    /**
+     * 标记了alert的接口发生调用时，系统发出敏感接口操作事件
+     */
     boolean alert() default false;
 }

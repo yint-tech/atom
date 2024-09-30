@@ -16,8 +16,6 @@ import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.util.Collection;
@@ -101,7 +99,7 @@ public class UserInfoService {
     }
 
     public String genLoginToken(UserInfo userInfo, LocalDateTime date) {
-        byte[] bytes = md5(userInfo.getUserName() + "|" + userInfo.getPassword() + "|" + salt + "|" + (
+        byte[] bytes = Md5Utils.md5Bytes(userInfo.getUserName() + "|" + userInfo.getPassword() + "|" + salt + "|" + (
                 date.get(ChronoField.MINUTE_OF_DAY) / 30) + "|" + date.getDayOfYear());
         //
         byte[] userIdData = longToByte(userInfo.getId());
@@ -154,16 +152,6 @@ public class UserInfoService {
         return b;
     }
 
-    public static byte[] md5(String inputString) {
-        try {
-            byte[] buffer = inputString.getBytes(StandardCharsets.UTF_8);
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            md5.update(buffer, 0, buffer.length);
-            return md5.digest();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
 
     // 用户名中非法的字符,这是因为我们的系统将会直接使用用户名称做业务，一些奇怪的字符串将会引起一些紊乱
     // 如鉴权表达式：传递控制信息
