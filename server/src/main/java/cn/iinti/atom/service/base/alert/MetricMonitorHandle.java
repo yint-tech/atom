@@ -95,6 +95,9 @@ public class MetricMonitorHandle {
                             .findAny()
                             .orElse(null))
                     .filter(Objects::nonNull).toList();
+            if (metricVos.isEmpty()) {
+                return null;
+            }
             MetricVo first = metricVos.get(0);
             MetricVo ret = MetricVo.cloneMetricVo(first);
             switch (first.getType()) {
@@ -111,7 +114,7 @@ public class MetricMonitorHandle {
                 }
             }
             return ret;
-        }).toList();
+        }).filter(Objects::nonNull).toList();
     }
 
     private TreeMap<String, List<MetricVo>> filter(TreeMap<String, List<MetricVo>> data) {
