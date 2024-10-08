@@ -78,7 +78,7 @@ public class UserInfoController {
         return userInfoService.register(userName, password);
     }
 
-    @LoginRequired(apiToken = true)
+    @LoginRequired(apiToken = true, skipLogRecord = true)
     @Operation(summary = "当前用户信息")
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public CommonRes<UserInfo> userInfo() {

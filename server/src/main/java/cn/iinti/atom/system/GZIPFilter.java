@@ -57,7 +57,7 @@ public class GZIPFilter implements Filter {
         }
 
         @Override
-        public ServletInputStream getInputStream() throws IOException {
+        public ServletInputStream getInputStream() {
             return servletInputStreamWrapper;
         }
     }

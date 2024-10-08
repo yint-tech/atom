@@ -1,7 +1,6 @@
 package cn.iinti.atom.system;
 
 
-import cn.iinti.atom.controller.UserInfoController;
 import cn.iinti.atom.entity.SysLog;
 import cn.iinti.atom.entity.UserInfo;
 import cn.iinti.atom.mapper.SysLogMapper;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Slf4j
@@ -45,11 +42,6 @@ public class SysLogAspect {
         return result;
     }
 
-    private static final Set<String> blackList = new HashSet<String>() {
-        {
-            add(UserInfoController.class.getName() + "#userInfo");
-        }
-    };
 
     private void saveLog(ProceedingJoinPoint point) {
         UserInfo user = AppContext.getUser();
@@ -60,14 +52,14 @@ public class SysLogAspect {
             return;
         }
 
+        LoginRequired loginAnnotation = AppContext.getLoginAnnotation();
+        if (loginAnnotation.skipLogRecord()) {
+            return;
+        }
         MethodSignature signature = (MethodSignature) point.getSignature();
         String className = point.getTarget().getClass().getName();
         String methodName = signature.getName();
         String target = className + "#" + methodName;
-        if (blackList.contains(target)) {
-            return;
-        }
-
 
         Method method = signature.getMethod();
         SysLog sysLog = new SysLog();
@@ -81,7 +73,6 @@ public class SysLogAspect {
         sysLogMapper.insert(sysLog);
 
         // alert
-        LoginRequired loginAnnotation = AppContext.getLoginAnnotation();
         if (loginAnnotation.alert()) {
             eventNotifierService.notifySensitiveOperation(sysLog.getUsername(),
                     target, sysLog.getParams()

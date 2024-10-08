@@ -28,7 +28,7 @@ import java.util.List;
 public class LoginInterceptor implements HandlerInterceptor {
     @Resource
     private UserInfoService userInfoService;
-
+    private static final String contentType = "application/json; charset=utf-8";
     private static final byte[] needLoginResponse = JSONObject.toJSONString(CommonRes.failed("请登录后访问")).getBytes(Charsets.UTF_8);
     private static final byte[] loginExpire = JSONObject.toJSONString(CommonRes.failed("请重新登录")).getBytes(Charsets.UTF_8);
     private static final byte[] onlyForAdminResponse = JSONObject.toJSONString(CommonRes.failed("非管理员")).getBytes(Charsets.UTF_8);
@@ -73,7 +73,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         if (tokenList.isEmpty()) {
-            response.addHeader("content-type", "application/json; charset=utf-8");
+            response.setContentType(contentType);
             response.getOutputStream().write(needLoginResponse);
             return false;
         }
@@ -85,7 +85,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 result = userInfoService.checkAPIToken(tokenList);
             }
             if (!result.isOk()) {
-                response.addHeader("content-type", "application/json; charset=utf-8");
+                response.setContentType(contentType);
                 response.getOutputStream().write(loginExpire);
                 return false;
             }
@@ -93,7 +93,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
         if (loginRequired.forAdmin()) {
             if (!BooleanUtils.isTrue(result.getData().getIsAdmin())) {
-                response.addHeader("content-type", "application/json; charset=utf-8");
+                response.setContentType(contentType);
                 response.getOutputStream().write(onlyForAdminResponse);
                 return false;
             }
