@@ -33,6 +33,9 @@ export const zhNavbar = navbar([
             {
                 text: "监控",
                 link: "02_metric.md",
+            }, {
+                text: "告警",
+                link: "03_alert.md",
             },
         ]
     }

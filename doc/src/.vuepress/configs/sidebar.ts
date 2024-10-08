@@ -5,6 +5,6 @@ export const zhSidebar = sidebar({
         "01_startup.md", "02_coding.md", "03_build.md", "04_project_transform.md"
     ],
     "/03_middleware/": [
-        "01_config.md","02_metric.md"
+        "01_config.md", "02_metric.md", "03_alert.md"
     ],
 });
