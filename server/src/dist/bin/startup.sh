@@ -9,10 +9,37 @@ script_dir=`pwd`
 function getPid(){
     echo $(ps -ef | grep "AtomMain" | grep -v "grep" | grep -v "startup.sh" | awk '{print $2}')
 }
+
+function prepareShutdown() {
+    if [[ -f ../conf/application.properties ]]
+      work_port=`cat ../conf/application.properties | grep 'server.port' | awk -F "=" '{print $2}'`
+      if [[ -n ${work_port} ]] ;then
+        counter=0
+        while [ $counter -lt 10 ]; do
+            response=$(curl -s "http://localhost:${work_port}/atom-api/system/prepareShutdown")
+            if [ $? != 0 ] ; then
+                # server status bad
+                break
+            fi
+            if [ "$response" = "0" ]; then
+                echo "the atom service can be shutdown safety"
+                break
+            else
+                echo "waiting atom service shutdown ${counter} times"
+            fi
+            ((counter++))
+            sleep 10
+        done
+      fi
+    if
+}
+
 remote_pid=`getPid`
 
 echo remote_pid:${remote_pid}
 if [[ -n "${remote_pid}" ]] ;then
+    # 在停机重启的时候，先发送通知给服务器，让服务器有时间可以做一些收尾工作
+    prepareShutdown
     echo kill pid ${remote_pid}
     kill -9 ${remote_pid}
 fi
