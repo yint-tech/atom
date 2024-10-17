@@ -50,6 +50,11 @@ public class ProjectMaker {
                 genRule.root.remove(relativePath);
             }
 
+            // 在输出目录下，需要先扫描一下,这样等会清理数据的时候，就不会把忽略文件删除掉了
+            // 否则只有原目录存在，且在原目录命中忽略规则的部分才可以真正命中忽略规则
+            ignoreFromOutputDirectory();
+
+
             Files.walkFileTree(srcRootDir.toPath(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -69,6 +74,34 @@ public class ProjectMaker {
                 String rewriteCmd = contentReplace(cmd);
                 Shell.execute(rewriteCmd, null, genRule.outputRootDir);
             }
+        }
+
+        private static void ignoreFromOutputDirectory() throws IOException {
+            String outputRootDirStr = genRule.outputRootDir.getAbsoluteFile().getCanonicalPath();
+            Files.walkFileTree(genRule.outputRootDir.toPath(), new SimpleFileVisitor<Path>() {
+                private FileVisitResult handleFile(Path path, BasicFileAttributes attrs) throws IOException {
+                    File file = path.toFile();
+                    // 当前文件的相对路径
+                    String relativePath = file.getCanonicalPath().substring(outputRootDirStr.length());
+                    boolean needIgnore = genRule.ignoreFiles.match(file);
+                    // 文件忽略逻辑
+                    if (needIgnore) {
+                        genRule.root.remove(relativePath);
+                        return attrs.isDirectory() ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    return handleFile(file, attrs);
+                }
+
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    return handleFile(dir, attrs);
+                }
+            });
         }
 
 
@@ -147,12 +180,15 @@ public class ProjectMaker {
             // 对于java和aidl文件，我们需要修改包名，此时需要重新计算文件路径
             // 对于其他类型文件，我们只会考虑修改文件内容，不会修改文件路径规则
             boolean isJavaLikeFile = false;
-            for (String str : javaLikeFiles) {
-                if (relativePath.endsWith(str)) {
-                    isJavaLikeFile = true;
-                    break;
+            if (!relativePath.endsWith(".gradle.kts")) {// .gradle.kts是构建脚本，没有包名的概念
+                for (String str : javaLikeFiles) {
+                    if (relativePath.endsWith(str)) {
+                        isJavaLikeFile = true;
+                        break;
+                    }
                 }
             }
+
             if (!isJavaLikeFile) {
                 return new File(genRule.outputRootDir, contentReplace(relativePath));
             }
