@@ -4,6 +4,7 @@ import cn.iinti.atom.utils.Md5Utils;
 import cn.iinti.atom.utils.ResourceUtil;
 import com.google.common.base.Splitter;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -571,13 +572,14 @@ public class ProjectMaker {
             return genRule;
         }
 
+        @SneakyThrows
         public static File resolveFile(String path) {
             path = path.trim();
             if (path.startsWith("~/")) {
                 path = FileUtils.getUserDirectoryPath() +
                         path.substring(1);
             }
-            return new File(path);
+            return new File(path).getCanonicalFile();
         }
 
         public void init(File root) {
