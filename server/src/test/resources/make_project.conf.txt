@@ -20,6 +20,8 @@ ignore:.gitmodules/
 ignore:node_modules
 ignore:target/
 ignore:.vuepress/dist/
+ignore:.vuepress/.temp/
+ignore:.yarn/
 ignore:yarn.lock
 ignore:package-lock.json
 
