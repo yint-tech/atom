@@ -11,7 +11,7 @@ function getPid(){
 }
 
 function prepareShutdown() {
-    if [[ -f ../conf/application.properties ]]
+    if [[ -f ../conf/application.properties ]]; then
       work_port=`cat ../conf/application.properties | grep 'server.port' | awk -F "=" '{print $2}'`
       if [[ -n ${work_port} ]] ;then
         counter=0
@@ -31,7 +31,7 @@ function prepareShutdown() {
             sleep 10
         done
       fi
-    if
+    fi
 }
 
 remote_pid=`getPid`
