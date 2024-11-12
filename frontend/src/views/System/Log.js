@@ -13,7 +13,6 @@ const LogPanel = () => {
         <BackendPagedTable
             loadDataFun={api.logList}
             searchParam={searchParam}
-            setSearchParam={setSearchParam}
             columns={[{
                 label: '操作人',
                 key: 'username'

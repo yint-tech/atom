@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 
 import clsx from "clsx";
 import {Card, CardActions, CardContent, Input, Pagination} from "@mui/material";
@@ -89,6 +89,7 @@ const BackendPagedTable = (props) => {
     const classes = useStyles({theme});
 
     const [page, setPage] = useState(1);
+    const defaultSearchParamBuilder = useCallback((param) => param, [])
 
     const {
         loadDataFun,
@@ -97,13 +98,7 @@ const BackendPagedTable = (props) => {
         columns,
         refresh,
         renderCollapse,
-        searchParamBuilder = (param) => {
-            return {
-                ...param,
-                page: page,
-                pageSize: 10
-            }
-        }
+        searchParamBuilder = defaultSearchParamBuilder
     } = props;
 
     const [loading, setLoading] = useState(false);
@@ -114,16 +109,20 @@ const BackendPagedTable = (props) => {
 
     useEffect(() => {
         setLoading(true);
-        loadDataFun(searchParamBuilder(searchParam))
-            .then(res => {
-                if (res.status === 0) {
-                    setRecords(res.data.records);
-                    setTotal(res.data.total);
-                }
-            }).finally(() => {
+        const param = searchParamBuilder(searchParam);
+        loadDataFun({
+            ...param,
+            page: page,
+            pageSize: 10
+        }).then(res => {
+            if (res.status === 0) {
+                setRecords(res.data.records);
+                setTotal(res.data.total);
+            }
+        }).finally(() => {
             setLoading(false);
         });
-    }, [loadDataFun, innerRefresh, searchParam,searchParamBuilder]);
+    }, [loadDataFun, innerRefresh, searchParam, searchParamBuilder]);
 
     useEffect(() => {
         setInnerRefresh(+new Date())
