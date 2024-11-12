@@ -3,8 +3,8 @@ import React, {useEffect, useState} from "react";
 import {Paper, Tab, Tabs} from "@mui/material";
 import Config from "./Config";
 import Log from "./Log";
-import ProxyNode from "./ServerNode";
 import BuildInfo from "./BuildInfo"
+import SeverNodeList from "./SeverNodeList"
 import configs from "config";
 import {createUseStyles, useTheme} from "react-jss";
 
@@ -59,7 +59,7 @@ function System() {
                         <Config/>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <ProxyNode/>
+                        <SeverNodeList/>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         <Log/>

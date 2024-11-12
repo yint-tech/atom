@@ -7,3 +7,4 @@ export {default as Empty} from './Empty';
 export {default as Goback} from './Goback';
 export {default as Table} from './Table';
 export {default as SimpleTable} from './SimpleTable'
+export {default as BackendPagedTable} from './BackendPagedTable'

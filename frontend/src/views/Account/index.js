@@ -197,13 +197,6 @@ const AccountList = () => {
                         render: (item) => (
                             item.isAdmin ? (<p>是</p>) : (<p>否</p>)
                         )
-                    }
-                    , {
-                        label: '余额',
-                        key: 'balance'
-                    }, {
-                        label: '已充值',
-                        key: 'actualPayAmount'
                     }, {
                         label: "操作",
                         render: (item) => (
