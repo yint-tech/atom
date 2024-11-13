@@ -39,16 +39,16 @@ docker tag registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-$image_vers
 docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-latest;
 docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-$image_version;
 
-echo "build allInOne img"
+echo "build all-in-one img"
 # all in one 模式
-docker build -f Dockerfile.AllInOne -t registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-$image_version .
+docker build -f Dockerfile.all-in-one -t registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-$image_version .
 if [ $? != 0 ] ; then
     echo "docker build failed"
     exit 11
 fi
-docker tag registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-$image_version registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-allInOne-$image_version;
+docker tag registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-$image_version registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-latest;
+docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-latest;
+docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-$image_version;
 
 echo "upload to oss"
 scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
