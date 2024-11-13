@@ -125,7 +125,7 @@ CREATE TABLE `sys_log`
     `method_name` varchar(200) DEFAULT NULL COMMENT '操作的方法名',
     `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4  COMMENT='用户访问日志';
 
 
 CREATE TABLE `user_info`
