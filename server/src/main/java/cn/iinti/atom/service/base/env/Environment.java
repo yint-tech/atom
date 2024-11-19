@@ -146,6 +146,7 @@ public class Environment {
             if (absolutePath.endsWith("target/classes") // with maven
                     || absolutePath.endsWith("build/resources/main") // with gradle
                     || absolutePath.endsWith("conf") // with distribution
+                    || absolutePath.endsWith("build\\resources\\main")//with gradle and Windows
             ) {
                 return classPathDir;
             }
