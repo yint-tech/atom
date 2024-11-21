@@ -11,7 +11,7 @@ export default {
 
 
     // admin
-    userLogin: api_prefix + "/admin-op/travelToUser", // 模拟登录
+    travelToUser: api_prefix + "/admin-op/travelToUser", // 模拟登录
     userAdd: api_prefix + "/admin-op/createUser", // 创建用户
     userList: api_prefix + "/admin-op/listUser", // 用户列表
     setConfig: api_prefix + "/admin-op/setConfig post", // config 单条

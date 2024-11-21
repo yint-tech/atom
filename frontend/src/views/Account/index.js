@@ -123,10 +123,9 @@ const AccountList = () => {
     const [refresh, setRefresh] = useState(+new Date());
 
 
-    const doLogin = (item) => {
-        api.login({
-            userName: item.userName,
-            password: item.password
+    const travelToUser = (item) => {
+        api.travelToUser({
+            id: item.id
         }).then(res => {
             if (res.status === 0) {
                 api.setStore({...res.data, mock: true}, LOGIN_USER_MOCK_KEY);
@@ -206,7 +205,7 @@ const AccountList = () => {
                                     size="small"
                                     color="primary"
                                     className={classes.tableButton}
-                                    onClick={() => doLogin(item)}
+                                    onClick={() => travelToUser(item)}
                                     variant="contained">登录</Button>
                                 <Button
                                     startIcon={<PermIdentity style={{fontSize: 16}}/>}
