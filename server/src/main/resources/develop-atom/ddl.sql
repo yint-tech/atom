@@ -7,7 +7,9 @@ create  database IF NOT EXISTS atom ;
 use atom;
 
 -- drop table if exist
-drop table if exists metric;
+drop table if exists metric_day;
+drop table if exists metric_hour;
+drop table if exists metric_minute;
 drop table if exists metric_tag;
 drop table if exists server_node;
 drop table if exists sys_config;
