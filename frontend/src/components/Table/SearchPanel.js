@@ -13,6 +13,19 @@ import {
 } from "@mui/material";
 import { createUseStyles } from 'react-jss'; // 导入 createUseStyles
 import React from "react";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from '@mui/material/styles';
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
 
 // 使用 JSS 样式
 const useStyles = createUseStyles({
@@ -46,18 +59,19 @@ const SearchPanel = (props) => {
 
     // 渲染每个配置项
     const renderField = (fieldItem) => {
-        const { componentType, label, fieldName, placeholder, xs, options, onClick } = fieldItem;
-        const onChange = handleChange(fieldName, setSearchParam, searchParam, setRefresh);
-        //console.log('onClick:', onClick);
+        const { component, label, field, placeholder, 
+            xs, options, onClick, uploadChange } = fieldItem;
+        const onChange = handleChange(field, setSearchParam, searchParam, setRefresh);
+
         // 根据 type 选择对应的组件
-        if (componentType === 'select') {
+        if (component === 'select') {
             return (
-                <Grid item xs={xs} key={fieldName}>
+                <Grid item xs={xs} key={field}>
                     <Typography gutterBottom variant="inherit">{label}</Typography>
                     <Select
                         className={classes.inputItem}
                         variant="outlined"
-                        value={searchParam[fieldName]}
+                        value={searchParam[field]}
                         onChange={onChange}
                         inputProps={{ style: { height: '40px' } }}
                     >
@@ -69,13 +83,13 @@ const SearchPanel = (props) => {
                     </Select>
                 </Grid>
             );
-        } else if (componentType === 'date') {
+        } else if (component === 'date') {
             return (
-                <Grid item xs={xs} key={fieldName}>
+                <Grid item xs={xs} key={field}>
                     <Typography gutterBottom variant="inherit">{label}</Typography>
                     <TextField
                         className={classes.inputItem}
-                        value={searchParam[fieldName]}
+                        value={searchParam[field]}
                         size="small"
                         onChange={onChange}
                         type="date"
@@ -84,9 +98,9 @@ const SearchPanel = (props) => {
                     />
                 </Grid>
             );
-        } else if (componentType === 'button') {  // 如果是 button 类型
+        } else if (component === 'button') {  // 如果是 button 类型
             return (
-                <Grid item xs={xs} key={fieldName}>
+                <Grid item xs={xs} key={field}>
                     <Button
                         color="primary"
                         variant="contained"
@@ -96,15 +110,33 @@ const SearchPanel = (props) => {
                     </Button>
                 </Grid>
             );
-        }
+        }else if (component === 'upload') {  // 如果是 button 类型
+            return (
+                <Grid item xs={xs} key={field}>
+                   <Button
+                            component="label"
+                            variant="contained"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon />}
+                        >
+                             {label}
+                             <VisuallyHiddenInput
+                                type="file"
+                                onChange={uploadChange}
+                                multiple
+                            />
 
+                        </Button>
+                </Grid>
+            );
+        }
         // 默认处理 text 类型
         return (
-            <Grid item xs={xs} key={fieldName}>
+            <Grid item xs={xs} key={field}>
                 <Typography gutterBottom variant="inherit">{label}</Typography>
                 <TextField
                     className={classes.inputItem}
-                    value={searchParam[fieldName]}
+                    value={searchParam[field]}
                     size="small"
                     onChange={onChange}
                     placeholder={placeholder}

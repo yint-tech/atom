@@ -75,22 +75,22 @@ const ExampleList = () => {
         [
             {
                 label: '用户名',
-                fieldName: 'userName',
+                field: 'userName',
                 placeholder: '用户名称',
-                componentType: 'text', // 输入框类型
+                component: 'text', // 输入框类型
             },
             {
                 label: 'API Token',
-                fieldName: 'apiToken',
+                field: 'apiToken',
                 placeholder: 'API Token',
-                componentType: 'text', // 输入框类型
+                component: 'text', // 输入框类型
             }
         ],
         [
             {
                 label: '导出',
-                fieldName: 'export',
-                componentType: 'button',
+                field: 'export',
+                component: 'button',
                 onClick: () => {
                     alert('暂未实现');
                 }
