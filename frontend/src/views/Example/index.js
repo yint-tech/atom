@@ -57,6 +57,8 @@ const ExampleList = () => {
         "userName": "",
         "apiToken": "",
         "lastActive": "",
+        "page": 1,
+        "pageSize": defaultPageSize,
         ...initListParam
     });
     useEffect(() => {
@@ -84,6 +86,11 @@ const ExampleList = () => {
                 field: 'apiToken',
                 placeholder: 'API Token',
                 component: 'text', // 输入框类型
+            },
+            {
+                label: 'lastActive',
+                field: '活跃时间',
+                component: 'date', // 输入框类型
             }
         ],
         [
