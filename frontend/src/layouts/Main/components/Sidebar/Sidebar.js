@@ -44,6 +44,11 @@ const Sidebar = props => {
             href: "/mine",
             icon: <Home/>
         },
+        {
+            title: "样例列表",
+            href: "/exampleList",
+            icon: <AccountBox/>
+        }
 
     ];
 

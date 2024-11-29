@@ -7,6 +7,7 @@ import loadable from '@loadable/component';
 import {AppContext} from "adapter";
 
 const AccountView = loadable(() => import('./views/Account'));
+const ExampleView = loadable(() => import('./views/Example'));
 const MineView = loadable(() => import('./views/Mine'));
 const NotFoundView = loadable(() => import('./views/NotFound'));
 const SignInView = loadable(() => import('./views/SignIn'));
@@ -35,6 +36,12 @@ const Routes = () => {
                 exact
                 from="/"
                 to="/mine"
+            />
+             <PrivateRoute
+                component={ExampleView}
+                exact
+                layout={MainLayout}
+                path="/exampleList"
             />
             <PrivateRoute
                 component={AccountView}

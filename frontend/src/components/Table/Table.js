@@ -8,9 +8,15 @@ import {Box, Checkbox, Collapse, IconButton, Table, TableBody, TableCell, TableH
 import Empty from '../Empty';
 import Loading from 'components/Loading';
 
+const defaultEllipsisStyle = {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+};
 const CollapseRow = (props) => {
     const {row, columns, checkbox, checked, onCheckboxChange, renderCollapse} = props;
     const [open, setOpen] = useState(false);
+
 
     return (
         <React.Fragment>
@@ -32,6 +38,8 @@ const CollapseRow = (props) => {
                 ) : null}
                 {columns.map(col => (
                     <TableCell
+                        style={{ ...defaultEllipsisStyle, ...col.style }} // 直接使用列定义中的样式
+                        sx={col.sx} // 如果需要支持 MUI 的 sx 属性
                         key={col.label}>{typeof col.render === 'function' ? col.render(row) : row[col.key]}</TableCell>
                 ))}
             </TableRow>
@@ -91,7 +99,7 @@ const DataTable = props => {
                                 </TableCell>
                             ) : null}
                             {columns.map(item => (
-                                <TableCell key={item.label}>{item.label}</TableCell>
+                                <TableCell key={item.label} style={{ ...defaultEllipsisStyle, ...item.style }} sx={item.sx}>{item.label}</TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
@@ -134,6 +142,8 @@ const DataTable = props => {
                                         ) : null}
                                         {columns.map(col => (
                                             <TableCell
+                                                style={{ ...defaultEllipsisStyle, ...col.style }} // 直接使用列定义中的样式
+                                                sx={col.sx} // 如果需要支持 MUI 的 sx 属性
                                                 key={col.label}>{typeof col.render === 'function' ? col.render(row) : row[col.key]}</TableCell>
                                         ))}
                                     </TableRow>
