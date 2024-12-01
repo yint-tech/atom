@@ -91,6 +91,8 @@ public abstract class EventScript extends Script {
         configuration.addCompilationCustomizers(secureASTCustomizer);
         configuration.setScriptBaseClass(EventScript.class.getName());
         GroovyShell shell = new GroovyShell(configuration);
-        return (EventScript) shell.parse(groovyScriptSource);
+        EventScript t = (EventScript) shell.parse(groovyScriptSource);
+        t.run();
+        return t;
     }
 }
