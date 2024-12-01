@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 
 import clsx from "clsx";
-import {SearchInput} from "../index";
+import {Loading, SearchInput} from "../index";
 import {Card, CardActions, CardContent, Pagination} from "@mui/material";
 import Table from "../Table";
 import PropTypes from "prop-types";
@@ -102,12 +102,16 @@ const SimbleTable = (props) => {
     const [limit] = useState(10);
     const [keyword, setKeyword] = useState("");
     const [innerRefresh, setInnerRefresh] = useState(refresh || +new Date());
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true)
         loadDataFun().then(res => {
             if (res.status === 0) {
                 setData(res.data);
             }
+        }).finally(() => {
+            setLoading(false)
         })
     }, [loadDataFun, innerRefresh]);
 
@@ -130,14 +134,16 @@ const SimbleTable = (props) => {
                 ActionEl={actionEl}
             />
             <div className={classes.content}>
-                <DataTable
-                    renderCollapse={renderCollapse}
-                    data={showData.slice((page - 1) * limit, page * limit)}
-                    total={showData.length}
-                    columns={columns}
-                    rowsPerPage={limit}
-                    pageState={[page, setPage]}
-                    setRefresh={setInnerRefresh}/>
+                {loading ? (<Loading/>) :
+                    <DataTable
+                        renderCollapse={renderCollapse}
+                        data={showData.slice((page - 1) * limit, page * limit)}
+                        total={showData.length}
+                        columns={columns}
+                        rowsPerPage={limit}
+                        pageState={[page, setPage]}
+                        setRefresh={setInnerRefresh}/>
+                }
             </div>
         </div>
     );
