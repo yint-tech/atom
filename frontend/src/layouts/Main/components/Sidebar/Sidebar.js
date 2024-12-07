@@ -43,13 +43,7 @@ const Sidebar = props => {
             title: "我的",
             href: "/mine",
             icon: <Home/>
-        },
-        {
-            title: "样例列表",
-            href: "/exampleList",
-            icon: <AccountBox/>
         }
-
     ];
 
     if (user.isAdmin) {
