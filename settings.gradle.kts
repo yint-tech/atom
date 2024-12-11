@@ -3,6 +3,12 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
+        maven {
+            setUrl("https://maven.aliyun.com/repository/public")
+        }
+        maven {
+            setUrl("https://maven.aliyun.com/repository/gradle-plugin")
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -10,6 +16,12 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        maven {
+            setUrl("https://maven.aliyun.com/repository/public")
+        }
+        maven {
+            setUrl("https://maven.aliyun.com/repository/google")
+        }
         mavenCentral()
     }
 }
