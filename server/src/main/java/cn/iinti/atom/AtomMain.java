@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
 
 @SpringBootApplication
 @EnableAspectJAutoProxy
@@ -110,14 +111,33 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
                 }
             }
         }
+        runApp(argList, throwable -> {
+            if (Environment.isIdeDevelopment && StringUtils.contains(throwable.getMessage(),
+                    "Docker is not running")) {
+                // 有一些时候用户在本地开发的时候,不想依赖docker，那么这个时候尝试禁用docker，直接使用本机配置尝试启动服务
+                argList.add("--spring.docker.compose.enabled=false");
+                throwable.printStackTrace(System.err);
+                runApp(argList, defaultErrorHandle);
+                return;
+            }
+            defaultErrorHandle.accept(throwable);
+        });
+    }
+
+
+    private static void runApp(List<String> argList, Consumer<Throwable> errorHandle) {
         try {
             SpringApplication.run(AtomMain.class, argList.toArray(new String[]{}));
         } catch (Throwable throwable) {
-            throwable.printStackTrace(System.err);
-            // 如果启动失败，必须退出，否则docker的进程守护无法感知到服务启动失败
-            System.exit(1);
+            errorHandle.accept(throwable);
         }
     }
+
+    private static final Consumer<Throwable> defaultErrorHandle = throwable -> {
+        throwable.printStackTrace(System.err);
+        // 如果启动失败，必须退出，否则docker的进程守护无法感知到服务启动失败
+        System.exit(1);
+    };
 
     private static void springContextParamSetup(List<String> argList) {
         argList.add("--spring.main.allow-circular-references=true");
