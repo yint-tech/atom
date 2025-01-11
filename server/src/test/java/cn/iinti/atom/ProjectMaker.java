@@ -443,24 +443,24 @@ public class ProjectMaker {
                 if (!onlyDirectory && file.isFile() && file.getName().equals(config)) {
                     runtimeMatchFiles.add(file);
                 }
-                File parentFile = file.getParentFile();
-                while (parentFile != null) {
-                    File candidate = parentFile.toPath().resolve(config).toFile();
-                    if (candidate.exists()) {
-                        if (candidate.isDirectory()) {
-                            runtimeMatchDirs.add(candidate);
-                        } else {
-                            runtimeMatchFiles.add(candidate);
-                        }
-                    }
-                    parentFile = parentFile.getParentFile();
-                }
-
                 if (config.startsWith("*.")) {
                     String suffix = config.substring(2);
                     if (file.getName().endsWith(suffix)) {
                         runtimeMatchFiles.add(file);
                         hasWildcardMatch = true;
+                    }
+                } else {
+                    File parentFile = file.getParentFile();
+                    while (parentFile != null) {
+                        File candidate = parentFile.toPath().resolve(config).toFile();
+                        if (candidate.exists()) {
+                            if (candidate.isDirectory()) {
+                                runtimeMatchDirs.add(candidate);
+                            } else {
+                                runtimeMatchFiles.add(candidate);
+                            }
+                        }
+                        parentFile = parentFile.getParentFile();
                     }
                 }
             }
