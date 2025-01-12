@@ -6,6 +6,8 @@
 # mbp
 -keep class com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean {*;}
 -keep class com.baomidou.mybatisplus.extension.ddl.IDdl
+-keep class com.baomidou.mybatisplus.extension.plugins.inner.**{*;}
+-keep class com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor{*;}
 
 # spring相关
 -keep @org.springframework.web.bind.annotation.RestController class * {*;}
