@@ -4,6 +4,7 @@ import {AppBar, Toolbar} from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {createUseStyles, useTheme} from "react-jss";
+import config from "../../../../config";
 
 const useStyles = createUseStyles({
     root: {
@@ -37,7 +38,7 @@ const Topbar = props => {
                     <img
                         alt="Logo"
                         style={{height: 60}}
-                        src={process.env.PUBLIC_URL + "/images/logos/logo.svg"}
+                        src={process.env.PUBLIC_URL + config.logo_path}
                     />
                 </RouterLink>
             </Toolbar>

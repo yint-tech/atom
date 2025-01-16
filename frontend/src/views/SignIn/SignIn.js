@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import configs from 'config'
 import {createUseStyles, useTheme} from "react-jss";
+import config from "../../config";
 
 const schema = {
     oa: {
@@ -200,7 +201,7 @@ const SignIn = props => {
                 >
                     <div className={classes.quote}>
                         <img className={classes.quoteImg}
-                             src={process.env.PUBLIC_URL + "/images/logos/logo.svg"}
+                             src={process.env.PUBLIC_URL + config.logo_path}
                              alt=""/>
                     </div>
                 </Grid>
