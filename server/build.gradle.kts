@@ -125,7 +125,6 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    //developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
 }
@@ -142,7 +141,6 @@ distributions {
             into("/")
         }
     }
-
 }
 
 application {
@@ -173,13 +171,17 @@ tasks.named<Jar>("jar") {
     archiveBaseName.set("atom-server")
 }
 
-// 增加一个conf的目录，作为最终目标的classPath，在最终发布的时候，我们需要植入静态资源
 tasks.getByPath("startScripts").doFirst {
     (this as CreateStartScripts).apply {
         fun wrapScriptGenerator(delegate: ScriptGenerator): ScriptGenerator {
             return ScriptGenerator { details, destination ->
+                // 增加一个conf的目录，作为最终目标的classPath，在最终发布的时候，我们需要植入静态资源
                 (details as DefaultJavaAppStartScriptGenerationDetails)
                     .apply {
+                        classpath.removeIf {
+                            // fix, why this fuck dependency present?
+                            it.contains("spring-boot-docker-compose")
+                        }
                         classpath.add(0, "conf")
                     }
                 delegate.generateScript(details, destination)
@@ -189,18 +191,7 @@ tasks.getByPath("startScripts").doFirst {
         windowsStartScriptGenerator = wrapScriptGenerator(windowsStartScriptGenerator)
     }
 }
-// distZip任务不支持排除developmentOnly的相关依赖，这里手动修复下
-tasks.withType<Zip>().configureEach {
-    if (name == "distZip") {
-        exclude { fileTreeElement: FileTreeElement ->
-            val module = configurations.developmentOnly.get()
-                .resolvedConfiguration.resolvedArtifacts.find {
-                    it.file.name == fileTreeElement.file.name
-                }
-            module != null
-        }
-    }
-}
+
 
 val generateJavaCode = tasks.register("generateJavaCode") {
     val genTarget = "build/generated/java"
