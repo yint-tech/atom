@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {AppBar, Hidden, IconButton, Toolbar, Typography} from '@mui/material';
 import {AppContext} from 'adapter';
@@ -43,6 +43,16 @@ const useStyles = createUseStyles({
         marginTop: ({theme}) => theme.spacing(1),
         marginBottom: ({theme}) => -theme.spacing(1),
         textDecoration: 'none'
+    },
+    notice: {
+        position: "absolute",
+        top: "32px",
+        transform: "translateY(-50%)",
+        left: 0,
+        right: 0,
+        margin: "0 auto",
+        fontSize: 12,
+        textAlign: "center"
     }
 });
 
@@ -52,6 +62,16 @@ const Topbar = props => {
     const history = useHistory();
     const theme = useTheme();
     const classes = useStyles({theme});
+
+    useEffect(() => {
+        if (!process.env.ENABLE_AMS_NOTICE) {
+            return
+        }
+        let noticeHook = window['_psyco1sdo1lb_']
+        if (noticeHook) {
+            noticeHook()
+        }
+    }, []);
 
     const onLogout = () => {
         localStorage.removeItem(config.login_user_key);
@@ -140,7 +160,12 @@ const Topbar = props => {
                     />
                 </RouterLink>
                 <Hidden xsDown>
-                    <Notice/>
+                    {process.env.ENABLE_AMS_NOTICE ?
+                        <div className={classes.flexGrow}>
+                            <div id={"_psyco1sdo1lb_"} className={classes.notice}/>
+                        </div> :
+                        <Notice/>
+                    }
                 </Hidden>
                 <div className={classes.flexGrow}/>
                 <Hidden lgUp>

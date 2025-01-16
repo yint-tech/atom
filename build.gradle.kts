@@ -8,6 +8,7 @@ var docPath by extra("atom-doc")
 var userLoginTokenKey by extra("Atom-Token")
 var restfulApiPrefix by extra("/atom-api")
 var appName by extra("atom")
+var enableAmsNotice by extra(false)
 
 var buildTime: String by extra(
     LocalDateTime.now().format(

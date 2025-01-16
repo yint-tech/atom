@@ -14,6 +14,7 @@ var versionCode: Int by rootProject.extra
 var versionName: String by rootProject.extra
 var buildTime: String by rootProject.extra
 var buildUser: String by rootProject.extra
+var enableAmsNotice: Boolean by rootProject.extra
 
 
 val yarnVersionStr: String by rootProject.extra
@@ -81,5 +82,9 @@ tasks.register<YarnTask>("yarnBuild") {
     dependsOn(tasks.yarnSetup)
     dependsOn(tasks.yarn)
     args = listOf("run", "build")
-    environment = mapOf("BUILD_VERSION" to versionName, "BUILD_TIME" to buildTime)
+    environment = mapOf(
+        "BUILD_VERSION" to versionName,
+        "BUILD_TIME" to buildTime,
+        "ENABLE_AMS_NOTICE" to enableAmsNotice.toString(),
+    )
 }
