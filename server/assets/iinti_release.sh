@@ -2,9 +2,9 @@
 
 ## 此脚本仅因体产品使用，用于实现因体代码加密保护，授权agent注入，产品发布、docker发布
 ## 以及可能注入的部分针对于和网站联动的脚本等
-(IntTool.sh --help) </dev/null >/dev/null 2>&1 || {
+(AmsCli --help) </dev/null >/dev/null 2>&1 || {
   echo
-  echo "**Warning**: You need Install IntTool from :https://github.com/yint-tech/inttool."
+  echo "**Warning**: You need Install AmsCli from :https://github.com/yint-tech/ams"
   exit 1
 }
 
@@ -15,7 +15,7 @@ shell_dir=`pwd`
 cd ${now_dir}
 
 echo "call iinti proguard toolkit"
-IntTool.sh Protection --input-dist $1  \
+AmsCli Protection --input-dist $1  \
  --proguard-config ${shell_dir}/iinti/proguard.pro \
  --main-jar atom-server \
  --slave-jar mybatis-plus-extension \
