@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -117,6 +118,11 @@ public class Settings {
         private String detailDesc;
 
         public Object valueVo() {
+            if (supplier.value != null && ClassUtils.isPrimitiveOrWrapper(supplier.value.getClass())) {
+                // 如果是基础类型，则按照基础类型返回给前端
+                return supplier.value;
+            }
+            // 如果是复杂类型，则返回给前端字符串
             return StringUtils.isNotBlank(supplier.sValue) ? supplier.sValue :
                     supplier.value;
         }
