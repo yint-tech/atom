@@ -99,12 +99,6 @@ const MetricCharsV2 = (props) => {
     const classes = useStyles({theme});
     const [echartOption, setEchartOption] = useState(buildEchartOption(title, [], [], [], bottomLegend));
 
-    const fuckCacheEvent = useCallback(() => {
-        // fuck cache
-        // ReactEcharts有bug，当option修改时，曲线可能有残留，
-        // 挂载一个onEvents空函数，则会触发图标重新渲染
-        return typeof echartOption;
-    }, [echartOption]);
 
 
     useEffect(() => {
@@ -129,7 +123,7 @@ const MetricCharsV2 = (props) => {
     return (
         <div className={clsx(classes.root, className)}>
             <ReactEcharts
-                onEvents={fuckCacheEvent}
+                notMerge={true}
                 option={echartOption}
                 style={{width: '100%', height}}/>
         </div>
