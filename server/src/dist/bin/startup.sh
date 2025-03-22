@@ -7,7 +7,12 @@ script_dir=`pwd`
 
 
 function getPid(){
-    echo $(ps -ef | grep "AtomMain" | grep -v "grep" | grep -v "startup.sh" | awk '{print $2}')
+    if [[ -f ../conf/pid ]]; then
+        current_pid=$(cat ../conf/pid)
+        echo $(ps -ef | grep "AtomMain" | awk '{print $2}' | grep "${current_pid}")
+    else
+        echo ""
+    fi
 }
 
 function prepareShutdown() {
@@ -42,6 +47,7 @@ if [[ -n "${remote_pid}" ]] ;then
     prepareShutdown
     echo kill pid ${remote_pid}
     kill -9 ${remote_pid}
+    rm -f ../conf/pid
 fi
 
 echo "start atom server"
@@ -70,7 +76,7 @@ if [[ -f ../conf/AtomMain.rc ]] ;then
     source ../conf/AtomMain.rc
 fi
 
-nohup sh AtomMain --LogbackDir=${std_log}  ${addition}  >> ${std_log}/std.log  2>&1 &
+nohup sh -c "sh AtomMain --LogbackDir=${std_log} ${addition} >> ${std_log}/std.log 2>&1 & echo \$! > ../conf/pid" &
 
 sleep 2
 
