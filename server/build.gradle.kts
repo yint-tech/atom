@@ -134,14 +134,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
-distributions {
-    main {
-        contents {
-            // https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
-            // reset parent
-            into("/")
-        }
-    }
+// https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
+// reset parent
+distributions.main{
+    contents.into("/")
 }
 
 application {
@@ -166,6 +162,8 @@ application {
     applicationDistribution.from("${rootProject.projectDir}/doc/src/.vuepress/dist") {
         into("conf/static/atom-doc")
     }
+    // https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
+    applicationDistribution.into("/")
     applicationDistribution.eachFile {
         // 在windows上面构建代码的话，权限和回车可能不对，这里修复一下
         if (name.endsWith(".sh") && path.startsWith("bin")) {
