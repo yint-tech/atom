@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 echo 'shutdown atom  server'
 now_dir=`pwd`
 

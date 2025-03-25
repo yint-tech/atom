@@ -1,4 +1,5 @@
 import org.apache.hc.core5.function.Supplier
+import org.apache.tools.ant.filters.FixCrLfFilter
 import org.gradle.api.internal.plugins.DefaultJavaAppStartScriptGenerationDetails
 import org.hidetake.groovy.ssh.connection.AllowAnyHosts
 import org.hidetake.groovy.ssh.core.Remote
@@ -165,6 +166,13 @@ application {
     applicationDistribution.from("${rootProject.projectDir}/doc/src/.vuepress/dist") {
         into("conf/static/atom-doc")
     }
+    applicationDistribution.eachFile {
+        // 在windows上面构建代码的话，权限和回车可能不对，这里修复一下
+        if (name.endsWith(".sh") && path.startsWith("bin")) {
+            mode = 755
+            filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
+        }
+    }
 }
 
 tasks.named<Jar>("jar") {
@@ -258,7 +266,7 @@ fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
                     "into" to "${deployPath}conf/application.properties"
                 )
 
-                val zipFileInServer = File(deployPath, outputZipFile.get().name).absolutePath
+                val zipFileInServer = "${deployPath}${outputZipFile.get().name}"
 
                 remoteList.forEach {
                     ssh.run(delegateClosureOf<RunHandler> {
