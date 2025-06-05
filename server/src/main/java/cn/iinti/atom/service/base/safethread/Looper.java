@@ -85,10 +85,6 @@ public class Looper implements Executor {
             runnable.run();
             return;
         }
-        if (inLooper()) {
-            runnable.run();
-            return;
-        }
         if (first) {
             taskQueue.offerFirst(runnable);
         } else {
@@ -133,6 +129,10 @@ public class Looper implements Executor {
 
     @Override
     public void execute(Runnable command) {
+        if (inLooper()) {
+            command.run();
+            return;
+        }
         post(command);
     }
 

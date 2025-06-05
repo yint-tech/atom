@@ -65,10 +65,17 @@ const OpeDialog = props => {
                                 api.successToast(message);
                             }
                             let failed = typeof message === 'boolean' && !message;
+
+                            if (!failed && typeof message === 'object') {
+                                failed = (typeof message.status) !== undefined
+                                    && message.status !== 0;
+                            }
+
                             if (!failed) {
                                 setOpenDialog(false);
                             }
                         }).catch((e) => {
+                            console.error(e)
                             api.errorToast(e.message);
                         }).finally(() => {
                             setLoading(false);

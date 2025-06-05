@@ -23,32 +23,36 @@ AmsCli Protection --input-dist $1  \
  --inject-rule "${shell_dir}"/iinti/inject_rule.txt \
  --output-dist ${shell_dir}/docker/AtomMain.zip \
  # --skip-proguard
+if [ $? != 0 ] ; then
+    echo "Protection Failed"
+    exit 12
+fi
 
-image_version=`date +%Y%m%d%H%M`;
+image_version=`date +%Y%m%d`;
 echo $image_version;
 
 cd ${shell_dir}/docker
 echo "build compose img"
 # compose 模式
-docker build -t registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-$image_version .
+docker build -t registry.cn-beijing.aliyuncs.com/iinti/atom:server-$image_version .
 if [ $? != 0 ] ; then
     echo "docker build failed"
     exit 10
 fi
-docker tag registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-$image_version registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-server-$image_version;
+docker tag registry.cn-beijing.aliyuncs.com/iinti/atom:server-$image_version registry.cn-beijing.aliyuncs.com/iinti/atom:latest;
+docker push registry.cn-beijing.aliyuncs.com/iinti/atom:latest;
+docker push registry.cn-beijing.aliyuncs.com/iinti/atom:server-$image_version;
 
 echo "build all-in-one img"
 # all in one 模式
-docker build -f Dockerfile.all-in-one -t registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-$image_version .
+docker build -f Dockerfile.all-in-one -t registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one-$image_version .
 if [ $? != 0 ] ; then
     echo "docker build failed"
     exit 11
 fi
-docker tag registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-$image_version registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/common:atom-all-in-one-$image_version;
+docker tag registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one-$image_version registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one;
+docker push registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one;
+docker push registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one-$image_version;
 
 echo "upload to oss"
 scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/

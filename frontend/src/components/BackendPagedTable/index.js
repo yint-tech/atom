@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 
 import clsx from "clsx";
-import {Card, CardActions, CardContent, Input, Pagination} from "@mui/material";
+import {Card, CardActions, CardContent, CardHeader, Input, Pagination} from "@mui/material";
 import Table from "../Table";
 import PropTypes from "prop-types";
 import {createUseStyles, useTheme} from "react-jss";
@@ -40,7 +40,7 @@ const useStyles = createUseStyles({
 const DataTable = props => {
     const {
         className, data, total, page, pageSize, loading, pageChangeFunc, renderCollapse,
-        columns, ...rest
+        columns, title, ...rest
     } = props;
 
     const theme = useTheme();
@@ -48,11 +48,12 @@ const DataTable = props => {
 
     return (
         <Card
-            {...rest}
             className={clsx(classes.tableRoot, className)}
         >
+            {title && <CardHeader title={title}/>}
             <CardContent className={classes.tableContent}>
                 <Table
+                    {...rest}
                     collapse={!!renderCollapse}
                     renderCollapse={renderCollapse}
                     data={data}
@@ -98,7 +99,8 @@ const BackendPagedTable = (props) => {
         columns,
         refresh,
         renderCollapse,
-        searchParamBuilder = defaultSearchParamBuilder
+        searchParamBuilder = defaultSearchParamBuilder,
+        ...rest
     } = props;
 
     const [loading, setLoading] = useState(false);
@@ -142,6 +144,7 @@ const BackendPagedTable = (props) => {
             }
             <div className={classes.content}>
                 <DataTable
+                    {...rest}
                     renderCollapse={renderCollapse}
                     pageChangeFunc={handlePageChange}
                     loading={loading}

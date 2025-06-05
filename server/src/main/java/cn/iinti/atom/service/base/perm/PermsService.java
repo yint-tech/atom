@@ -70,7 +70,7 @@ public class PermsService implements ApplicationListener<WebServerInitializedEve
     }
 
     public <T> List<T> filter(Class<T> type, List<T> input) {
-        return doAction(type, new AuthAction<List<T>, T>() {
+        return doAction(type, new AuthAction<>() {
             @Override
             public List<T> applyAuth(Permission<T> permission, Collection<String> perms) {
                 return permission.filter(perms, input);
@@ -84,7 +84,7 @@ public class PermsService implements ApplicationListener<WebServerInitializedEve
     }
 
     public <T> boolean hasPermission(Class<T> type, T t) {
-        return doAction(type, new AuthAction<Boolean, T>() {
+        return doAction(type, new AuthAction<>() {
             @Override
             public Boolean applyAuth(Permission<T> permission, Collection<String> perms) {
                 return permission.hasPermission(perms, t);
@@ -128,7 +128,7 @@ public class PermsService implements ApplicationListener<WebServerInitializedEve
         sorted.forEach((scope, permItems) -> {
             StringBuilder sbOfScope = new StringBuilder().append(scope);
             for (String item : permItems.stream().sorted(String::compareTo)
-                    .collect(Collectors.toList())) {
+                    .toList()) {
                 if (sbOfScope.length() > 256) {
                     sb.append(sbOfScope).append("\n");
                     sbOfScope = new StringBuilder().append(scope);
@@ -163,7 +163,7 @@ public class PermsService implements ApplicationListener<WebServerInitializedEve
 
             if (count.get() == 0) {
                 if (safe) {
-                    log.warn("error perms exp: " + line);
+                    log.warn("error perms exp: {}", line);
                 } else {
                     throw new IllegalArgumentException("error perms exp: " + line);
                 }

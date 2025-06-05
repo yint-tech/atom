@@ -119,12 +119,9 @@ public class Settings {
 
         public Object valueVo() {
             if (supplier.value != null && ClassUtils.isPrimitiveOrWrapper(supplier.value.getClass())) {
-                // 如果是基础类型，则按照基础类型返回给前端
                 return supplier.value;
             }
-            // 如果是复杂类型，则返回给前端字符串
-            return StringUtils.isNotBlank(supplier.sValue) ? supplier.sValue :
-                    supplier.value;
+            return supplier.sValue;
         }
     }
 
@@ -134,6 +131,15 @@ public class Settings {
             "设置不允许注册新用户，则可以避免用户空白注册，规避系统安全机制不完善，让敏感数据通过注册泄漏"
     );
 
+    public static final Configs.BooleanConfigValue blockSwagger = newBooleanConfig(
+            BuildInfo.appName + ".user.blockSwagger", false, "拦截Swagger",
+            "系统如果部署在公网，swagger将会展示接口信息，实例在政府机构内部部署等情况将会被安全扫组件判定为数据泄露"
+    );
+
+    public static final Configs.BooleanConfigValue blockActuator = newBooleanConfig(
+            BuildInfo.appName + ".user.blockActuator", false, "拦截Actuator",
+            "系统如果部署在公网，Actuator可以导出监控指标数据，实例在政府机构内部部署等情况将会被安全扫组件判定为数据泄露"
+    );
 
     public static final Configs.StringConfigValue outIpTestUrl = newStringConfig(
             BuildInfo.appName + ".outIpTestUrl", "https://iinti.cn/conn/getPublicIp?scene=" + BuildInfo.appName,

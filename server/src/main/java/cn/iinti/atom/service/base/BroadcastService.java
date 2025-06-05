@@ -88,7 +88,8 @@ public class BroadcastService implements ApplicationListener<WebServerInitialize
         if (!resolvedNodes.isEmpty()) {
             queryWrapper.notIn(ServerNode.SERVER_ID, resolvedNodes);
         }
-        queryWrapper.ne(ServerNode.SERVER_ID, serverId).ge(ServerNode.LAST_ACTIVE_TIME, LocalDateTime.now().minusMinutes(5));
+        queryWrapper.ne(ServerNode.SERVER_ID, serverId)
+                .ge(ServerNode.LAST_ACTIVE_TIME, LocalDateTime.now().minusMinutes(5));
         serverNodeMapper.selectList(queryWrapper).forEach(this::resolveOtherNode);
     }
 
@@ -227,7 +228,8 @@ public class BroadcastService implements ApplicationListener<WebServerInitialize
                 return;
             }
             callListener(topic);
-            List<ServerNode> ServerNodes = instance.serverNodeMapper.selectList(new QueryWrapper<ServerNode>().eq(ServerNode.ENABLE, true));
+            List<ServerNode> ServerNodes = instance.serverNodeMapper
+                    .selectList(new QueryWrapper<ServerNode>().eq(ServerNode.ENABLE, true));
             for (ServerNode node : ServerNodes) {
                 if (ServerIdentifier.id().equals(node.getServerId())) {
                     //当前机器本身不用广播通知，直接调用即可

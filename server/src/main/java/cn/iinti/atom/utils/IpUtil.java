@@ -38,12 +38,12 @@ public class IpUtil {
         return null;
     }
 
-    private static boolean isValidIp(String ip) {
+    public static boolean isValidIp(String ip) {
         if (StringUtils.isBlank(ip)) {
             return false;
         }
         ip = ip.trim();
-        String[] segments = ip.split("\\.");
+        String[] segments = StringUtils.split(ip, '.');
         if (segments.length != 4) {
             return false;
         }

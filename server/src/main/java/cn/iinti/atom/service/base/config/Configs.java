@@ -206,11 +206,9 @@ public class Configs {
             this.configKey = configKey;
             this.defaultValue = defaultValue;
             this.configFetcher = configFetcher;
-            if (transformer == null) {
-                this.transformer = (TransformFunc<T>) defaultTransformFuncInstance;
-            } else {
-                this.transformer = transformer;
-            }
+            this.transformer = Objects.requireNonNullElseGet(transformer,
+                    () -> (TransformFunc<T>) defaultTransformFuncInstance
+            );
             this.finalValueType = finalValueType;
             autoTransformerValidators.put(configKey, this);
         }
@@ -226,7 +224,7 @@ public class Configs {
                 return;
             }
             originValue = config;
-            if (config == null) {
+            if (config == null && defaultValue != null) {
                 value = defaultValue;
                 configFetcher.fetch(defaultValue);
                 return;
@@ -278,6 +276,9 @@ public class Configs {
             addConfigFetcher(value -> {
                         ConfigValue.this.value = value;
                         ConfigValue.this.sValue = getConfig(configKey);
+                        if (ConfigValue.this.sValue == null && value instanceof String) {
+                            ConfigValue.this.sValue = (String) value;
+                        }
                     }, configKey, defaultValue, transformer, superClassGenericType
             );
         }

@@ -73,14 +73,13 @@ const Routes = () => {
                 layout={MinimalLayout}
                 path="/not-found"
             />
-
-            {/* custom begin */}
             <PrivateRoute
                 component={MetricsView}
                 exact
                 layout={MainLayout}
                 path="/metrics"
             />
+            {/* custom begin */}
             <Redirect to="/not-found"/>
         </Switch>
     );

@@ -1,19 +1,18 @@
 package cn.iinti.atom.service.base.safethread;
 
 
+import lombok.Getter;
+
 public class ValueCallbackGetter<T> {
     private volatile ValueCallback.Value<T> value;
     private final Object lock = new Object();
+    @Getter
     private final ValueCallback<T> callback = value -> {
         ValueCallbackGetter.this.value = value;
         synchronized (lock) {
             lock.notifyAll();
         }
     };
-
-    public ValueCallback<T> getCallback() {
-        return callback;
-    }
 
     public T getUncheck() {
         try {

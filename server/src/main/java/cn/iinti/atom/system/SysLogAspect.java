@@ -7,6 +7,8 @@ import cn.iinti.atom.mapper.SysLogMapper;
 import cn.iinti.atom.service.base.alert.EventNotifierService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import proguard.annotation.Keep;
+
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -31,9 +33,11 @@ public class SysLogAspect {
     private EventNotifierService eventNotifierService;
 
     @Pointcut("@annotation(cn.iinti.atom.system.LoginRequired)")
+    @Keep
     public void pointcut() {
     }
 
+    @Keep
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         Object result = point.proceed();
