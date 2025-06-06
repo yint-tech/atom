@@ -53,6 +53,8 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
     id("org.hidetake.ssh") version "2.11.2"
     application
+    id("org.jetbrains.kotlin.jvm") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.spring") version "2.0.0"
 }
 
 gitProperties {
@@ -90,6 +92,9 @@ repositories {
 }
 
 dependencies {
+    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-test-junit5")
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(group = "org.apache.logging.log4j", module = "log4j-to-slf4j")
     }
@@ -334,8 +339,8 @@ afterEvaluate {
         dependsOn(generateJavaCode)
     }
     tasks.startScripts {
-        dependsOn(":frontend:yarnBuild")
-        dependsOn(":doc:yarnBuild")
+//        dependsOn(":frontend:yarnBuild")
+//        dependsOn(":doc:yarnBuild")
     }
 }
 

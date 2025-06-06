@@ -82,9 +82,9 @@ public class DbCacheStorage<M, E> {
         baseMapper.selectList(new QueryWrapper<>()).forEach(m -> {
             Object keyObj;
             try {
-                keyObj = ReflectUtil.getFieldValue(m, keyFieldCamel);
+                keyObj = ReflectUtil.Companion.getFieldValue(m, keyFieldCamel);
             } catch (NoSuchFieldError error) {
-                keyObj = ReflectUtil.getFieldValue(m, keyField);
+                keyObj = ReflectUtil.Companion.getFieldValue(m, keyField);
             }
             if (keyObj == null) {
                 return;

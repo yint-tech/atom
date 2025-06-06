@@ -50,7 +50,7 @@ public class MetricPermission extends Permission<Metric> {
     @Override
     public void filter(Collection<String> perms, QueryWrapper<Metric> sql) {
         if (perms.isEmpty()) {
-            sql.eq(MetricDay.ID, -1);
+            sql.eq(Metric.ID, -1);
             return;
         }
         Set<String> hasPermsMetrics = new HashSet<>();

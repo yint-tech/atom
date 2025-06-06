@@ -42,7 +42,7 @@ import java.util.function.Consumer;
 public class AtomMain implements ApplicationListener<WebServerInitializedEvent> {
 
     @Getter
-    private static final Looper shardThread = new Looper("ShardThread").startLoop();
+    public static final Looper shardThread = new Looper("ShardThread").startLoop();
 
 
     @Resource
