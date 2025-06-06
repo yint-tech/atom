@@ -16,9 +16,11 @@ import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -175,7 +177,7 @@ public class UserInfoService {
         Long adminCount = userMapper.selectCount(new QueryWrapper<UserInfo>().eq(UserInfo.IS_ADMIN, true));
 
         boolean isCallFromAdmin = AppContext.getUser() != null && AppContext.getUser().getIsAdmin();
-        if (!isCallFromAdmin && adminCount != 0 && !Settings.allowRegisterUser.value) {
+        if (!isCallFromAdmin && adminCount != 0 && !Settings.allowRegisterUser.getValue()) {
             return CommonRes.failed("当前系统不允许注册新用户，详情请联系管理员");
         }
 
@@ -311,6 +313,7 @@ public class UserInfoService {
         return CommonRes.ofPresent(dbCacheManager.getUserCacheWithName().getModeWithCache(userName))
                 .ifOk(userInfo -> {
                     Map<String, Collection<String>> map = PermsService.parseExp(permsConfig, false);
+
                     String newConfig = PermsService.rebuildExp(map);
                     userMapper.update(null, new UpdateWrapper<UserInfo>()
                             .eq(UserInfo.ID, userInfo.getId())

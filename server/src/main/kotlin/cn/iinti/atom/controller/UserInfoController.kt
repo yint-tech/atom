@@ -131,7 +131,7 @@ class UserInfoController {
     @Operation(summary = "某个作用域下，权限授权范围枚举项")
     @LoginRequired(forAdmin = true)
     @GetMapping("/permItemsOfScope")
-    fun permItemsOfScope(scope: String?): CommonRes<List<String>> {
+    fun permItemsOfScope(scope: String): CommonRes<List<String>> {
         return permsService.perms(scope)
     }
 }

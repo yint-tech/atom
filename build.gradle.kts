@@ -13,8 +13,7 @@ var enableAmsNotice by extra(false)
 var buildTime: String by extra(
     LocalDateTime.now().format(
         DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd_HH:mm:ss",
-            java.util.Locale.CHINA
+            "yyyy-MM-dd_HH:mm:ss"
         )
     )
 )

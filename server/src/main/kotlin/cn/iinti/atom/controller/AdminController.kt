@@ -114,7 +114,7 @@ class AdminController {
     @Operation(summary = "修改系统配置")
     @PostMapping("/setConfig")
     @LoginRequired(forAdmin = true, alert = true)
-    fun setConfig(@RequestBody data: Map<String, String>): CommonRes<SysConfig> {
+    fun setConfig(@RequestBody data: Map<String?, String?>): CommonRes<SysConfig> {
         if (Environment.isDemoSite) {
             return CommonRes.failed("测试demo网站不允许修改配置")
         }
@@ -122,9 +122,9 @@ class AdminController {
         val value = data["value"]
         val msg = SettingsValidate.doValidate(key, value)
         if (StringUtils.isNotBlank(msg)) {
-            return CommonRes.failed(msg)
+            return CommonRes.failed(msg!!)
         }
-        val ret = configService.setConfig(key, value)
+        val ret = configService.setConfig(key!!, value!!)
         BroadcastService.triggerEvent(BroadcastService.Topic.CONFIG)
         return ret
     }

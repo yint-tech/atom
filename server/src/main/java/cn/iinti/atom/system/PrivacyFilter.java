@@ -28,8 +28,8 @@ public class PrivacyFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
-        boolean block = Settings.blockSwagger.value && isSwaggerAccess(requestURI);
-        if (!block && Settings.blockActuator.value && isActuator(requestURI)) {
+        boolean block = Settings.blockSwagger.getValue() && isSwaggerAccess(requestURI);
+        if (!block && Settings.blockActuator.getValue() && isActuator(requestURI)) {
             block = true;
         }
         if (!block) {

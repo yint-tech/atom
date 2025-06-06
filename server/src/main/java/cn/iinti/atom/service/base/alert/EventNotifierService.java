@@ -83,7 +83,7 @@ public class EventNotifierService implements CommandLineRunner {
     }
 
     private void withScriptExtension(Consumer<EventScript> fun) {
-        EventScript eventScript = Settings.eventNotifyScript.value;
+        EventScript eventScript = Settings.eventNotifyScript.getValue();
         if (eventScript == null) {
             return;
         }

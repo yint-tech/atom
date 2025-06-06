@@ -53,7 +53,7 @@ public class MonitorThreadPoolExecutor extends ThreadPoolExecutor {
                                      String name,
                                      BlockingQueue<Runnable> workQueue,
                                      RejectedExecutionHandler handler) {
-        super(threadSizeConfig.value, threadSizeConfig.value,
+        super(threadSizeConfig.getValue(), threadSizeConfig.getValue(),
                 0, TimeUnit.MINUTES, workQueue,
                 new NamedThreadFactory(name),
                 new MonitorRejectedExecutionHandler(handler, name)
@@ -81,8 +81,8 @@ public class MonitorThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     private void linkThreadSizeConfig(Configs.IntegerConfigValue threadSizeConfig) {
-        Configs.addKeyMonitor(threadSizeConfig.key, () -> {
-            Integer newThreadSize = threadSizeConfig.value;
+        Configs.addKeyMonitor(threadSizeConfig.getKey(), () -> {
+            Integer newThreadSize = threadSizeConfig.getValue();
             int corePoolSize = getCorePoolSize();
             if (newThreadSize < corePoolSize) {
                 setCorePoolSize(newThreadSize);
