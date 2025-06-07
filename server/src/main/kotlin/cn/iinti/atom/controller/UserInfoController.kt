@@ -107,9 +107,11 @@ class UserInfoController {
     fun regenerateAPIToken(): CommonRes<UserInfo> {
         val mUser = AppContext.getUser()
         mUser.apiToken = UUID.randomUUID().toString()
-        userInfoMapper.update(null, UpdateWrapper<UserInfo>()
-            .eq(UserInfo.USER_NAME, mUser.userName)
-            .set(UserInfo.API_TOKEN, mUser.apiToken))
+        userInfoMapper.update(
+            null, UpdateWrapper<UserInfo>()
+                .eq(UserInfo.USER_NAME, mUser.userName)
+                .set(UserInfo.API_TOKEN, mUser.apiToken)
+        )
         BroadcastService.triggerEvent(BroadcastService.Topic.USER)
         return CommonRes.success(mUser)
     }

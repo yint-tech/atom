@@ -1,0 +1,75 @@
+package cn.iinti.atom.system
+
+import cn.iinti.atom.entity.SysLog
+import cn.iinti.atom.entity.UserInfo
+import cn.iinti.atom.mapper.SysLogMapper
+import cn.iinti.atom.service.base.alert.EventNotifierService
+import com.alibaba.fastjson.JSONObject
+import jakarta.annotation.Resource
+import org.apache.commons.lang3.StringUtils
+import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.annotation.Around
+import org.aspectj.lang.annotation.Aspect
+import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.stereotype.Component
+import java.util.Arrays
+import java.lang.reflect.Method
+
+@Aspect
+@Component
+class SysLogAspect {
+    @Resource
+    private lateinit var sysLogMapper: SysLogMapper
+
+    @Resource
+    private lateinit var eventNotifierService: EventNotifierService
+
+    @Around("@annotation(cn.iinti.atom.system.LoginRequired)")
+    @Throws(Throwable::class)
+    fun around(point: ProceedingJoinPoint): Any? {
+        val result = point.proceed()
+        // 保存日志
+        saveLog(point)
+        return result
+    }
+
+    private fun saveLog(point: ProceedingJoinPoint) {
+        val user = AppContext.getUser()
+        if (user == null || AppContext.isApiUser()) {
+            return
+        }
+
+        val loginAnnotation = AppContext.getLoginAnnotation()
+        if (loginAnnotation?.skipLogRecord == true) {
+            return
+        }
+
+        val signature = point.signature as MethodSignature
+        val className = point.target.javaClass.name
+        val methodName = signature.name
+        val target = "$className#$methodName"
+
+        val method: Method = signature.method
+        val sysLog = SysLog()
+        sysLog.username = AppContext.getUser().userName
+        sysLog.operation = method.name
+        val params = Arrays.toString(point.args)
+        sysLog.params = StringUtils.substring(params, 0, 50)
+
+        sysLog.methodName = target
+        log.info("record sys log:{}", sysLog)
+        sysLogMapper.insert(sysLog)
+
+        // alert
+        if (loginAnnotation?.alert == true) {
+            eventNotifierService.notifySensitiveOperation(
+                sysLog.username,
+                target,
+                sysLog.params
+            )
+        }
+    }
+}
+
+// 手动实现Lombok的@Slf4j功能
+private val log = org.slf4j.LoggerFactory.getLogger(SysLogAspect::class.java)
