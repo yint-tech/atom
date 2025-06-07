@@ -45,18 +45,22 @@ class DbCacheManager {
         userCacheWithName = DbCacheStorage(UserInfo.USER_NAME, userInfoMapper, updateHandlerUser)
         userCacheWithApiToken = DbCacheStorage(UserInfo.API_TOKEN, userInfoMapper)
         userCacheWithId = DbCacheStorage(UserInfo.ID, userInfoMapper)
-        BroadcastService.register(BroadcastService.Topic.USER) {
-            userCacheWithName!!.updateAll()
-            userCacheWithApiToken!!.updateAll()
-            userCacheWithId!!.updateAll()
-        }
+        BroadcastService.register(BroadcastService.Topic.USER, object : BroadcastService.IBroadcastListener {
+            override fun onBroadcastEvent() {
+                userCacheWithName!!.updateAll()
+                userCacheWithApiToken!!.updateAll()
+                userCacheWithId!!.updateAll()
+            }
+
+        })
     }
 
-    private val updateHandlerUser: DbCacheStorage.UpdateHandler<UserInfo, UserEx> = object : DbCacheStorage.UpdateHandler<UserInfo, UserEx> {
-        override fun doUpdate(userInfo: UserInfo, userEx: UserEx?): UserEx {
-            val ex = userEx ?: UserEx()
-            ex.reload(userInfo)
-            return ex
+    private val updateHandlerUser: DbCacheStorage.UpdateHandler<UserInfo, UserEx> =
+        object : DbCacheStorage.UpdateHandler<UserInfo, UserEx> {
+            override fun doUpdate(userInfo: UserInfo, userEx: UserEx?): UserEx {
+                val ex = userEx ?: UserEx()
+                ex.reload(userInfo)
+                return ex
+            }
         }
-    }
 }

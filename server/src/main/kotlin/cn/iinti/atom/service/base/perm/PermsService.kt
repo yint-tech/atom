@@ -62,7 +62,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
 
         @Suppress("UnstableApiUsage")
         @JvmStatic
-        fun parseExp(config: String, safe: Boolean): Map<String, Collection<String>> {
+        fun parseExp(config: String?, safe: Boolean): Map<String, Collection<String>> {
             val ret = HashMultimap.create<String, String>()
             val lineReader = LineReader(StringReader(config))
             var line: String?
