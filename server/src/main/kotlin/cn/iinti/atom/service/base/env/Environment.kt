@@ -22,7 +22,7 @@ class Environment {
     companion object {
         const val APPLICATION_PROPERTIES = "application.properties"
 
-        @JvmStatic
+        
         var tomcatPort: Int = 0
             private set
 
@@ -41,7 +41,7 @@ class Environment {
         @JvmField
         val storageRoot: File = CommonUtils.forceMkdir(resolveStorageRoot())
 
-        @JvmStatic
+        
         fun buildInfo(): CommonRes<JSONObject> {
             return CommonRes.success(JSONObject()
                 .fluentPut("buildInfo",
@@ -71,14 +71,14 @@ class Environment {
                 return currentApp
             }
 
-        @JvmStatic
+        
         fun setupApp(event: WebServerInitializedEvent) {
             _app = event.applicationContext
             tomcatPort = event.webServer.port
         }
 
         @Throws(SQLException::class)
-        @JvmStatic
+        
         fun upgradeIfNeed(dataSource: DataSource) {
             upgradeRuleHolders.sortBy { it.fromVersionCode }
             doDbUpGradeTask(dataSource)
@@ -171,12 +171,12 @@ class Environment {
             (upgradeRuleHolders as ArrayList<UpgradeRuleHolder>).add(UpgradeRuleHolder(fromVersionCode, toVersionCode, upgradeHandler))
         }
 
-        @JvmStatic
+        
         fun registerShutdownHook(runnable: Runnable) {
             ShutdownHook.registerShutdownHook(runnable)
         }
 
-        @JvmStatic
+        
         fun prepareShutdown(): Int {
             return ShutdownHook.prepareShutdown()
         }

@@ -44,7 +44,6 @@ class BroadcastService : ApplicationListener<WebServerInitializedEvent> {
 
         private val registry: Multimap<Topic, IBroadcastListener> = HashMultimap.create()
 
-        @JvmStatic
         fun register(topic: Topic, listener: IBroadcastListener) {
             registry.put(topic, listener)
         }

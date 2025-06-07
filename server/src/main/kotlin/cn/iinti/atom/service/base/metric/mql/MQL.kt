@@ -54,7 +54,7 @@ class MQL(private val statements: List<Statement>) {
     }
 
     companion object {
-        @JvmStatic
+        
         fun compile(mqlCode: String): MQL {
             return MQLCompiler.compile(mqlCode)
         }

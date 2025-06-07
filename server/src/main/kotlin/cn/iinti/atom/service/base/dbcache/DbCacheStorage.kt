@@ -100,7 +100,7 @@ class DbCacheStorage<M, E>(
     }
 
     companion object {
-        @JvmStatic
+        
         fun lineToCamel(str: String): String {
             val sb = StringBuilder()
             var preUnderLine = false

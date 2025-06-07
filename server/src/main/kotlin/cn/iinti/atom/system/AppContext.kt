@@ -10,7 +10,6 @@ object AppContext {
     private val LOGIN_ANNOTATION = ThreadLocal<LoginRequired>()
     private val SERVLET_RESPONSE = ThreadLocal<HttpServletResponse>()
 
-    @JvmStatic
     fun getUser(): UserInfo? {
         return userInfoThreadLocal.get()
     }

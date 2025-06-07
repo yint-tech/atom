@@ -26,19 +26,19 @@ class Value<T> {
     }
 
     companion object {
-        @JvmStatic
+        
         fun <T> failed(e: Throwable): Value<T> {
             val value = Value<T>()
             value.e = e
             return value
         }
 
-        @JvmStatic
+        
         fun <T> failed(message: String): Value<T> {
             return failed(RuntimeException(message))
         }
 
-        @JvmStatic
+        
         fun <T> success(t: T): Value<T> {
             val value = Value<T>()
             value.v = t

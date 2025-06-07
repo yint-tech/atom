@@ -1,9 +1,10 @@
 package cn.iinti.atom.service.base.alert
 
+import cn.iinti.atom.service.base.BroadcastService.Companion.post
 import cn.iinti.atom.service.base.alert.events.DiskPoorEvent
 import cn.iinti.atom.service.base.alert.events.MetricMonitorConfig
 import cn.iinti.atom.service.base.alert.events.SensitiveOperationEvent
-import cn.iinti.atom.utils.net.SimpleHttpInvoker.Companion.post
+import cn.iinti.atom.utils.net.SimpleHttpInvoker
 import com.alibaba.fastjson.JSONObject
 import groovy.json.JsonBuilder
 import groovy.lang.Closure
@@ -55,7 +56,7 @@ abstract class EventScript : Script() {
     }
 
     fun httpPost(url: String, jsonBuilder: JsonBuilder): String {
-        return post(url, JSONObject.parseObject(jsonBuilder.toString()))
+        return SimpleHttpInvoker.post(url, JSONObject.parseObject(jsonBuilder.toString()))
     }
 
 

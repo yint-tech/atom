@@ -40,7 +40,6 @@ class MetricVo {
     }
 
     companion object {
-        @JvmStatic
         fun cloneMetricVo(metricVo: MetricVo): MetricVo {
             val ret = MetricVo()
             BeanUtils.copyProperties(ret, metricVo)

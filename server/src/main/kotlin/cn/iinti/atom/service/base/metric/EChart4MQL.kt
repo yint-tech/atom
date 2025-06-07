@@ -42,7 +42,7 @@ class EChart4MQL {
     }
 
     companion object {
-        @JvmStatic
+        
         fun legendId(varName: String, metricVo: MetricVo, singleVar: Boolean): String {
             val tagDisplayIds: MutableList<String> = Lists.newArrayList()
             val tags = metricVo.tags

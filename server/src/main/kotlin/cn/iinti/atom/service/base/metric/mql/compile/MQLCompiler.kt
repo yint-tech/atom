@@ -30,7 +30,7 @@ object MQLCompiler {
             }
         })
 
-    @JvmStatic
+    
     fun compile(script: String): MQL {
         check(!StringUtils.isBlank(script)) { "empty script content" }
         return cache.computeIfAbsent(md5Hex(script)) { s: String? -> doCompile(script) }

@@ -18,7 +18,7 @@ object IpUtil {
      * 解析本机IP
      */
     @Throws(SocketException::class)
-    @JvmStatic
+    
     fun getLocalIps(): String {
         var ips: MutableSet<String> = Sets.newHashSet()
         val interfaces = NetworkInterface.getNetworkInterfaces()
@@ -72,7 +72,7 @@ object IpUtil {
 
         return StringUtils.join(ips, ",")
     }
-    @JvmStatic
+    
     fun getOutIp(): String? {
         val outIp: String = SimpleHttpInvoker.get(Settings.outIpTestUrl.value!!)
         if (isValidIp(outIp)) {

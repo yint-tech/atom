@@ -19,41 +19,40 @@ data class CommonRes<T>(
         const val statusLoginExpire = -5
         const val statusDeny = -6
 
-        @JvmStatic
+
         fun <T> success(t: T): CommonRes<T> {
             return CommonRes(status = statusOK, data = t)
         }
 
-        @JvmStatic
         fun <T> failed(throwable: Throwable): CommonRes<T> {
             return failed(CommonUtils.throwableToString(throwable))
         }
 
-        @JvmStatic
+
         fun <T> failed(message: String): CommonRes<T> {
             return failed(statusError, message)
         }
 
-        @JvmStatic
+
         fun <T> failed(status: Int, message: String): CommonRes<T> {
             return CommonRes(status = status, message = message)
         }
 
-        @JvmStatic
+
         fun <T> ofPresent(t: T?): CommonRes<T> {
             return if (t == null) {
-                CommonRes.failed("record not found")
+                failed("record not found")
             } else {
-                CommonRes.success(t)
+                success(t)
             }
         }
 
-        @JvmStatic
+
         fun <T> call(callable: Callable<T>): CommonRes<T> {
             return try {
                 ofPresent(callable.call())
             } catch (e: Exception) {
-                CommonRes.failed(e)
+                failed(e)
             }
         }
     }
@@ -63,12 +62,12 @@ data class CommonRes<T>(
     }
 
     fun <TN> errorTransfer(): CommonRes<TN> {
-        return CommonRes.failed(status, message!!)
+        return failed(status, message!!)
     }
 
     fun <TN> transform(function: Function<T, TN>): CommonRes<TN> {
         return if (isOk()) {
-            CommonRes.success(function.apply(data!!))
+            success(function.apply(data!!))
         } else {
             errorTransfer()
         }
@@ -82,7 +81,7 @@ data class CommonRes<T>(
         if (isOk()) {
             data?.let(consumer::accept)
         }
-       return this
+        return this
     }
 
     fun acceptIfOk(consumer: Consumer<CommonRes<T>>) {
@@ -96,7 +95,7 @@ data class CommonRes<T>(
             try {
                 callable.call()
             } catch (e: Exception) {
-                CommonRes.failed(e)
+                failed(e)
             }
         } else {
             errorTransfer()

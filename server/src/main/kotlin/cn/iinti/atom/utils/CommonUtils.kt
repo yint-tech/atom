@@ -11,7 +11,7 @@ import java.time.ZoneOffset
 object CommonUtils {
     val zoneOffset = ZoneOffset.of("+8")
 
-    @JvmStatic
+    
     fun throwableToString(throwable: Throwable): String {
         ByteArrayOutputStream().use { byteArrayOutputStream ->
             PrintStream(byteArrayOutputStream).use { printStream ->
@@ -21,12 +21,12 @@ object CommonUtils {
         }
     }
 
-    @JvmStatic
+    
     fun dateTimeToTimestamp(ldt: LocalDateTime): Long {
         return ldt.toInstant(zoneOffset).toEpochMilli()
     }
 
-    @JvmStatic
+    
     fun forceMkdir(dir: File): File {
         if (!dir.exists()) {
             if (!dir.mkdirs()) {

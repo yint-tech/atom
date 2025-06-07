@@ -15,7 +15,7 @@ import java.io.File
  * 系统设置,所有系统设置我们统一聚合在同一个文件中，避免默认值无法对齐
  */
 object Settings {
-    @JvmStatic
+    
     fun allSettingsVo(): JSONObject {
         val ret = JSONObject()
         ret["normal"] = allSettings.map { settingConfig ->
@@ -74,7 +74,7 @@ object Settings {
         return configValue
     }
 
-    @JvmStatic
+    
     fun <T> newCustomConfig(builder: CustomConfigBuilder<T>): Configs.ConfigValue<T> {
         val configValue = object : Configs.ConfigValue<T>(builder.configKey!!, builder.defaultValue!!) {
             override fun transformer(): Configs.TransformFunc<T?>? {
@@ -132,19 +132,19 @@ object Settings {
         "系统如果部署在公网，Actuator可以导出监控指标数据，实例在政府机构内部部署等情况将会被安全扫组件判定为数据泄露"
     )
 
-    @JvmStatic
+    
     val outIpTestUrl = newStringConfig(
         "${BuildInfo.appName}.outIpTestUrl", "https://iinti.cn/conn/getPublicIp?scene=${BuildInfo.appName}",
         "出口ip探测URL", "计算当前服务器节点的出口IP，用于多节点部署在公网时多节点事件通讯"
     )
 
-    @JvmStatic
+    
     val systemNotice = newStringConfig(
         "${BuildInfo.appName}.systemNotice", "",
         "系统通告信息", "在框架前端系统，将会在用户avatar推送消息"
     )
 
-    @JvmStatic
+    
     val docNotice = newStringConfig(
         "${BuildInfo.appName}.docNotice", "",
         "文档首页通告信息", "在框架文档系统中，将会推送一段消息展示在文档中（此配置是html片段，故支持任意）"

@@ -38,7 +38,7 @@ import kotlin.system.exitProcess
 class AtomMain : ApplicationListener<WebServerInitializedEvent> {
 
     companion object {
-        @JvmStatic
+
         val shardThread = Looper("ShardThread").startLoop()
 
         @JvmStatic

@@ -36,7 +36,7 @@ object ServerIdentifier {
         }
     }
 
-    @JvmStatic
+    
     fun id(): String {
         clientIdInMemory?.let { return it }
         // from cache file

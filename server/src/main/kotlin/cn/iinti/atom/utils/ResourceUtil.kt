@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets
 
 class ResourceUtil {
     companion object {
-        @JvmStatic
+        
         fun readLines(resourceName: String): List<String> {
             return try {
                 IOUtils.readLines(openResource(resourceName), StandardCharsets.UTF_8)
@@ -16,7 +16,7 @@ class ResourceUtil {
             }
         }
 
-        @JvmStatic
+        
         fun readText(resourceName: String): String {
             return try {
                 IOUtils.toString(openResource(resourceName), StandardCharsets.UTF_8)
@@ -25,7 +25,7 @@ class ResourceUtil {
             }
         }
 
-        @JvmStatic
+        
         fun readBytes(resourceName: String): ByteArray {
             return try {
                 IOUtils.toByteArray(openResource(resourceName))
@@ -34,7 +34,7 @@ class ResourceUtil {
             }
         }
 
-        @JvmStatic
+        
         fun openResource(name: String): InputStream {
             val resource = ResourceUtil::class.java.classLoader.getResourceAsStream(name)
                 ?: throw IllegalStateException("can not find resource: $name")

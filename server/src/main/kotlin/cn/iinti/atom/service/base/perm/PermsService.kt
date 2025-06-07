@@ -35,7 +35,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
         private val log = LoggerFactory.getLogger(PermsService::class.java)
         private val splitter = Splitter.on(':').omitEmptyStrings().trimResults()
 
-        @JvmStatic
+        
         fun rebuildExp(config: Map<String, Collection<String>>): String {
             val sb = StringBuilder()
 
@@ -60,7 +60,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
         }
 
         @Suppress("UnstableApiUsage")
-        @JvmStatic
+        
         fun parseExp(config: String, safe: Boolean): Map<String, Collection<String>> {
             val ret = HashMultimap.create<String, String>()
             val lineReader = LineReader(StringReader(config))
@@ -172,7 +172,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
         event.applicationContext.getBeansOfType(Permission::class.java)
             .values.forEach { permission ->
                 allPermissionsWithScope[permission.scope()] = permission
-                allPermissionWithType[Permission.getClazz(permission)] = permission
+                allPermissionWithType[permission.clazz] = permission
             }
     }
 }

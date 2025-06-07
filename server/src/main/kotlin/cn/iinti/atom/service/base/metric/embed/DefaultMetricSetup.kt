@@ -10,7 +10,6 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 object DefaultMetricSetup {
     private val jvmGcMetrics = JvmGcMetrics()
 
-    @JvmStatic
     fun setup() {
         // 系统级别的默认指标，内存/CPU/线程等
         bind(DiskSpaceMetrics(Settings.Storage.root))

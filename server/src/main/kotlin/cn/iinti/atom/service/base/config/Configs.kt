@@ -36,7 +36,7 @@ object Configs {
 
     private var dbConfigs = Maps.newHashMap<String, String>()
 
-    @JvmStatic
+    
     fun getConfig(key: String, defaultValue: String): String? {
         val config = getConfig(key)
         return if (StringUtils.isBlank(config)) {
@@ -146,7 +146,7 @@ object Configs {
         }
     }
 
-    @JvmStatic
+    
     @Suppress("UNCHECKED_CAST")
     fun <T> addConfigFetcher(
         configFetcher: ConfigFetcher<T?>,
@@ -343,7 +343,7 @@ object Configs {
         return true
     }
 
-    @JvmStatic
+    
     fun addKeyMonitor(key: String, changeListener: ConfigChangeListener) {
         addKeyMonitor(listOf(key), changeListener)
     }
@@ -354,7 +354,7 @@ object Configs {
      * @param keys           key列表
      * @param changeListener 事件监听
      */
-    @JvmStatic
+    
     fun addKeyMonitor(keys: List<String>, changeListener: ConfigChangeListener) {
         val data = Maps.newHashMap<String, String>()
         for (key in keys) {

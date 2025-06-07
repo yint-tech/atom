@@ -74,11 +74,4 @@ abstract class Permission<T> protected constructor(val clazz: Class<T>) {
     open fun hasPermission(perms: Collection<String>, t: T): Boolean {
         return false
     }
-
-    companion object {
-        @JvmStatic
-        fun <T> getClazz(permission: Permission<T>): Class<T> {
-            return permission.clazz
-        }
-    }
 }
