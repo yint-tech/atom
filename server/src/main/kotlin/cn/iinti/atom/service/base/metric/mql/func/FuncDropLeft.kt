@@ -1,14 +1,9 @@
 package cn.iinti.atom.service.base.metric.mql.func
 
-import cn.iinti.atom.service.base.metric.MetricVo
 import cn.iinti.atom.service.base.metric.mql.Context
 import cn.iinti.atom.service.base.metric.mql.Context.MQLVar
 import cn.iinti.atom.service.base.metric.mql.func.MQLFunction.MQL_FUNC
 import com.google.common.collect.Sets
-import java.util.function.Consumer
-import java.util.function.Function
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 
 @MQL_FUNC("dropLeft")
@@ -35,15 +30,16 @@ class FuncDropLeft(params: List<String>) : MQLFunction(params) {
     override fun call(context: Context): MQLVar {
         val mqlVar = requireVar(context)
 
-        val allMetricByTagId = mqlVar.data!!.values.stream()
-            .flatMap(Function { metricVos: List<MetricVo> ->
-                metricVos.stream().map { obj: MetricVo -> obj.toTagId() }
-            } as Function<List<MetricVo>, Stream<String>>)
-            .collect(Collectors.toSet())
+        val allMetricByTagId = mqlVar.data!!.values
+            .flatMap { metricVos ->
+                metricVos.map { metricVo ->
+                    metricVo.toTagId()
+                }
+            }.toSet()
 
         val emptyTimeKeys: MutableSet<String> = Sets.newHashSet()
 
-        allMetricByTagId.forEach(Consumer<String> { metricTagId: String ->
+        allMetricByTagId.forEach { metricTagId: String ->
             var findCount = 0
             for ((key, metricVos) in mqlVar.data!!) {
                 for (i in metricVos.indices) {
@@ -61,8 +57,8 @@ class FuncDropLeft(params: List<String>) : MQLFunction(params) {
                     break
                 }
             }
-        })
-        emptyTimeKeys.forEach(Consumer { s: String? -> mqlVar.data!!.remove(s!!) })
+        }
+        emptyTimeKeys.forEach { s: String? -> mqlVar.data!!.remove(s!!) }
         return mqlVar
     }
 }

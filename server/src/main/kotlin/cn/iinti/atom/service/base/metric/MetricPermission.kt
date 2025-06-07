@@ -63,6 +63,6 @@ class MetricPermission : Permission<Metric>(Metric::class.java) {
 
 
     override fun hasPermission(perms: Collection<String>, t: Metric): Boolean {
-        return perms.stream().anyMatch { s: String -> t.name!!.startsWith(s) }
+        return perms.any { t.name!!.startsWith(it) }
     }
 }

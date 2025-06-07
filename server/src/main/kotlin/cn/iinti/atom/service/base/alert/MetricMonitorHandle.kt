@@ -14,10 +14,7 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.scheduling.support.CronExpression
 import java.time.LocalDateTime
 import java.util.*
-import java.util.function.Function
 import java.util.function.Predicate
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 
 class MetricMonitorHandle {
@@ -85,40 +82,33 @@ class MetricMonitorHandle {
     }
 
     private fun merge(metricData: TreeMap<String, MutableList<MetricVo>>): MutableList<MetricVo> {
-        val allMetricByTagId = metricData.values.stream()
-            .flatMap(Function { metricVos: List<MetricVo> ->
-                metricVos.stream().map { obj: MetricVo -> obj.toTagId() }
-            } as Function<List<MetricVo>, Stream<String>>)
-            .collect(Collectors.toSet())
+        val allMetricByTagId = metricData.flatMap { (_, value) ->
+            value.map { obj: MetricVo -> obj.toTagId() }
+        }.toSet()
 
-        return allMetricByTagId.stream().map { s: String ->
-            val metricVos = metricData.values
-                .stream().map { metricVoWithTags: List<MetricVo> ->
-                    metricVoWithTags.stream()
-                        .filter { metricVo: MetricVo? -> metricVo!!.toTagId() == s }
-                        .findAny()
-                        .orElse(null)
-                }
-                .filter { obj: MetricVo -> Objects.nonNull(obj) }.toList()
+        return allMetricByTagId.mapNotNull { s: String ->
+            val metricVos = metricData.values.mapNotNull { metricVoWithTags: List<MetricVo> ->
+                metricVoWithTags.find { it.toTagId() == s }
+            }.toList()
             if (metricVos.isEmpty()) {
-                return@map null
+                return@mapNotNull null
             }
             val first = metricVos[0]
-            val ret = cloneMetricVo(first!!)
+            val ret = cloneMetricVo(first)
             when (first.type) {
-                Meter.Type.COUNTER -> ret.value = metricVos.stream().map<Double>(MetricVo::value)
-                    .reduce(0.0) { a: Double, b: Double -> java.lang.Double.sum(a, b) }
-
-                Meter.Type.GAUGE -> ret.value = metricVos[metricVos.size - 1]!!.value
+                Meter.Type.COUNTER -> ret.value = metricVos.sumOf { it.value!! }
+                Meter.Type.GAUGE -> ret.value = metricVos[metricVos.size - 1].value
                 Meter.Type.TIMER -> {
                     val timerType = first.tags[MetricEnums.TimeSubType.TIMER_TYPE]
-                    if (StringUtils.isBlank(timerType) || timerType == MetricEnums.TimeSubType.MAX.metricKey) {
+                    if (StringUtils.isBlank(timerType) ||
+                        timerType == MetricEnums.TimeSubType.MAX.metricKey
+                    ) {
                         // this is aggregated time-max
-                        ret.value = metricVos.stream().map<Double>(MetricVo::value)
-                            .reduce(0.0) { a: Double, b: Double -> java.lang.Double.max(a, b) }
-                    } else if (timerType == MetricEnums.TimeSubType.TIME.metricKey || timerType == MetricEnums.TimeSubType.COUNT.metricKey) {
-                        ret.value = metricVos.stream().map<Double>(MetricVo::value)
-                            .reduce(0.0) { a: Double, b: Double -> java.lang.Double.sum(a, b) }
+                        ret.value = metricVos.maxOf { it.value!! }
+                    } else if (timerType == MetricEnums.TimeSubType.TIME.metricKey ||
+                        timerType == MetricEnums.TimeSubType.COUNT.metricKey
+                    ) {
+                        ret.value = metricVos.sumOf { it.value!! }
                     }
                 }
 
@@ -127,7 +117,7 @@ class MetricMonitorHandle {
                 }
             }
             ret
-        }.filter { obj: MetricVo? -> Objects.nonNull(obj) }.map { it!! }.toList()
+        }.toMutableList()
     }
 
     private fun filter(data: TreeMap<String, MutableList<MetricVo>>): TreeMap<String, MutableList<MetricVo>> {

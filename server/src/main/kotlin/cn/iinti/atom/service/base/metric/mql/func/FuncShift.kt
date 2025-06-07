@@ -10,7 +10,6 @@ import com.google.common.collect.Maps
 import java.time.LocalDateTime
 import java.util.*
 import java.util.function.Function
-import java.util.stream.Collectors
 
 
 @MQL_FUNC("shift")
@@ -68,12 +67,12 @@ class FuncShift(params: List<String>) : MQLFunction(params) {
             val shiftTime: LocalDateTime = shiftFunc[context.metricAccuracy]!!.apply(nowNode.createTime)
             val shiftTimeStr: String = context.metricAccuracy.timePattern.format(shiftTime)
             val shiftMetrics: MutableList<MetricVo> = mqlVar.data!!.get(shiftTimeStr) ?: return@forEach
-            ret[timeKey] = shiftMetrics.stream().map { metricVo: MetricVo? ->
+            ret[timeKey] = shiftMetrics.map { metricVo: MetricVo? ->
                 val ret1: MetricVo = cloneMetricVo(metricVo!!)
                 ret1.createTime = nowNode.createTime
                 ret1.timeKey = timeKey
                 ret1
-            }.collect(Collectors.toList())
+            }.toMutableList()
         }
 
         return MQLVar.newVar(ret)

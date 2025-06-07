@@ -6,7 +6,6 @@ import cn.iinti.atom.mapper.metric.MetricDayMapper
 import cn.iinti.atom.mapper.metric.MetricHourMapper
 import cn.iinti.atom.mapper.metric.MetricMinuteMapper
 import cn.iinti.atom.service.base.env.Environment
-import cn.iinti.atom.service.base.env.Environment.Companion.registerShutdownHook
 import cn.iinti.atom.service.base.perm.PermsService
 import cn.iinti.atom.service.base.safethread.Looper
 import cn.iinti.atom.system.AppContext.getUser
@@ -29,8 +28,6 @@ import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 import java.util.function.Function
-import java.util.stream.Collectors
-import kotlin.math.max
 
 
 @Service
@@ -39,23 +36,23 @@ class MetricService {
     private val metricHandleLooper = Looper("metric_handler").startLoop()
 
     @Resource
-    private val metricDayMapper: MetricDayMapper? = null
+    private lateinit var metricDayMapper: MetricDayMapper
 
     @Resource
-    private val metricHourMapper: MetricHourMapper? = null
+    private lateinit var metricHourMapper: MetricHourMapper
 
     @Resource
-    private val metricMinuteMapper: MetricMinuteMapper? = null
+    private lateinit var metricMinuteMapper: MetricMinuteMapper
 
     @Resource
-    private val metricTagService: MetricTagService? = null
+    private lateinit var metricTagService: MetricTagService
 
     @Resource
-    private val permsService: PermsService? = null
+    private lateinit var permsService: PermsService
 
     @PostConstruct
     fun registerShutdownHook() {
-        registerShutdownHook { this.publishMetrics() }
+        Environment.registerShutdownHook { publishMetrics() }
     }
 
     @Scheduled(cron = "5 * * * * ?")
@@ -151,17 +148,13 @@ class MetricService {
         }
 
 
-        var metricRet = chooseDao<Metric>(accuracy).selectList(queryWrapper.orderByAsc(Metric.TIME_KEY))
-            .stream()
+        return chooseDao<Metric>(accuracy).selectList(queryWrapper.orderByAsc(Metric.TIME_KEY))
             .map { metric: Metric -> mapMetric(metric, metricTag) }
-
-        metricRet = metricRet.peek { metricVo: MetricVo ->
-            // remove tag field after
-            val tags = metricVo.tags
-            query.keys.forEach(Consumer { o: String -> tags.remove(o) })
-        }
-
-        return metricRet.collect(Collectors.toList())
+            .onEach {
+                // remove tag field after
+                val tags = it.tags
+                query.keys.forEach { o: String -> tags.remove(o) }
+            }.toList()
     }
 
 
@@ -242,24 +235,18 @@ class MetricService {
 
         // 一个指标，可能存在很多tag，tag分维如果有上千之后，再加上时间维度，数据量级就可能非常大，所以我们在数据库中先根据tag分组一下
         // 这样驻留在内存中的数据就没有tag维度，避免内存中数据量过大
-        val tags = chooseDao<Metric>(from).selectObjs<Any>(
+        chooseDao<Metric>(from).selectObjs<Any>(
             QueryWrapper<Metric>()
                 .select(Metric.TAGS_MD5)
                 .eq(Metric.NAME, metricName)
                 .ge(Metric.CREATE_TIME, startTime)
                 .lt(Metric.CREATE_TIME, endTime)
                 .groupBy(Metric.TAGS_MD5)
-        ).stream().map { o: Any? -> o as String? }.toList()
-
-        if (tags.isEmpty()) {
-            return
-        }
-
-        tags.forEach(Consumer { tagsMd5: String? ->
+        ).map { it as String }.forEach { tagsMd5 ->
             mergeTimesSpaceWithTag(
-                startTime, endTime, from, to, metricName, tagsMd5!!, timeKey, cleanBefore
+                startTime, endTime, from, to, metricName, tagsMd5, timeKey, cleanBefore
             )
-        })
+        }
     }
 
     private fun mergeTimesSpaceWithTag(
@@ -290,7 +277,7 @@ class MetricService {
             val countList: MutableList<Metric> = Lists.newArrayList()
             val totalTimeList: MutableList<Metric> = Lists.newArrayList()
             val maxList: MutableList<Metric> = Lists.newArrayList()
-            val metricTag = metricTagService!!.fromKey(metricName)!!
+            val metricTag = metricTagService.fromKey(metricName)!!
             metrics.forEach(Consumer { metric: Metric ->
                 val subtype = mapMetric(metric, metricTag).tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 if (MetricEnums.TimeSubType.COUNT.metricKey == subtype) {
@@ -336,14 +323,16 @@ class MetricService {
             }
         }
 
-        val needRemoveIds = metrics.stream()
+        metrics
             .filter { metric: Metric -> metric.createTime!!.isBefore(cleanBefore) }
-            .map(Metric::id)
-            .collect(Collectors.toList())
+            .map { it.id!! }
+            .apply {
+                if (isNotEmpty()) {
+                    chooseDao<Metric>(from).deleteBatchIds(this)
+                }
+            }
 
-        if (needRemoveIds.isNotEmpty()) {
-            chooseDao<Metric>(from).deleteBatchIds(needRemoveIds)
-        }
+
     }
 
     private fun mergeMetrics(
@@ -388,7 +377,7 @@ class MetricService {
             val totalTime = timer.totalTime(TimeUnit.MILLISECONDS)
             val max = timer.max(TimeUnit.MILLISECONDS)
 
-            val metricTagTime = metricTagService!!.fromMeter(meter, MetricEnums.TimeSubType.TIME)
+            val metricTagTime = metricTagService.fromMeter(meter, MetricEnums.TimeSubType.TIME)
             val metricTime = makeMetric(timeKey, time, meter, metricTagTime, MetricEnums.TimeSubType.TIME)
             saveCounter(metricTime, metricTime.tagsMd5, totalTime)
 
@@ -453,7 +442,7 @@ class MetricService {
         metric.name = id.name
         metric.createTime = time
 
-        metricTagService!!.setupTag(metricTag, meter, metric, timerType)
+        metricTagService.setupTag(metricTag, meter, metric, timerType)
         metric.type = meter.id.type
         metric.timeKey = timeKey
         return metric
@@ -494,23 +483,15 @@ class MetricService {
 
     companion object {
         private val AVG = { metrics: List<Metric> ->
-            metrics.stream()
-                .map { it.value!! }
-                .reduce(0.0) { a, b ->
-                    (a + b) / metrics.size
-                }
+            metrics.sumOf { it.value!! } / metrics.size
         }
 
         private val SUM = { metrics: List<Metric> ->
-            metrics.stream()
-                .map { it.value!! }
-                .reduce(0.0) { a, b -> a + b }
+            metrics.sumOf { it.value!! }
         }
 
         private val MAX = { metrics: List<Metric> ->
-            metrics.stream()
-                .map { it.value!! }
-                .reduce(0.0) { a, b -> max(a, b) }
+            metrics.maxOf { it.value!! }
         }
     }
 }

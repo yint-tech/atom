@@ -6,8 +6,6 @@ import cn.iinti.atom.service.base.metric.mql.func.MQLFunction.MQL_FUNC
 import com.google.common.collect.Maps
 import io.micrometer.core.instrument.Meter
 import org.apache.commons.lang3.StringUtils
-import java.util.function.Consumer
-import java.util.stream.Collectors
 
 
 /**
@@ -31,25 +29,24 @@ class FuncFilter(params: List<String>) : XofVarFunc(params) {
 
 
     override fun apply(metricVos: List<MetricVo>): MutableList<MetricVo> {
-        return metricVos.stream()
+        return metricVos
             .filter { metricVo: MetricVo? ->
                 val tags: Map<String, String> = metricVo!!.tags
                 filters.entries
-                    .stream()
-                    .allMatch { entry: Map.Entry<String, String> ->
+                    .all { entry: Map.Entry<String, String> ->
                         StringUtils.equals(
                             tags[entry.key], entry.value
                         )
                     }
-            }.peek { metricVo: MetricVo? ->
+            }
+            .onEach { metricVo: MetricVo? ->
                 val metricTimeType = metricVo!!.tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 switchMetricType4TimeFilter(metricVo, metricTimeType)
 
                 val tags = metricVo.tags
                 //this field will be removed  after filter
-                filters.keys.forEach(Consumer { o: String -> tags.remove(o) })
-            }
-            .collect(Collectors.toList())
+                filters.keys.forEach { o: String -> tags.remove(o) }
+            }.toMutableList()
     }
 
     companion object {

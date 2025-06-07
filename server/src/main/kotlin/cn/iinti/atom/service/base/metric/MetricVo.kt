@@ -10,7 +10,7 @@ import proguard.annotation.Keep
 import java.time.LocalDateTime
 
 @Keep
-class MetricVo {
+class MetricVo() {
     @Schema(name = "指标名称")
     var name: String? = null
 

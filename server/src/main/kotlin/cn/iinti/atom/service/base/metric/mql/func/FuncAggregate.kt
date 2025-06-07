@@ -30,7 +30,7 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
 
 
     override fun apply(metricVos: List<MetricVo>): MutableList<MetricVo> {
-        val group: MutableMap<String, MutableList<MetricVo?>> = Maps.newHashMap()
+        val group: MutableMap<String, MutableList<MetricVo>> = Maps.newHashMap()
 
         metricVos.forEach(Consumer { metricVo: MetricVo? ->
             val tags: Map<String, String> = metricVo!!.tags
@@ -49,8 +49,8 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
             .toMutableList()
     }
 
-    private fun doAggregate(metricVos: List<MetricVo?>): MetricVo {
-        val metricVo = cloneMetricVo(metricVos[0]!!)
+    private fun doAggregate(metricVos: List<MetricVo>): MetricVo {
+        val metricVo = cloneMetricVo(metricVos[0])
         val tags = metricVo.tags
         //this field will be removed  after filter
         aggregateFields.forEach(Consumer { o: String -> tags.remove(o) })
@@ -60,23 +60,17 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
         }
         when (metricVo.type) {
             Meter.Type.COUNTER, Meter.Type.GAUGE ->                 // sum
-                metricVo.value = metricVos.stream()
-                    .map { it!!.value!! }
-                    .reduce(0.0) { a: Double, b: Double -> sum(a, b) }
+                metricVo.value = metricVos.sumOf { it.value!! }
 
             Meter.Type.TIMER -> {
                 val timerType = metricVo.tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 if (StringUtils.isBlank(timerType) || timerType == MetricEnums.TimeSubType.MAX.metricKey) {
                     // this is aggregated time-max
-                    metricVo.value = metricVos.stream()
-                        .map { it!!.value!! }
-                        .reduce(0.0) { a: Double, b: Double -> max(a, b) }
+                    metricVo.value = metricVos.maxOf { it.value!! }
                 } else if (timerType == MetricEnums.TimeSubType.TIME.metricKey
                     || timerType == MetricEnums.TimeSubType.COUNT.metricKey
                 ) {
-                    metricVo.value = metricVos.stream()
-                        .map { it!!.value!! }
-                        .reduce(0.0) { a: Double, b: Double -> sum(a, b) }
+                    metricVo.value = metricVos.sumOf { it.value!! }
                 }
             }
 

@@ -22,23 +22,17 @@ class Environment {
     companion object {
         const val APPLICATION_PROPERTIES = "application.properties"
 
-        
         var tomcatPort: Int = 0
             private set
 
-        @JvmField
         val isLocalDebug: Boolean = BooleanUtils.toBoolean(Configs.getConfig("env.localDebug", "false"))
 
-        @JvmField
         val isDemoSite: Boolean = BooleanUtils.toBoolean(Configs.getConfig("env.demoSite", "false"))
 
-        @JvmField
         val runtimeClassPathDir: File = resolveClassPathDir()
 
-        @JvmField
         val isIdeDevelopment: Boolean = !runtimeClassPathDir.name.equals("conf")
 
-        @JvmField
         val storageRoot: File = CommonUtils.forceMkdir(resolveStorageRoot())
 
         
@@ -78,7 +72,6 @@ class Environment {
         }
 
         @Throws(SQLException::class)
-        
         fun upgradeIfNeed(dataSource: DataSource) {
             upgradeRuleHolders.sortBy { it.fromVersionCode }
             doDbUpGradeTask(dataSource)

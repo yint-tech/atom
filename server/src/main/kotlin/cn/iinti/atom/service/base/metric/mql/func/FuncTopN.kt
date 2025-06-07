@@ -16,7 +16,7 @@ import java.util.stream.Collectors
 @MQL_FUNC("topN")
 class FuncTopN(params: List<String>) : MQLFunction(params) {
     private val varName: String
-    private var n: Int? = null
+    private var n: Int
     private val revers: Boolean
 
     init {
@@ -47,20 +47,20 @@ class FuncTopN(params: List<String>) : MQLFunction(params) {
                 })
         })
 
-        val keepLines: Set<String> = legendIdValues.entries.stream()
-            .sorted { o1: Map.Entry<String, Double>, o2: Map.Entry<String?, Double?> ->
-                if (revers) o1.value.compareTo(o2.value!!) else o2.value!!.compareTo(o1.value)
+        val keepLines: Set<String> = legendIdValues.entries
+            .sortedWith { o1, o2 ->
+                if (revers) o1.value.compareTo(o2.value) else o2.value.compareTo(o1.value)
             }
-            .limit(n!!.toLong())
-            .map { it.key }.collect(Collectors.toSet())
+            .take(n)
+            .map { it.key }
+            .toSet()
 
 
         val newData: TreeMap<String, MutableList<MetricVo>> = TreeMap()
 
         `var`.data!!.forEach { (s: String, metricVos: MutableList<MetricVo>) ->
-            newData[s] = metricVos.stream()
-                .filter { metricVo: MetricVo? -> keepLines.contains(legendId(varName, metricVo!!, true)) }
-                .toList()
+            newData[s] = metricVos
+                .filter { metricVo -> keepLines.contains(legendId(varName, metricVo, true)) }
                 .toMutableList()
         }
         return MQLVar.newVar(newData)

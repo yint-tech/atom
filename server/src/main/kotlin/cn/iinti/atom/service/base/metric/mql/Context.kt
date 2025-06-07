@@ -25,9 +25,9 @@ class Context(val metricAccuracy: MetricAccuracy, val metricService: MetricServi
         fun copy(): MQLVar {
             val newData = Maps.newTreeMap<String, MutableList<MetricVo>>()
             data!!.forEach { (s: String?, metricVos: List<MetricVo>) ->
-                newData[s] = metricVos.stream()
+                newData[s] = metricVos
                     .map { obj: MetricVo -> MetricVo.cloneMetricVo(obj) }
-                    .toList()
+                    .toMutableList()
             }
             return newVar(newData)
         }

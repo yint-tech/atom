@@ -56,20 +56,20 @@ class MetricOperator(
 
         val data: TreeMap<String, MutableList<MetricVo>> = Maps.newTreeMap()
         mqlVar.data!!.forEach { (s: String, metricVos: List<MetricVo>) ->
-            data[s] = metricVos.stream()
-                .map<MetricVo> { metricVo: MetricVo ->
+            data[s] = metricVos
+                .mapNotNull { metricVo: MetricVo ->
                     val ret: Double? = doCalculate(
                         if (leftNum) doubleValue else metricVo.value,
                         if (leftNum) metricVo.value else doubleValue
                     )
                     if (ret == null || ret.isNaN()) {
-                        return@map null
+                        return@mapNotNull null
                     }
                     val retMetricVo: MetricVo = cloneMetricVo(metricVo)
                     retMetricVo.value = ret
                     retMetricVo
-                }.filter { obj: MetricVo? -> Objects.nonNull(obj) }
-                .toList()
+                }
+                .toMutableList()
         }
         return MQLVar.newVar(data)
     }

@@ -3,13 +3,7 @@ package cn.iinti.atom.system
 import cn.iinti.atom.BuildInfo
 import cn.iinti.atom.entity.CommonRes.Companion.failed
 import cn.iinti.atom.service.base.UserInfoService
-import cn.iinti.atom.system.AppContext.markApiUser
-import cn.iinti.atom.system.AppContext.removeUser
-import cn.iinti.atom.system.AppContext.setLoginAnnotation
-import cn.iinti.atom.system.AppContext.setUser
 import com.alibaba.fastjson.JSONObject
-import com.google.common.base.Charsets
-import com.google.common.collect.Lists
 import jakarta.annotation.Resource
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -25,34 +19,26 @@ import java.util.*
 @Component
 class LoginInterceptor : HandlerInterceptor {
     @Resource
-    private val userInfoService: UserInfoService? = null
+    private lateinit var userInfoService: UserInfoService
 
     private fun collectTokenList(request: HttpServletRequest): List<String> {
-        val tokenList: MutableList<String> = Lists.newArrayList()
-
+        val tokenList: MutableList<String> = mutableListOf()
         // header 不区分大小写
-        var operatorToken = request.getHeader(BuildInfo.userLoginTokenKey)
-        if (StringUtils.isNotBlank(operatorToken)) {
-            tokenList.add(operatorToken)
-        }
-        operatorToken = request.getParameter(BuildInfo.userLoginTokenKey)
-        if (StringUtils.isNotBlank(operatorToken)) {
-            tokenList.add(operatorToken)
+        request.apply {
+            getHeader(BuildInfo.userLoginTokenKey)?.apply {
+                tokenList.add(this)
+            }
+            getParameter(BuildInfo.userLoginTokenKey)?.apply {
+                tokenList.add(this)
+            }
+            cookies?.find { it.name == BuildInfo.userLoginTokenKey }
+                ?.apply { tokenList.add(value) }
         }
 
-        val cookies = request.cookies
-        if (cookies != null) {
-            for (cookie in cookies) {
-                if (cookie.name == BuildInfo.userLoginTokenKey) {
-                    tokenList.add(cookie.value)
-                }
-            }
-        }
-        return tokenList.stream()
-            .filter { s: String? ->
-                StringUtils.isNotBlank(s) &&  // undefined,null as blank from frontend javascript
-                        !StringUtils.containsAny(s, "undefined", "null")
-            }
+        return tokenList
+            .filter { it.isNotBlank() }
+            // undefined,null as blank from frontend javascript
+            .filter { !StringUtils.containsAny(it, "undefined", "null") }
             .toList()
     }
 
@@ -82,12 +68,12 @@ class LoginInterceptor : HandlerInterceptor {
             return handleNoToken(loginRequired, response)
         }
 
-        var result = userInfoService!!.checkLogin(tokenList)
+        var result = userInfoService.checkLogin(tokenList)
         if (loginRequired == null) {
             // no need login
             if (result.isOk()) {
                 // but user send userToken
-                setUser(result.data)
+                AppContext.setUser(result.data)
             }
             return true
         }
@@ -102,15 +88,15 @@ class LoginInterceptor : HandlerInterceptor {
                 response.outputStream.write(loginExpire)
                 return false
             }
-            markApiUser()
+            AppContext.markApiUser()
         }
         if (loginRequired.forAdmin && BooleanUtils.isNotTrue(result.data!!.isAdmin)) {
             response.addHeader("content-type", "application/json; charset=utf-8")
             response.outputStream.write(onlyForAdminResponse)
             return false
         }
-        setUser(result.data)
-        setLoginAnnotation(loginRequired)
+        AppContext.setUser(result.data)
+        AppContext.setLoginAnnotation(loginRequired)
         return true
     }
 
@@ -120,12 +106,12 @@ class LoginInterceptor : HandlerInterceptor {
         handler: Any,
         modelAndView: ModelAndView?
     ) {
-        removeUser()
+        AppContext.clean()
     }
 
     companion object {
-        private val needLoginResponse = JSONObject.toJSONString(failed<Any>("请登录后访问")).toByteArray(Charsets.UTF_8)
-        private val loginExpire = JSONObject.toJSONString(failed<Any>("请重新登录")).toByteArray(Charsets.UTF_8)
-        private val onlyForAdminResponse = JSONObject.toJSONString(failed<Any>("非管理员")).toByteArray(Charsets.UTF_8)
+        private val needLoginResponse = JSONObject.toJSONString(failed<Any>("请登录后访问")).toByteArray()
+        private val loginExpire = JSONObject.toJSONString(failed<Any>("请重新登录")).toByteArray()
+        private val onlyForAdminResponse = JSONObject.toJSONString(failed<Any>("非管理员")).toByteArray()
     }
 }

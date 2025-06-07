@@ -39,7 +39,7 @@ object AppContext {
         return BooleanUtils.isTrue(aBoolean)
     }
 
-    fun removeUser() {
+    fun clean() {
         userInfoThreadLocal.remove()
         API_USER.remove()
         LOGIN_ANNOTATION.remove()
