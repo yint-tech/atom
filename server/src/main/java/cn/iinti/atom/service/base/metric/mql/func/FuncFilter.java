@@ -62,8 +62,8 @@ public class FuncFilter extends XofVarFunc {
         }
 
         // if filter time field, switch metric type
-        if (MetricEnums.TimeSubType.TIME.metricKey.equals(metricTimeType) ||
-                MetricEnums.TimeSubType.COUNT.metricKey.equals(metricTimeType)
+        if (MetricEnums.TimeSubType.TIME.getMetricKey().equals(metricTimeType) ||
+                MetricEnums.TimeSubType.COUNT.getMetricKey().equals(metricTimeType)
         ) {
             metricVo.setType(Meter.Type.COUNTER);
         }

@@ -51,7 +51,7 @@ class SysLogAspect {
 
         val method: Method = signature.method
         val sysLog = SysLog()
-        sysLog.username = AppContext.getUser().userName
+        sysLog.username = AppContext.getUser()!!.userName
         sysLog.operation = method.name
         val params = Arrays.toString(point.args)
         sysLog.params = StringUtils.substring(params, 0, 50)

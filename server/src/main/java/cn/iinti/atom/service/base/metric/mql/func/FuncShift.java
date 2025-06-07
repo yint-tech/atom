@@ -73,7 +73,7 @@ public class FuncShift extends MQLFunction {
             }
             MetricVo nowNode = metricVos.iterator().next();
             LocalDateTime shiftTime = shiftFunc.get(context.getMetricAccuracy()).apply(nowNode.getCreateTime());
-            String shiftTimeStr = context.getMetricAccuracy().timePattern.format(shiftTime);
+            String shiftTimeStr = context.getMetricAccuracy().getTimePattern().format(shiftTime);
             List<MetricVo> shiftMetrics = mqlVar.getData().get(shiftTimeStr);
             if (shiftMetrics == null) {
                 return;

@@ -11,7 +11,7 @@ object AppContext {
     private val SERVLET_RESPONSE = ThreadLocal<HttpServletResponse>()
 
     @JvmStatic
-    fun getUser(): UserInfo {
+    fun getUser(): UserInfo? {
         return userInfoThreadLocal.get()
     }
 

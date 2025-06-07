@@ -71,7 +71,7 @@ class UserInfoController {
     @Operation(summary = "当前用户信息")
     @RequestMapping(value = ["/userInfo"], method = [RequestMethod.GET])
     fun userInfo(): CommonRes<UserInfo> {
-        val user = AppContext.getUser()
+        val user = AppContext.getUser()!!
         if (AppContext.isApiUser()) {
             // api方式无法获取到用户密码，我们认为API是用在代码中，他是低优账户体系。后台账户将会对他保密
             user.password = null
@@ -83,7 +83,7 @@ class UserInfoController {
     @Operation(summary = "刷新当前用户token")
     @GetMapping(value = ["/refreshToken"])
     fun refreshToken(): CommonRes<String> {
-        val newToken = userInfoService.refreshToken(AppContext.getUser().loginToken)
+        val newToken = userInfoService.refreshToken(AppContext.getUser()!!.loginToken)
         if (newToken == null) {
             return CommonRes.failed(CommonRes.statusLoginExpire, "请重新登陆")
         }
@@ -95,7 +95,7 @@ class UserInfoController {
     @PostMapping(value = ["/resetPassword"])
     fun resetPassword(newPassword: String): CommonRes<UserInfo> {
         val mUser = AppContext.getUser()
-        if (mUser.isAdmin!! && Environment.isDemoSite) {
+        if (mUser!!.isAdmin!! && Environment.isDemoSite) {
             return CommonRes.failed("测试demo网站不允许修改管理员密码")
         }
         return userInfoService.resetUserPassword(mUser.id, newPassword)
@@ -105,7 +105,7 @@ class UserInfoController {
     @Operation(summary = "重新生产api访问的token")
     @GetMapping("/regenerateAPIToken")
     fun regenerateAPIToken(): CommonRes<UserInfo> {
-        val mUser = AppContext.getUser()
+        val mUser = AppContext.getUser()!!
         mUser.apiToken = UUID.randomUUID().toString()
         userInfoMapper.update(
             null, UpdateWrapper<UserInfo>()

@@ -68,10 +68,10 @@ public class FuncAggregate extends XofVarFunc {
                 break;
             case TIMER:
                 String timerType = metricVo.getTags().get(MetricEnums.TimeSubType.timer_type);
-                if (StringUtils.isBlank(timerType) || timerType.equals(MetricEnums.TimeSubType.MAX.metricKey)) {
+                if (StringUtils.isBlank(timerType) || timerType.equals(MetricEnums.TimeSubType.MAX.getMetricKey())) {
                     // this is aggregated time-max
                     metricVo.setValue(metricVos.stream().map(MetricVo::getValue).reduce(0D, Double::max));
-                } else if (timerType.equals(MetricEnums.TimeSubType.TIME.metricKey) || timerType.equals(MetricEnums.TimeSubType.COUNT.metricKey)) {
+                } else if (timerType.equals(MetricEnums.TimeSubType.TIME.getMetricKey()) || timerType.equals(MetricEnums.TimeSubType.COUNT.getMetricKey())) {
                     metricVo.setValue(metricVos.stream().map(MetricVo::getValue).reduce(0D, Double::sum));
                 }
                 break;

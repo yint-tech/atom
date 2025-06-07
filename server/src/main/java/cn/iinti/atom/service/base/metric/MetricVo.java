@@ -18,25 +18,25 @@ import java.util.Map;
 @Keep
 public class MetricVo {
     @Schema(name = "指标名称")
-    private String name;
+    String name;
 
     @Schema(name = "时间索引")
-    private String timeKey;
+    String timeKey;
 
     @Schema(name = "精度，分为分钟、小时、天三个维度：minutes/hours/days")
-    private MetricEnums.MetricAccuracy accuracy;
+    MetricEnums.MetricAccuracy accuracy;
 
     @Schema(name = "分量tag")
-    private Map<String, String> tags = Maps.newHashMap();
+    Map<String, String> tags = Maps.newHashMap();
 
     @Schema(name = "指标类型：（counter、gauge、timer，请注意暂时只支持这三种指标）")
-    private Meter.Type type;
+    Meter.Type type;
 
     @Schema(name = "指标值")
-    private Double value;
+    Double value;
 
     @Schema(name = "创建时间")
-    private LocalDateTime createTime;
+    LocalDateTime createTime;
 
     public String toTagId() {
         List<String> tagSegments = Lists.newArrayList();

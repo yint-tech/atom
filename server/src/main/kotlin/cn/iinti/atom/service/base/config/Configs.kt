@@ -91,7 +91,7 @@ object Configs {
         }
     }
 
-    interface ConfigChangeListener {
+    fun interface ConfigChangeListener {
         fun onConfigChange()
     }
 

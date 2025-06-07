@@ -262,7 +262,7 @@ class BroadcastService : ApplicationListener<WebServerInitializedEvent> {
     /**
      * 广播实践监听器
      */
-    interface IBroadcastListener {
+    fun interface IBroadcastListener {
         fun onBroadcastEvent()
     }
 
