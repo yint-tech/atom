@@ -33,7 +33,7 @@ public class EventNotifierService implements CommandLineRunner {
     public void notifySensitiveOperation(String user, String api, String params) {
         withScriptExtension((eventScript -> {
             SensitiveOperationEvent event = new SensitiveOperationEvent(user, api, params);
-            callExtensions(eventScript.sensitiveEventList, event);
+            callExtensions(eventScript.getSensitiveEventList(), event);
         }));
     }
 
@@ -47,14 +47,14 @@ public class EventNotifierService implements CommandLineRunner {
         }
         withScriptExtension(eventScript -> {
             DiskPoorEvent diskPoorEvent = new DiskPoorEvent(totalSpace, freeSpace, ServerIdentifier.id());
-            callExtensions(eventScript.diskPoorEventList, diskPoorEvent);
+            callExtensions(eventScript.getDiskPoorEventList(), diskPoorEvent);
         });
     }
 
     public void scheduleMetricEvent(boolean force) {
         withScriptExtension(eventScript -> {
             Map<String, MetricMonitorHandle> newRecords = new HashMap<>();
-            eventScript.metricMonitorConfigList.forEach(config -> {
+            eventScript.getMetricMonitorConfigList().forEach(config -> {
                 MetricMonitorHandle metricMonitorHandle =
                         metricNotifyRecord.computeIfAbsent(config.getId(), (k) -> new MetricMonitorHandle());
 
