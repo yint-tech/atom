@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Setter
+
 public class MetricMonitorHandle {
     private MQL mql;
     private CronExpression cron;
@@ -138,4 +138,35 @@ public class MetricMonitorHandle {
         return !next.isAfter(LocalDateTime.now());
     }
 
+    public void setMql(MQL mql) {
+        this.mql = mql;
+    }
+
+    public void setCron(CronExpression cron) {
+        this.cron = cron;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public void setAccuracy(MetricEnums.MetricAccuracy accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public void setCallback(Closure<?> callback) {
+        this.callback = callback;
+    }
+
+    public void setLastRun(LocalDateTime lastRun) {
+        this.lastRun = lastRun;
+    }
+
+    public void setTimeFilter(Predicate<List<MetricVo>> timeFilter) {
+        this.timeFilter = timeFilter;
+    }
 }
