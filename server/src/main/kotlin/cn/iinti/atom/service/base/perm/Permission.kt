@@ -21,12 +21,7 @@ import kotlin.jvm.JvmStatic
  *
  * @param <T> 权限模型绑定实体类型
  */
-abstract class Permission<T> protected constructor(clazz: Class<T>) {
-    val clazz: Class<T>
-
-    init {
-        this.clazz = clazz
-    }
+abstract class Permission<T> protected constructor(val clazz: Class<T>) {
 
     /**
      * @return 本权限模型对应的作用域，作用域代表一个具体的权限模型，具备特定的权限处理规则

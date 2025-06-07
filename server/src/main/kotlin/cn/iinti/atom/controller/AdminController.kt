@@ -21,7 +21,6 @@ import jakarta.annotation.Resource
 import org.apache.commons.lang3.StringUtils
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
-import java.util.*
 
 @RestController
 @RequestMapping(BuildInfo.restfulApiPrefix + "/admin-op")
@@ -133,10 +132,7 @@ class AdminController {
     @LoginRequired(forAdmin = true)
     @GetMapping("/travelToUser")
     fun travelToUser(id: Long): CommonRes<UserInfo> {
-        val toUser = userInfoMapper.selectById(id)
-        if (toUser == null) {
-            return CommonRes.failed("user not exist")
-        }
+        val toUser = userInfoMapper.selectById(id) ?: return CommonRes.failed("user not exist")
         toUser.loginToken = userInfoService.genLoginToken(toUser, LocalDateTime.now())
         return CommonRes.success(toUser)
     }
@@ -149,7 +145,12 @@ class AdminController {
         if (actualPage < 1) {
             actualPage = 1
         }
-        return CommonRes.success(userInfoMapper.selectPage(Page(actualPage.toLong(), pageSize.toLong()), QueryWrapper()))
+        return CommonRes.success(
+            userInfoMapper.selectPage(
+                Page(actualPage.toLong(), pageSize.toLong()),
+                QueryWrapper()
+            )
+        )
     }
 
     @Operation(summary = "列出 server")
@@ -161,7 +162,12 @@ class AdminController {
             actualPage = 1
         }
         val queryWrapper = QueryWrapper<ServerNode>().orderByDesc(ServerNode.LAST_ACTIVE_TIME)
-        return CommonRes.success(serverNodeMapper.selectPage(Page(actualPage.toLong(), pageSize.toLong()), queryWrapper))
+        return CommonRes.success(
+            serverNodeMapper.selectPage(
+                Page(actualPage.toLong(), pageSize.toLong()),
+                queryWrapper
+            )
+        )
     }
 
     @Operation(summary = "设置服务器启用状态")

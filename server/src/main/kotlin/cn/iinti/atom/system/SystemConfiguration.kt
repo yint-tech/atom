@@ -6,13 +6,11 @@ import io.swagger.v3.oas.models.ExternalDocumentation
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
-import io.swagger.v3.oas.models.parameters.Parameter
 import io.swagger.v3.oas.models.parameters.QueryParameter
 import org.apache.commons.lang3.StringUtils
 import org.springdoc.core.customizers.OperationCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.ArrayList
 
 @Configuration
 class SystemConfiguration {
@@ -24,25 +22,29 @@ class SystemConfiguration {
     @Bean
     fun springShopOpenAPI(): OpenAPI {
         return OpenAPI()
-            .info(Info()
-                .title("Atom")
-                .description("atom系统")
-                .version("v${BuildInfo.versionName}")
-                .license(License()
-                    .name("Apache 2.0")
-                    .url("https://atom.iinti.cn/atom-doc")))
-            .externalDocs(ExternalDocumentation()
-                .description("iinti")
-                .url("https://iinti.cn"))
+            .info(
+                Info()
+                    .title("Atom")
+                    .description("atom系统")
+                    .version("v${BuildInfo.versionName}")
+                    .license(
+                        License()
+                            .name("Apache 2.0")
+                            .url("https://atom.iinti.cn/atom-doc")
+                    )
+            )
+            .externalDocs(
+                ExternalDocumentation()
+                    .description("iinti")
+                    .url("https://iinti.cn")
+            )
     }
 
     @Bean
     fun apiCustomizer(): OperationCustomizer {
         return OperationCustomizer { operation, handlerMethod ->
             val loginRequired = handlerMethod.method.getAnnotation(LoginRequired::class.java)
-            if (loginRequired == null) {
-                return@OperationCustomizer operation
-            }
+                ?: return@OperationCustomizer operation
             val newSummary = ArrayList<String>()
             if (loginRequired.forAdmin) {
                 newSummary.add("AdminOnly")

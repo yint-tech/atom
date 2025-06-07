@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper
 import jakarta.annotation.Resource
 import org.springframework.stereotype.Service
-import java.io.IOException
 import java.time.LocalDateTime
 import java.time.temporal.ChronoField
 import java.util.*
@@ -163,14 +162,16 @@ class UserInfoService {
     }
 
     fun register(account: String, password: String): CommonRes<UserInfo> {
-        if (account.isNullOrBlank() || password.isNullOrBlank()) {
+        if (account.isBlank() || password.isBlank()) {
             return CommonRes.failed("用户或者密码不能为空")
         }
         if (illegalUserNameChs.any { ch -> account.contains(ch) }) {
             return CommonRes.failed("userName contain illegal character")
         }
-        val userInfo = userMapper
-            .selectOne(QueryWrapper<UserInfo>().eq(UserInfo.USER_NAME, account).last("limit 1"))
+        val userInfo = userMapper.selectOne(
+            QueryWrapper<UserInfo>()
+                .eq(UserInfo.USER_NAME, account).last("limit 1")
+        )
 
         if (userInfo != null) {
             return CommonRes.failed("用户已存在")
@@ -207,7 +208,7 @@ class UserInfoService {
 
     fun checkAPIToken(tokenList: List<String>): CommonRes<UserInfo> {
         tokenList.forEach { token ->
-            val userInfo = dbCacheManager.getUserCacheWithApiToken()?.getModeWithCache(token)
+            val userInfo = dbCacheManager.userCacheWithApiToken?.getModeWithCache(token)
             if (userInfo != null) {
                 return CommonRes.success(userInfo)
             }
@@ -239,10 +240,10 @@ class UserInfoService {
     }
 
     fun checkLogin(token: String): CommonRes<UserInfo> {
-        val userInfo = getUserInfoFromToken(token)
-        if (userInfo == null) {
-            return CommonRes.failed(CommonRes.statusNeedLogin, "token错误")
-        }
+        val userInfo = getUserInfoFromToken(token) ?: return CommonRes.failed(
+            CommonRes.statusNeedLogin, "token错误"
+        )
+
         if (!isRightToken(token, userInfo)) {
             return CommonRes.failed("请登录")
         }
@@ -285,7 +286,7 @@ class UserInfoService {
             //  md5BeginByteArray[i] = bytes[i * 2 + 1];
         }
         val userId = byteToLong(longByteArray)
-        val userInfo = dbCacheManager.getUserCacheWithId()!!.getModeWithCache(userId.toString())
+        val userInfo = dbCacheManager.userCacheWithId!!.getModeWithCache(userId.toString())
         if (userInfo != null) {
             return userInfo
         }
@@ -293,15 +294,13 @@ class UserInfoService {
     }
 
     fun isUserExist(username: String): Boolean {
-        return dbCacheManager.getUserCacheWithName()?.getModeWithCache(username) != null
+        return dbCacheManager.userCacheWithName?.getModeWithCache(username) != null
     }
 
     fun grantAdmin(userName: String, isAdmin: Boolean): CommonRes<String> {
         val userInfo = userMapper.selectOne(QueryWrapper<UserInfo>().eq(UserInfo.USER_NAME, userName))
-        if (userInfo == null) {
-            return CommonRes.failed("user not exist")
-        }
-        if (userInfo.id!!.equals(AppContext.getUser()?.id)) {
+            ?: return CommonRes.failed("user not exist")
+        if (userInfo.id!! == AppContext.getUser()?.id) {
             return CommonRes.failed("you can not operate yourself")
         }
         userInfo.isAdmin = isAdmin
@@ -313,8 +312,8 @@ class UserInfoService {
         return CommonRes.success("ok")
     }
 
-    fun editUserPerm(userName: String, permsConfig: String?): CommonRes<UserInfo> {
-        return CommonRes.ofPresent(dbCacheManager.getUserCacheWithName()!!.getModeWithCache(userName))
+    fun editUserPerm(userName: String, permsConfig: String): CommonRes<UserInfo> {
+        return CommonRes.ofPresent(dbCacheManager.userCacheWithName!!.getModeWithCache(userName))
             .ifOk { userInfo ->
                 val map = PermsService.parseExp(permsConfig, false)
 

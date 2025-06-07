@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotBlank
 import org.apache.commons.lang3.ClassUtils
 import org.apache.commons.lang3.StringUtils
 import java.io.File
-import java.util.*
-import java.util.stream.Collectors
 
 /**
  * 系统设置,所有系统设置我们统一聚合在同一个文件中，避免默认值无法对齐
@@ -20,13 +18,13 @@ object Settings {
     @JvmStatic
     fun allSettingsVo(): JSONObject {
         val ret = JSONObject()
-        ret.put("normal", allSettings.stream().map { settingConfig ->
+        ret["normal"] = allSettings.map { settingConfig ->
             JSONObject().fluentPut("key", settingConfig.key)
                 .fluentPut("value", settingConfig.valueVo())
                 .fluentPut("type", settingConfig.supplier.configType())
                 .fluentPut("desc", settingConfig.desc)
                 .fluentPut("detailDesc", settingConfig.detailDesc)
-        }.collect(Collectors.toList()))
+        }.toList()
         return ret
     }
 

@@ -4,6 +4,7 @@ import cn.iinti.atom.BuildInfo
 import jakarta.annotation.Resource
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.context.annotation.Configuration
+import org.springframework.lang.Nullable
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
@@ -19,31 +20,36 @@ import org.springframework.web.servlet.resource.ResourceResolverChain
 @Configuration
 class WebConfig : WebMvcConfigurer {
     @Resource
-    private val loginInterceptor: LoginInterceptor? = null
+    private lateinit var loginInterceptor: LoginInterceptor
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(loginInterceptor)
     }
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
-        registry.addRedirectViewController(docPath, docPath + "/index.html")
+        registry.addRedirectViewController(DOC_PATH, DOC_PATH + "/index.html")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler(docPath + "/")
+        registry.addResourceHandler(DOC_PATH + "/")
             .addResourceLocations("classpath:/static/")
             .resourceChain(true)
             .addResolver(object : PathResourceResolver() {
                 override fun resolveResource(
-                    request: HttpServletRequest,
+                    @Nullable request: HttpServletRequest?,
                     requestPath: String,
-                    locations: List<org.springframework.core.io.Resource>,
+                    locations: MutableList<out org.springframework.core.io.Resource>,
                     chain: ResourceResolverChain
-                ): org.springframework.core.io.Resource {
+                ): org.springframework.core.io.Resource? {
                     var requestPath = requestPath
                     return super.resolveResource(
                         request,
-                        if (requestPath.endsWith("/")) "index.html" else "/index.html".let { requestPath += it; requestPath },
+                        if (requestPath.endsWith("/"))
+                            "index.html" else
+                            "/index.html".let {
+                                requestPath += it;
+                                requestPath
+                            },
                         locations,
                         chain
                     )
@@ -51,14 +57,15 @@ class WebConfig : WebMvcConfigurer {
             })
         // 特殊处理文档静态资源规则，因为文档存在多个二级的index页面
         // 但是在spring里面只有root index会走welcome html
-        registry.addResourceHandler(docPath + "/**")
-            .addResourceLocations("classpath:/static" + docPath + "/")
+        registry.addResourceHandler("$DOC_PATH/**")
+            .addResourceLocations("classpath:/static$DOC_PATH/")
             .resourceChain(true).addResolver(object : PathResourceResolver() {
                 override fun resolveResource(
-                    request: HttpServletRequest, requestPath: String,
-                    locations: List<org.springframework.core.io.Resource>,
+                    @Nullable request: HttpServletRequest?,
+                    requestPath: String,
+                    locations: MutableList<out org.springframework.core.io.Resource>,
                     chain: ResourceResolverChain
-                ): org.springframework.core.io.Resource {
+                ): org.springframework.core.io.Resource? {
                     val resource = super.resolveResource(request, requestPath, locations, chain)
                     if (resource != null) {
                         return resource
@@ -69,6 +76,6 @@ class WebConfig : WebMvcConfigurer {
     }
 
     companion object {
-        private const val docPath = "/" + BuildInfo.docPath
+        private const val DOC_PATH = "/" + BuildInfo.docPath
     }
 }

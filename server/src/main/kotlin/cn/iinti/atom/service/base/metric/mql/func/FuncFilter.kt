@@ -42,7 +42,7 @@ class FuncFilter(params: List<String>) : XofVarFunc(params) {
                         )
                     }
             }.peek { metricVo: MetricVo? ->
-                val metricTimeType = metricVo!!.tags[MetricEnums.TimeSubType.timer_type]
+                val metricTimeType = metricVo!!.tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 switchMetricType4TimeFilter(metricVo, metricTimeType)
 
                 val tags = metricVo.tags

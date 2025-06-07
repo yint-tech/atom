@@ -17,7 +17,7 @@ class MetricMonitorConfig {
     private var _mql: MQL? = null
     private var _start: LocalDateTime? = null
     private var _end: LocalDateTime? = null
-    private var _accuracy: MetricEnums.MetricAccuracy = MetricEnums.MetricAccuracy.hours
+    private var _accuracy: MetricEnums.MetricAccuracy = MetricEnums.MetricAccuracy.HOURS
 
     private var callback: Closure<*>? = null
 

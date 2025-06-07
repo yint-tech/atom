@@ -1,7 +1,6 @@
 package cn.iinti.atom.service.base.metric
 
 import cn.iinti.atom.entity.metric.Metric
-import cn.iinti.atom.entity.metric.MetricDay
 import cn.iinti.atom.entity.metric.MetricTag
 import cn.iinti.atom.mapper.metric.MetricDayMapper
 import cn.iinti.atom.mapper.metric.MetricHourMapper
@@ -19,7 +18,6 @@ import com.google.common.collect.Maps
 import io.micrometer.core.instrument.*
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.Resource
-import lombok.extern.slf4j.Slf4j
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -37,8 +35,8 @@ import kotlin.math.max
 
 @Service
 class MetricService {
-    private val metricHandleLooper = Looper("metric_handler").startLoop()
     private val log: Logger = LoggerFactory.getLogger(MetricService::class.java)
+    private val metricHandleLooper = Looper("metric_handler").startLoop()
 
     @Resource
     private val metricDayMapper: MetricDayMapper? = null
@@ -67,10 +65,10 @@ class MetricService {
         }
         log.info(
             "schedule generator metric data for timeKey: {}",
-            LocalDateTime.now().format(MetricEnums.MetricAccuracy.minutes.timePattern)
+            LocalDateTime.now().format(MetricEnums.MetricAccuracy.MINUTES.timePattern)
         )
         val now = LocalDateTime.now()
-        val timeKey = now.format(MetricEnums.MetricAccuracy.minutes.timePattern)
+        val timeKey = now.format(MetricEnums.MetricAccuracy.MINUTES.timePattern)
         Metrics.globalRegistry.forEachMeter { meter: Meter ->
             try {
                 onMeter(timeKey, now, meter)
@@ -92,8 +90,8 @@ class MetricService {
         log.info("schedule mergeHoursMetric")
         metricHandleLooper.execute {
             performMerge(
-                MetricEnums.MetricAccuracy.minutes,
-                MetricEnums.MetricAccuracy.hours,
+                MetricEnums.MetricAccuracy.MINUTES,
+                MetricEnums.MetricAccuracy.HOURS,
                 LocalDateTime.now().minusHours(36),
                 minuteCrt.scanStart(),
                 { localDateTime: LocalDateTime -> localDateTime.plusHours(1) },
@@ -114,8 +112,8 @@ class MetricService {
         log.info("schedule mergeHourToDays")
         metricHandleLooper.execute {
             performMerge(
-                MetricEnums.MetricAccuracy.hours,
-                MetricEnums.MetricAccuracy.days,
+                MetricEnums.MetricAccuracy.HOURS,
+                MetricEnums.MetricAccuracy.DAYS,
                 LocalDateTime.now().minusDays(40),
                 hourCrt.scanStart(),
                 { localDateTime: LocalDateTime -> localDateTime.plusDays(1) },
@@ -127,7 +125,7 @@ class MetricService {
     @Scheduled(cron = "0 4 4 14 * ?")
     fun scheduleCleanDays() {
         // 最多保留3年的指标数据，超过3年的直接删除
-        chooseDao<Metric>(MetricEnums.MetricAccuracy.days).delete(
+        chooseDao<Metric>(MetricEnums.MetricAccuracy.DAYS).delete(
             QueryWrapper<Metric>()
                 .le(Metric.CREATE_TIME, LocalDateTime.now().minusDays(1000))
         )
@@ -155,7 +153,7 @@ class MetricService {
 
         var metricRet = chooseDao<Metric>(accuracy).selectList(queryWrapper.orderByAsc(Metric.TIME_KEY))
             .stream()
-            .map<MetricVo> { metric: Metric -> mapMetric(metric, metricTag) }
+            .map { metric: Metric -> mapMetric(metric, metricTag) }
 
         metricRet = metricRet.peek { metricVo: MetricVo ->
             // remove tag field after
@@ -215,7 +213,7 @@ class MetricService {
             }
             val now = LocalDateTime.now()
             while (scanStart_!!.isBefore(now)) {
-                val start = stepStartFun.apply(scanStart_!!)
+                val start = stepStartFun.apply(scanStart_)
                 val end = stepFun.apply(start)
                 mergeTimesSpace(start, end, fromAccuracy, toAccuracy, metricName, cleanBefore)
                 scanStart_ = end.plusMinutes(30)
@@ -294,7 +292,7 @@ class MetricService {
             val maxList: MutableList<Metric> = Lists.newArrayList()
             val metricTag = metricTagService!!.fromKey(metricName)!!
             metrics.forEach(Consumer { metric: Metric ->
-                val subtype = mapMetric(metric, metricTag).tags[MetricEnums.TimeSubType.timer_type]
+                val subtype = mapMetric(metric, metricTag).tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 if (MetricEnums.TimeSubType.COUNT.metricKey == subtype) {
                     countList.add(metric)
                 } else if (MetricEnums.TimeSubType.TIME.metricKey == subtype) {
@@ -303,20 +301,20 @@ class MetricService {
                     maxList.add(metric)
                 }
             })
-            if (!countList.isEmpty()) {
+            if (countList.isNotEmpty()) {
                 mergedList.add(mergeMetrics(countList, countList[0], SUM))
             }
-            if (!totalTimeList.isEmpty()) {
+            if (totalTimeList.isNotEmpty()) {
                 mergedList.add(mergeMetrics(totalTimeList, totalTimeList[0], SUM))
             }
-            if (!maxList.isEmpty()) {
+            if (maxList.isNotEmpty()) {
                 mergedList.add(mergeMetrics(maxList, maxList[0], MAX))
             }
         } else {
             mergedList.add(mergeMetrics(metrics, first, if (first.type == Meter.Type.COUNTER) SUM else AVG))
         }
 
-        mergedList.forEach(Consumer<Metric> { mergedMetric: Metric ->
+        mergedList.forEach { mergedMetric: Metric ->
             mergedMetric.timeKey = timeKey
             mergedMetric.createTime = first.createTime
             log.info("merged metric: {}", JSONObject.toJSONString(mergedMetric))
@@ -336,14 +334,14 @@ class MetricService {
                     chooseDao<Metric>(to).updateById(mergedMetric)
                 }
             }
-        })
+        }
 
         val needRemoveIds = metrics.stream()
             .filter { metric: Metric -> metric.createTime!!.isBefore(cleanBefore) }
             .map(Metric::id)
             .collect(Collectors.toList())
 
-        if (!needRemoveIds.isEmpty()) {
+        if (needRemoveIds.isNotEmpty()) {
             chooseDao<Metric>(from).deleteBatchIds(needRemoveIds)
         }
     }
@@ -368,13 +366,19 @@ class MetricService {
         } else if (type == Meter.Type.COUNTER) {
             val metricTag = metricTagService!!.fromMeter(meter, null)
             val metric = makeMetric(timeKey, time, meter, metricTag, null)
-            val count = if (meter is Counter) {
-                meter.count()
-            } else if (meter is FunctionCounter) {
-                meter.count()
-            } else {
-                log.warn("unknown counter type:{}", meter.javaClass)
-                return
+            val count = when (meter) {
+                is Counter -> {
+                    meter.count()
+                }
+
+                is FunctionCounter -> {
+                    meter.count()
+                }
+
+                else -> {
+                    log.warn("unknown counter type:{}", meter.javaClass)
+                    return
+                }
             }
             saveCounter(metric, metric.tagsMd5, count)
         } else if (type == Meter.Type.TIMER) {
@@ -432,7 +436,7 @@ class MetricService {
     private fun saveMetric(metric: Metric) {
         try {
             metric.createTime = LocalDateTime.now()
-            chooseDao<Metric>(MetricEnums.MetricAccuracy.minutes).insert(metric)
+            chooseDao<Metric>(MetricEnums.MetricAccuracy.MINUTES).insert(metric)
         } catch (ignore: DuplicateKeyException) {
         }
     }
@@ -473,39 +477,40 @@ class MetricService {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T : Metric> chooseDao(accuracy: MetricEnums.MetricAccuracy): BaseMapper<T> {
         return when (accuracy) {
-            MetricEnums.MetricAccuracy.days -> (metricDayMapper as BaseMapper<T>)
-            MetricEnums.MetricAccuracy.hours -> (metricHourMapper as BaseMapper<T>)
+            MetricEnums.MetricAccuracy.DAYS -> (metricDayMapper as BaseMapper<T>)
+            MetricEnums.MetricAccuracy.HOURS -> (metricHourMapper as BaseMapper<T>)
             else -> (metricMinuteMapper as BaseMapper<T>)
         }
     }
 
     fun eachDao(consumer: Consumer<BaseMapper<Metric>>) {
-        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.days))
-        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.hours))
-        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.minutes))
+        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.DAYS))
+        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.HOURS))
+        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.MINUTES))
     }
 
     companion object {
         private val AVG = { metrics: List<Metric> ->
             metrics.stream()
-                .map(Metric::value)
+                .map { it.value!! }
                 .reduce(0.0) { a, b ->
-                    (a!! + b!!) / metrics.size
-                }!!
+                    (a + b) / metrics.size
+                }
         }
 
         private val SUM = { metrics: List<Metric> ->
             metrics.stream()
-                .map(Metric::value)
-                .reduce(0.0) { a, b -> a!! + b!! }!!
+                .map { it.value!! }
+                .reduce(0.0) { a, b -> a + b }
         }
 
         private val MAX = { metrics: List<Metric> ->
             metrics.stream()
-                .map(Metric::value)
-                .reduce(0.0) { a, b -> max(a!!, b!!) }!!
+                .map { it.value!! }
+                .reduce(0.0) { a, b -> max(a, b) }
         }
     }
 }

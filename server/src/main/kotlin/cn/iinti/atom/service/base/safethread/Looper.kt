@@ -1,10 +1,12 @@
 package cn.iinti.atom.service.base.safethread
 
-import cn.iinti.atom.BuildInfo
 import cn.iinti.atom.service.base.metric.monitor.Monitor
 import io.micrometer.core.instrument.Counter
 import org.slf4j.LoggerFactory
-import java.util.concurrent.*
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingDeque
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -18,11 +20,8 @@ class Looper() : Executor {
     private var monitorExecuteCounter: Counter? = null
     private var monitorLooperQueueSize: AtomicInteger? = null
 
-    // 默认构造函数，用于 Java 兼容
-    constructor(looperName: String) : this(looperName, true)
-
     // 主构造函数
-    constructor(looperName: String, metric: Boolean) : this() {
+    constructor(looperName: String, metric: Boolean = true) : this() {
         this.loopThread = LoopThread(looperName)
         this.metric = metric
         if (metric) {
@@ -109,12 +108,12 @@ class Looper() : Executor {
         scheduler.schedule({ post(runnable) }, delay, TimeUnit.MILLISECONDS)
     }
 
-    fun fluentScheduleWithRate(runnable: Runnable, rate: Long): Looper {
-        scheduleWithRate(runnable, rate)
+    fun fluentScheduleWithRate(rate: Long, runnable: Runnable): Looper {
+        scheduleWithRate(rate, runnable)
         return this
     }
 
-    fun scheduleWithRate(runnable: Runnable, rate: Number): FixRateScheduleHandle {
+    fun scheduleWithRate(rate: Number, runnable: Runnable): FixRateScheduleHandle {
         val fixRateScheduleHandle = FixRateScheduleHandle(runnable, rate)
         postDelay(fixRateScheduleHandle, rate.toLong())
         return fixRateScheduleHandle

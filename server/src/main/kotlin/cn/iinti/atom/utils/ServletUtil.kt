@@ -2,7 +2,6 @@ package cn.iinti.atom.utils
 
 import cn.iinti.atom.entity.CommonRes
 import com.alibaba.fastjson.JSON
-import jakarta.servlet.ServletOutputStream
 import jakarta.servlet.http.HttpServletResponse
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
@@ -52,7 +51,12 @@ class ServletUtil {
             responseFile(file, contentType, httpServletResponse, true)
         }
 
-        fun responseFile(file: File?, contentType: String, httpServletResponse: HttpServletResponse, download: Boolean) {
+        fun responseFile(
+            file: File?,
+            contentType: String,
+            httpServletResponse: HttpServletResponse,
+            download: Boolean
+        ) {
             if (file == null || !file.canRead()) {
                 writeRes(httpServletResponse, CommonRes.failed<Any>("system error,filed retrieve failed"))
                 return
@@ -71,7 +75,7 @@ class ServletUtil {
             httpServletResponse.contentType = contentType
 
             try {
-                BufferedOutputStream(httpServletResponse.getOutputStream()).use { bufferedOutputStream ->
+                BufferedOutputStream(httpServletResponse.outputStream).use { bufferedOutputStream ->
                     IOUtils.copy(Files.newInputStream(file.toPath()), bufferedOutputStream)
                 }
             } catch (e: IOException) {

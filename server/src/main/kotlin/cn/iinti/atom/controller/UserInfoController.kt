@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.NotBlank
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import java.util.UUID
 
 @RestController
 @RequestMapping(BuildInfo.restfulApiPrefix + "/user-info")
@@ -119,7 +118,7 @@ class UserInfoController {
     @Operation(summary = "给用户编辑权限")
     @LoginRequired(forAdmin = true)
     @PostMapping("/editUserPerm")
-    fun editUserPerm(@NotBlank userName: String, permsConfig: String?): CommonRes<UserInfo> {
+    fun editUserPerm(@NotBlank userName: String, permsConfig: String): CommonRes<UserInfo> {
         return userInfoService.editUserPerm(userName, permsConfig)
     }
 

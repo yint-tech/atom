@@ -7,9 +7,9 @@ import java.time.format.DateTimeFormatter
 class MetricEnums {
     @Keep
     enum class MetricAccuracy(val timePattern: DateTimeFormatter) {
-        minutes(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm")),
-        hours(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH")),
-        days(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        MINUTES(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm")),
+        HOURS(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH")),
+        DAYS(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     }
 
     @Keep
@@ -20,7 +20,7 @@ class MetricEnums {
 
 
         companion object {
-            const val timer_type: String = "timer_type"
+            const val TIMER_TYPE: String = "timer_type"
         }
     }
 }

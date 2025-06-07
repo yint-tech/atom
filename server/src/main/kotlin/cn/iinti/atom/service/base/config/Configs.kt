@@ -130,23 +130,24 @@ object Configs {
         fun fetch(value: T?)
     }
 
-    @Suppress("unchecked")
+    @Suppress("UNCHECKED_CAST")
     private fun <T> getSuperClassGenericType(clazz: Class<*>): Class<T> {
         val genType = clazz.genericSuperclass
         if (genType !is ParameterizedType) {
             return Object::class.java as Class<T>
         }
         val params = genType.actualTypeArguments
-        if (params.isEmpty()) {
-            return Object::class.java as Class<T>
+        return if (params.isEmpty()) {
+            Object::class.java as Class<T>
         } else if (params[0] !is Class<*>) {
-            return Object::class.java as Class<T>
+            Object::class.java as Class<T>
         } else {
-            return params[0] as Class<T>
+            params[0] as Class<T>
         }
     }
 
     @JvmStatic
+    @Suppress("UNCHECKED_CAST")
     fun <T> addConfigFetcher(
         configFetcher: ConfigFetcher<T?>,
         configKey: String,
@@ -154,13 +155,7 @@ object Configs {
         transformer: TransformFunc<T?>?,
         valueType: Class<T>?
     ) {
-        var resolveValueType: Class<T>
-
-        if (valueType == null) {
-            resolveValueType = getSuperClassGenericType(configFetcher.javaClass)
-        } else {
-            resolveValueType = valueType
-        }
+        var resolveValueType: Class<T> = valueType ?: getSuperClassGenericType(configFetcher.javaClass)
 
         if (resolveValueType == Object::class.java && defaultValue != null) {
             resolveValueType = defaultValue.javaClass as Class<T>
@@ -180,10 +175,7 @@ object Configs {
     private val autoTransformerValidators = HashMap<String, MonitorConfigChangeListener<*>>()
 
     fun validateConfig(key: String, value: String?): String? {
-        val monitorConfigChangeListener = autoTransformerValidators[key]
-        if (monitorConfigChangeListener == null) {
-            return null
-        }
+        val monitorConfigChangeListener = autoTransformerValidators[key] ?: return null
         return try {
             monitorConfigChangeListener.transform(value)
             null
@@ -207,7 +199,7 @@ object Configs {
             autoTransformerValidators[configKey] = this as MonitorConfigChangeListener<*>
         }
 
-        @Suppress("unchecked")
+        @Suppress("UNCHECKED_CAST")
         fun transform(config: String?): T {
             return transformer?.apply(config, finalValueType)
                 ?: (defaultTransformFuncInstance.apply(
@@ -238,11 +230,8 @@ object Configs {
     }
 
 
-    val defaultTransformFuncInstance = object : TransformFunc<Any> {
-        override fun apply(value: String?, type: Class<Any>): Any {
-            return TypeUtils.cast(value, type, ParserConfig.getGlobalInstance())
-        }
-    }
+    val defaultTransformFuncInstance =
+        TransformFunc<Any> { value, type -> TypeUtils.cast(value, type, ParserConfig.getGlobalInstance()) }
 
     private val registerConfigValueRecord = Maps.newConcurrentMap<String, Any>()
 
@@ -285,11 +274,11 @@ object Configs {
 
             addConfigFetcher(
                 object : ConfigFetcher<V?> {
-                    override fun fetch(value1: V?) {
-                        value = value1!!
+                    override fun fetch(value: V?) {
+                        this@ConfigValue.value = value!!
                         sValue = getConfig(key)
-                        if (sValue == null && value is String) {
-                            sValue = value1 as String
+                        if (sValue == null && this@ConfigValue.value is String) {
+                            sValue = value as String
                         }
                     }
                 },
@@ -371,20 +360,18 @@ object Configs {
         for (key in keys) {
             data[key] = getConfig(key)!!
         }
-        addConfigChangeListener(object : ConfigChangeListener {
-            override fun onConfigChange() {
-                var hasChange = false
-                for (key in keys) {
-                    val nowValue = getConfig(key)
-                    if (!Objects.equals(data[key], nowValue)) {
-                        hasChange = true
-                        data[key] = nowValue
-                    }
-                }
-                if (hasChange) {
-                    changeListener.onConfigChange()
+        addConfigChangeListener {
+            var hasChange = false
+            for (key in keys) {
+                val nowValue = getConfig(key)
+                if (!Objects.equals(data[key], nowValue)) {
+                    hasChange = true
+                    data[key] = nowValue
                 }
             }
-        })
+            if (hasChange) {
+                changeListener.onConfigChange()
+            }
+        }
     }
 }

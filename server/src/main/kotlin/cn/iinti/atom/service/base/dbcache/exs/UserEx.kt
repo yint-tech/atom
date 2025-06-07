@@ -2,7 +2,6 @@ package cn.iinti.atom.service.base.dbcache.exs
 
 import cn.iinti.atom.entity.UserInfo
 import cn.iinti.atom.service.base.perm.PermsService
-import java.util.*
 
 class UserEx {
     var perms: Map<String, Collection<String>> = emptyMap()

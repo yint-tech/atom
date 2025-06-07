@@ -1,9 +1,8 @@
 package cn.iinti.atom.service.base.storage
 
-import cn.iinti.atom.service.base.config.Settings
-import org.slf4j.LoggerFactory
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
@@ -25,10 +24,7 @@ object StorageManager {
     }
 
     fun get(path: String): File? {
-        val file = getImpl(path)
-        if (file == null) {
-            return null
-        }
+        val file = getImpl(path) ?: return null
         if (!file.exists()) {
             return null
         }
@@ -41,7 +37,7 @@ object StorageManager {
         }
         return try {
             val file = localStorage.getFile(path, null)
-            if (file != null && file.exists()) {
+            if (file.exists()) {
                 file
             } else {
                 null

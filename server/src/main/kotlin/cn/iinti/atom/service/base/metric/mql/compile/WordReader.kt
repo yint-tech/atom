@@ -172,7 +172,7 @@ class WordReader(private val reader: LineNumberReader?, private val description:
         return comments
     }
 
-    fun peekCurrentWord(): String? {
+    private fun peekCurrentWord(): String? {
         return if (stageWords.isEmpty()) currentWord else stageWords.peek()
     }
 
@@ -227,7 +227,7 @@ class WordReader(private val reader: LineNumberReader?, private val description:
      * @return the read line.
      */
     @Throws(IOException::class)
-    protected fun nextLine(): String {
+    fun nextLine(): String? {
         return reader!!.readLine()
     }
 

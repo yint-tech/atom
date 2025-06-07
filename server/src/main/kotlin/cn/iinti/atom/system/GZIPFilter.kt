@@ -13,7 +13,11 @@ import java.util.zip.GZIPInputStream
 @Component
 class GZIPFilter : Filter {
     @Throws(IOException::class, ServletException::class)
-    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
+    override fun doFilter(
+        servletRequest: ServletRequest,
+        servletResponse: ServletResponse,
+        filterChain: FilterChain
+    ) {
         val httpServletRequest = servletRequest as HttpServletRequest
         val encodeType = httpServletRequest.getHeader(CONTENT_ENCODING)
         if (CONTENT_ENCODING_TYPE.equals(encodeType, ignoreCase = true)) {

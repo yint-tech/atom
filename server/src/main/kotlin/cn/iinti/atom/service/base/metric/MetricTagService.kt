@@ -176,7 +176,7 @@ class MetricTagService {
     companion object {
         private const val TAG_SERVER_ID = "serverId"
 
-        private const val TAG_TIMER_TYPE = TimeSubType.timer_type
+        private const val TAG_TIMER_TYPE = TimeSubType.TIMER_TYPE
 
         private const val TAG_SLOT_COUNT = 5
     }

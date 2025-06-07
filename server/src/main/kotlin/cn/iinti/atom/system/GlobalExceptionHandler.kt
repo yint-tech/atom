@@ -20,12 +20,19 @@ import org.slf4j.LoggerFactory
 class GlobalExceptionHandler {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @ExceptionHandler(value = [MethodArgumentNotValidException::class, IllegalArgumentException::class])
+    @ExceptionHandler(
+        value = [
+            MethodArgumentNotValidException::class,
+            IllegalArgumentException::class
+        ]
+    )
     fun handleMethodArgumentNotValid(exception: Exception): CommonRes<String> {
         if (exception is MethodArgumentNotValidException) {
             if (exception.bindingResult.fieldError != null) {
-                return CommonRes.failed("参数错误：" + exception.bindingResult
-                    .fieldError?.defaultMessage)
+                return CommonRes.failed(
+                    "参数错误：" + exception.bindingResult
+                        .fieldError?.defaultMessage
+                )
             }
         }
 

@@ -4,10 +4,13 @@ import cn.iinti.atom.utils.ReflectUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import com.google.common.collect.Maps
-import java.util.*
 import org.springframework.scheduling.annotation.Scheduled
 
-class DbCacheStorage<M, E>(val keyField: String, val baseMapper: BaseMapper<M>, private val updateHandler: UpdateHandler<M, E>? = null) {
+class DbCacheStorage<M, E>(
+    private val keyField: String,
+    private val baseMapper: BaseMapper<M>,
+    private val updateHandler: UpdateHandler<M, E>? = null
+) {
     private var cacheMap: MutableMap<String, DbWrapper<M, E>> = Maps.newConcurrentMap()
     private val keyFieldCamel: String = lineToCamel(keyField)
 
@@ -52,11 +55,10 @@ class DbCacheStorage<M, E>(val keyField: String, val baseMapper: BaseMapper<M>, 
     fun updateAll() {
         val newCacheMap: MutableMap<String, DbWrapper<M, E>> = Maps.newConcurrentMap()
         baseMapper.selectList(QueryWrapper<M>()).forEach { m ->
-            var keyObj: Any?
-            try {
-                keyObj = ReflectUtil.getFieldValue(m!!, keyFieldCamel)
+            val keyObj: Any? = try {
+                ReflectUtil.getFieldValue(m!!, keyFieldCamel)
             } catch (error: NoSuchFieldError) {
-                keyObj = ReflectUtil.getFieldValue(m!!, keyField)
+                ReflectUtil.getFieldValue(m!!, keyField)
             }
             if (keyObj == null) {
                 return@forEach
@@ -72,7 +74,7 @@ class DbCacheStorage<M, E>(val keyField: String, val baseMapper: BaseMapper<M>, 
                     wrapper.e = updateHandler.doUpdate(m as M, wrapper.e)
                 }
                 // 将val改为var并添加显式类型转换
-                var tempM: M = m as M
+                val tempM: M = m as M
                 wrapper.m = tempM
             } else {
                 wrapper = DbWrapper(m as M)
@@ -86,11 +88,11 @@ class DbCacheStorage<M, E>(val keyField: String, val baseMapper: BaseMapper<M>, 
     }
 
     fun extensions(): Collection<E> {
-        return cacheMap.values.map { it.e }.filterNotNull()
+        return cacheMap.values.mapNotNull { it.e }
     }
 
     fun models(): List<M> {
-        return cacheMap.values.map { it.m }.filterNotNull()
+        return cacheMap.values.mapNotNull { it.m }
     }
 
     interface UpdateHandler<M, E> {

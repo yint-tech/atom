@@ -1,9 +1,5 @@
 package cn.iinti.atom.service.base.safethread
 
-import java.util.concurrent.atomic.AtomicReference
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.thread
-
 class ValueCallbackGetter<T> {
     @Volatile
     private var value: Value<T>? = null

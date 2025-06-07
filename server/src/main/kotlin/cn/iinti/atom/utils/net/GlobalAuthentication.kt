@@ -2,7 +2,6 @@ package cn.iinti.atom.utils.net
 
 import java.net.Authenticator
 import java.net.PasswordAuthentication
-import java.util.concurrent.ConcurrentHashMap
 
 object GlobalAuthentication {
     // 账号代理的账号密码

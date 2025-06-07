@@ -19,45 +19,45 @@ class FuncShift(params: List<String>) : MQLFunction(params) {
     private val shiftFunc: MutableMap<MetricAccuracy, Function<LocalDateTime?, LocalDateTime>> = Maps.newHashMap()
 
     init {
-        check(!params.isEmpty()) { "shift must has one param" }
-        shiftVal = params.get(0)
+        check(params.isNotEmpty()) { "shift must has one param" }
+        shiftVal = params[0]
         parseParam(params)
     }
 
 
     private fun parseParam(params: List<String>) {
-        var count: Int = 1
+        var count = 1
         if (params.size > 1) {
             count = params.get(1).toInt()
         }
         if (params.size > 2) {
             val func: Function<LocalDateTime?, LocalDateTime> = definitionFun(count, params.get(2))
-            shiftFunc[MetricAccuracy.minutes] = func
-            shiftFunc[MetricAccuracy.hours] = func
-            shiftFunc[MetricAccuracy.days] = func
+            shiftFunc[MetricAccuracy.MINUTES] = func
+            shiftFunc[MetricAccuracy.HOURS] = func
+            shiftFunc[MetricAccuracy.DAYS] = func
         } else {
             val finalCount: Int = count
-            shiftFunc[MetricAccuracy.minutes] =
+            shiftFunc[MetricAccuracy.MINUTES] =
                 Function { t: LocalDateTime? -> t!!.minusMinutes(finalCount.toLong()) }
-            shiftFunc[MetricAccuracy.hours] =
+            shiftFunc[MetricAccuracy.HOURS] =
                 Function { t: LocalDateTime? -> t!!.minusHours(finalCount.toLong()) }
-            shiftFunc[MetricAccuracy.days] =
+            shiftFunc[MetricAccuracy.DAYS] =
                 Function { t: LocalDateTime? -> t!!.minusDays(finalCount.toLong()) }
         }
     }
 
     private fun definitionFun(count: Int, unit: String): Function<LocalDateTime?, LocalDateTime> {
-        when (unit.lowercase(Locale.getDefault())) {
-            "minute" -> return Function { t: LocalDateTime? -> t!!.minusMinutes(count.toLong()) }
-            "hour" -> return Function { t: LocalDateTime? -> t!!.minusHours(count.toLong()) }
-            "day" -> return Function { t: LocalDateTime? -> t!!.minusDays(count.toLong()) }
-            "month" -> return Function { t: LocalDateTime? -> t!!.minusMonths(count.toLong()) }
+        return when (unit.lowercase(Locale.getDefault())) {
+            "minute" -> Function { t: LocalDateTime? -> t!!.minusMinutes(count.toLong()) }
+            "hour" -> Function { t: LocalDateTime? -> t!!.minusHours(count.toLong()) }
+            "day" -> Function { t: LocalDateTime? -> t!!.minusDays(count.toLong()) }
+            "month" -> Function { t: LocalDateTime? -> t!!.minusMonths(count.toLong()) }
             else -> throw IllegalStateException("unknown shift unit")
         }
     }
 
-    override fun call(context: Context): MQLVar? {
-        val mqlVar: MQLVar? = context.variables.get(shiftVal)
+    override fun call(context: Context): MQLVar {
+        val mqlVar: MQLVar? = context.variables[shiftVal]
         checkNotNull(mqlVar) { "no var : $shiftVal" }
         val ret: TreeMap<String, MutableList<MetricVo>> = Maps.newTreeMap()
         mqlVar.data!!.forEach { (timeKey: String, metricVos: MutableList<MetricVo>) ->
@@ -65,12 +65,9 @@ class FuncShift(params: List<String>) : MQLFunction(params) {
                 return@forEach
             }
             val nowNode: MetricVo = metricVos.iterator().next()
-            val shiftTime: LocalDateTime = shiftFunc.get(context.metricAccuracy)!!.apply(nowNode.createTime)
+            val shiftTime: LocalDateTime = shiftFunc[context.metricAccuracy]!!.apply(nowNode.createTime)
             val shiftTimeStr: String = context.metricAccuracy.timePattern.format(shiftTime)
-            val shiftMetrics: List<MetricVo>? = mqlVar.data!!.get(shiftTimeStr)
-            if (shiftMetrics == null) {
-                return@forEach
-            }
+            val shiftMetrics: MutableList<MetricVo> = mqlVar.data!!.get(shiftTimeStr) ?: return@forEach
             ret[timeKey] = shiftMetrics.stream().map { metricVo: MetricVo? ->
                 val ret1: MetricVo = cloneMetricVo(metricVo!!)
                 ret1.createTime = nowNode.createTime

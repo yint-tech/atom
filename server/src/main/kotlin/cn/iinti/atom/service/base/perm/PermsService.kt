@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.web.context.WebServerInitializedEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Service
-import java.io.IOException
 import java.io.StringReader
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -43,7 +42,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
             val sorted = TreeMap(config)
 
             sorted.forEach { (scope, permItems) ->
-                var sbOfScope = StringBuilder ().append(scope)
+                var sbOfScope = StringBuilder().append(scope)
                 for (item in permItems.sorted()) {
                     if (sbOfScope.length > 256) {
                         sb.append(sbOfScope).append("\n")
@@ -62,7 +61,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
 
         @Suppress("UnstableApiUsage")
         @JvmStatic
-        fun parseExp(config: String?, safe: Boolean): Map<String, Collection<String>> {
+        fun parseExp(config: String, safe: Boolean): Map<String, Collection<String>> {
             val ret = HashMultimap.create<String, String>()
             val lineReader = LineReader(StringReader(config))
             var line: String?
@@ -154,7 +153,7 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
         }
         @Suppress("UNCHECKED_CAST")
         val permission = allPermissionWithType[type] as Permission<T2>?
-        val userEx = dbCacheManager.getUserCacheWithName()!!.getExtension(user.userName)
+        val userEx = dbCacheManager.userCacheWithName!!.getExtension(user.userName)
         if (permission != null) {
             val perms = userEx!!.perms.getOrDefault(permission.scope(), Collections.emptyList())
             return function.applyAuth(permission, perms)!!
@@ -172,8 +171,8 @@ class PermsService : ApplicationListener<WebServerInitializedEvent> {
     override fun onApplicationEvent(event: WebServerInitializedEvent) {
         event.applicationContext.getBeansOfType(Permission::class.java)
             .values.forEach { permission ->
-                allPermissionsWithScope.put(permission.scope(), permission)
-                allPermissionWithType.put(Permission.getClazz(permission), permission)
+                allPermissionsWithScope[permission.scope()] = permission
+                allPermissionWithType[Permission.getClazz(permission)] = permission
             }
     }
 }

@@ -10,7 +10,7 @@ abstract class XofVarFunc(params: List<String>) : MQLFunction(params) {
     private val varName: String
 
     init {
-        check(!params.isEmpty()) { "must has one param" }
+        check(params.isNotEmpty()) { "must has one param" }
         varName = params[0]
     }
 

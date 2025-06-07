@@ -21,13 +21,14 @@ import java.util.function.Function
 
 
 object MQLCompiler {
-    private const val maxCache = 1024
+    private const val MAC_CACHE = 1024
 
-    private val cache: MutableMap<String, MQL> = Collections.synchronizedMap(object : LinkedHashMap<String, MQL>() {
-        override fun removeEldestEntry(eldest: Map.Entry<String, MQL>): Boolean {
-            return size > maxCache
-        }
-    })
+    private val cache: MutableMap<String, MQL> =
+        Collections.synchronizedMap(object : LinkedHashMap<String, MQL>() {
+            override fun removeEldestEntry(eldest: Map.Entry<String, MQL>): Boolean {
+                return size > MAC_CACHE
+            }
+        })
 
     @JvmStatic
     fun compile(script: String): MQL {
@@ -49,25 +50,31 @@ object MQLCompiler {
             }
             val op = tokenReader.nextWord()
                 ?: throw BadGrammarException("compile failed, bad code at: " + tokenReader.lineLocationDescription())
-            if ("(" == op) {
-                // this is a None variable declare function call
-                // show(successRate);
-                tokenReader.pushBack("(")
-                tokenReader.pushBack(firstToken)
-                val function = parseExpression(tokenReader)
-                statements.add(VoidFunCallStatement(function))
-            } else if ("=" == op) {
-                // this is a variable declare
-                // taskEnd = aggregate(taskEnd,'serverId');
-                val exp = parseExpression(tokenReader)
-                statements.add(VarStatement(firstToken, exp))
-            } else {
-                throw BadGrammarException(
-                    """
-                        unexpected token: $firstToken
-                        ${tokenReader.locationDescription()}
-                        """.trimIndent()
-                )
+            when (op) {
+                "(" -> {
+                    // this is a None variable declare function call
+                    // show(successRate);
+                    tokenReader.pushBack("(")
+                    tokenReader.pushBack(firstToken)
+                    val function = parseExpression(tokenReader)
+                    statements.add(VoidFunCallStatement(function))
+                }
+
+                "=" -> {
+                    // this is a variable declare
+                    // taskEnd = aggregate(taskEnd,'serverId');
+                    val exp = parseExpression(tokenReader)
+                    statements.add(VarStatement(firstToken, exp))
+                }
+
+                else -> {
+                    throw BadGrammarException(
+                        """
+                                unexpected token: $firstToken
+                                ${tokenReader.locationDescription()}
+                                """.trimIndent()
+                    )
+                }
             }
 
             firstToken = tokenReader.nextWord()
@@ -110,8 +117,7 @@ object MQLCompiler {
                 }
                 if (MQLFunction.isFunctionNotDefined(preToken)) {
                     throw BadGrammarException(
-                        """no function "$preToken" defined
-${tokenReader.locationDescription()}"""
+                        """no function "$preToken" defined ${tokenReader.locationDescription()}"""
                     )
                 }
                 // this is a function call
@@ -267,7 +273,7 @@ ${tokenReader.locationDescription()}"""
         FUCK("#", 0, null),
         ADD(
             "+", 10,
-            BiFunction { leftParam: Function<Context, Any?>, rightParam: Function<Context, Any?> ->
+            { leftParam, rightParam ->
                 MetricOperator.add(
                     leftParam,
                     rightParam
@@ -275,7 +281,7 @@ ${tokenReader.locationDescription()}"""
             }),
         MINUS(
             "-", 10,
-            BiFunction { leftParam: Function<Context, Any?>, rightParam: Function<Context, Any?> ->
+            { leftParam, rightParam ->
                 MetricOperator.minus(
                     leftParam,
                     rightParam
@@ -283,7 +289,7 @@ ${tokenReader.locationDescription()}"""
             }),
         MULTIPLE(
             "*", 100,
-            BiFunction { leftParam: Function<Context, Any?>, rightParam: Function<Context, Any?> ->
+            { leftParam, rightParam ->
                 MetricOperator.multiply(
                     leftParam,
                     rightParam
@@ -291,7 +297,7 @@ ${tokenReader.locationDescription()}"""
             }),
         DIVIDE(
             "/", 100,
-            BiFunction { leftParam: Function<Context, Any?>, rightParam: Function<Context, Any?> ->
+            { leftParam, rightParam ->
                 MetricOperator.divide(
                     leftParam,
                     rightParam

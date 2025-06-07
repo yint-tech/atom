@@ -19,7 +19,10 @@ class ConfigService {
 
     fun allConfig(): CommonRes<List<SysConfig>> {
         return CommonRes.success(
-            sysConfigMapper.selectList(QueryWrapper<SysConfig>().eq(SysConfig.CONFIG_COMMENT, SYSTEM_SETTINGS))
+            sysConfigMapper.selectList(
+                QueryWrapper<SysConfig>()
+                    .eq(SysConfig.CONFIG_COMMENT, SYSTEM_SETTINGS)
+            )
         )
     }
 
@@ -45,8 +48,11 @@ class ConfigService {
     }
 
     fun reloadConfig() {
-        Configs.refreshConfig(sysConfigMapper.selectList(QueryWrapper<SysConfig>()
-            .eq(SysConfig.CONFIG_COMMENT, SYSTEM_SETTINGS))
+        Configs.refreshConfig(
+            sysConfigMapper.selectList(
+                QueryWrapper<SysConfig>()
+                    .eq(SysConfig.CONFIG_COMMENT, SYSTEM_SETTINGS)
+            )
         )
     }
 }

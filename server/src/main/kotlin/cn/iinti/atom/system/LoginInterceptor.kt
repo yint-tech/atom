@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.StringUtils
-import org.springframework.lang.Nullable
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
@@ -71,16 +70,8 @@ class LoginInterceptor : HandlerInterceptor {
     }
 
     @Throws(Exception::class)
-    override fun preHandle(
-        @Nullable request: HttpServletRequest?,
-        @Nullable response: HttpServletResponse?,
-        @Nullable handler: Any?
-    ): Boolean {
+    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler !is HandlerMethod) {
-            return true
-        }
-
-        if (request == null || response == null) {
             return true
         }
 
@@ -124,9 +115,9 @@ class LoginInterceptor : HandlerInterceptor {
     }
 
     override fun postHandle(
-        @Nullable request: HttpServletRequest?,
-        @Nullable response: HttpServletResponse?,
-        @Nullable handler: Any?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        handler: Any,
         modelAndView: ModelAndView?
     ) {
         removeUser()

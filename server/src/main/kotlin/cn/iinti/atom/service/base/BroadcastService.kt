@@ -62,7 +62,7 @@ class BroadcastService : ApplicationListener<WebServerInitializedEvent> {
             return "true"
         }
 
-        fun callListener(topic: Topic) {
+        private fun callListener(topic: Topic) {
             val logger = LoggerFactory.getLogger(BroadcastService::class.java)
             logger.info("call broadcast with topic: $topic")
             val iBroadcastListeners = registry[topic]
@@ -86,18 +86,15 @@ class BroadcastService : ApplicationListener<WebServerInitializedEvent> {
             //      此时由于在未来一定还会有refresh，故可以取消本次消息触发（原则为最后消息为最新消息，最新消息保证一定达到最终状态,同主题非最新action可以被过滤取消）
             sendThread.offerLast { topicQueue.addFirst(topic) }
             sendThread.offerLast {
-                val last = topicQueue.removeLast()
-                if (last == null) {
-                    return@offerLast
-                }
+                val last = topicQueue.removeLast() ?: return@offerLast
                 if (topicQueue.contains(last)) {
                     return@offerLast
                 }
                 callListener(topic)
-                val ServerNodes = instance.serverNodeMapper
+                val serverNodes = instance.serverNodeMapper
                     .selectList(QueryWrapper<ServerNode>().eq(ServerNode.ENABLE, true))
-                for (node in ServerNodes) {
-                    if (ServerIdentifier.id().equals(node.serverId)) {
+                for (node in serverNodes) {
+                    if (ServerIdentifier.id() == node.serverId) {
                         //当前机器本身不用广播通知，直接调用即可
                         continue
                     }

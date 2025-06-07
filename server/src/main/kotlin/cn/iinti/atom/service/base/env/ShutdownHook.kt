@@ -1,9 +1,7 @@
 package cn.iinti.atom.service.base.env
 
-import java.util.Collections
-import java.util.LinkedHashSet
-import java.util.Set
-import java.util.concurrent.atomic.AtomicBoolean
+import java.util.*
+import kotlin.collections.LinkedHashSet
 import kotlin.concurrent.thread
 
 // 手动实现Lombok的Slf4j功能
@@ -11,7 +9,9 @@ private val log = org.slf4j.LoggerFactory.getLogger(ShutdownHook::class.java)
 
 class ShutdownHook {
     companion object {
-        private val shutdownHooks: Set<Runnable> = Collections.synchronizedSet(LinkedHashSet<Runnable>()) as Set<Runnable>
+        private val shutdownHooks: MutableSet<Runnable> =
+            Collections.synchronizedSet(LinkedHashSet<Runnable>())
+
         @Volatile
         private var shutdownHookRunning = false
 
@@ -25,7 +25,7 @@ class ShutdownHook {
         }
 
         fun prepareShutdown(): Int {
-            var nowTaskSize = shutdownHooks.size
+            val nowTaskSize = shutdownHooks.size
             if (shutdownHookRunning || nowTaskSize == 0) {
                 return nowTaskSize
             }
@@ -36,17 +36,17 @@ class ShutdownHook {
                 shutdownHookRunning = true
             }
             thread {
-                val it = shutdownHooks.iterator()
-                while (it.hasNext()) {
-                    val next = it.next()
+                val clean = mutableSetOf<Runnable>()
+                for (shutdownHook in shutdownHooks) {
                     try {
-                        next.run()
+                        shutdownHook.run()
                     } catch (throwable: Throwable) {
                         log.error("running shutdown hook failed", throwable)
                     } finally {
-                        it.remove()
+                        clean.add(shutdownHook)
                     }
                 }
+                shutdownHooks.removeAll(clean)
             }
             return shutdownHooks.size
         }

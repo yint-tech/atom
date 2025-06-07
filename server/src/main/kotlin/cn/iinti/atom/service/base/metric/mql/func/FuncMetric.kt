@@ -17,7 +17,7 @@ class FuncMetric(params: List<String>) : MQLFunction(params) {
 
 
     init {
-        check(!params.isEmpty()) { "metric function need param" }
+        check(params.isNotEmpty()) { "metric function need param" }
         metricName = params[0]
         var key: String? = null
         for (i in 1..<params.size) {
@@ -39,7 +39,7 @@ class FuncMetric(params: List<String>) : MQLFunction(params) {
     }
 
 
-    override fun call(context: Context): MQLVar? {
+    override fun call(context: Context): MQLVar {
         val metrics: List<MetricVo> =
             context.metricService.queryMetric(metricName, filters, context.metricAccuracy)
 

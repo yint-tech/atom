@@ -2,7 +2,6 @@ package cn.iinti.atom
 
 import cn.iinti.atom.entity.type.JSONTypeHandler
 import cn.iinti.atom.service.base.BroadcastService
-import cn.iinti.atom.service.base.BroadcastService.IBroadcastListener
 import cn.iinti.atom.service.base.config.ConfigService
 import cn.iinti.atom.service.base.env.Environment
 import cn.iinti.atom.service.base.safethread.Looper
@@ -25,11 +24,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import proguard.annotation.Keep
-import javax.sql.DataSource
 import java.io.File
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
-import java.util.*
+import javax.sql.DataSource
 import kotlin.system.exitProcess
 
 @SpringBootApplication
@@ -184,18 +181,16 @@ class AtomMain : ApplicationListener<WebServerInitializedEvent> {
         try {
             Environment.upgradeIfNeed(dataSource)
         } catch (throwable: Throwable) {
-            System.out.println("upgrade failed,please contact iint business support")
+            println("upgrade failed,please contact iinti business support")
             throwable.printStackTrace(System.err)
-            System.exit(1)
+            exitProcess(1)
         }
         // 配置加载和刷新，需要放到Main上面，这样配置加载将会在所有bean启动前初始化好，
         // 让业务模块在运行的时候就拿到数据库的配置项
         reloadConfig()
-        BroadcastService.register(BroadcastService.Topic.CONFIG, object : IBroadcastListener {
-            override fun onBroadcastEvent() {
-                reloadConfig()
-            }
-        })
+        BroadcastService.register(BroadcastService.Topic.CONFIG) {
+            reloadConfig()
+        }
     }
 
     override fun onApplicationEvent(@Nonnull event: WebServerInitializedEvent) {

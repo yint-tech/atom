@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.BeanUtils
 import proguard.annotation.Keep
 import java.time.LocalDateTime
-import java.util.Collections
 
 @Keep
 class MetricVo {
@@ -35,8 +34,8 @@ class MetricVo {
 
     fun toTagId(): String {
         val tagSegments = Lists.newArrayList<String>()
-        tags.forEach { s, s2 -> tagSegments.add("$s##-##$s2") }
-        Collections.sort(tagSegments)
+        tags.forEach { (s, s2) -> tagSegments.add("$s##-##$s2") }
+        tagSegments.sort()
         return StringUtils.join(tagSegments, ",")
     }
 

@@ -17,7 +17,7 @@ class FuncDropLeft(params: List<String>) : MQLFunction(params) {
     private val `var`: String
 
     init {
-        check(!params.isEmpty()) { "shift must has one param" }
+        check(params.isNotEmpty()) { "shift must has one param" }
         `var` = params[0]
         count = if (params.size == 1) {
             1

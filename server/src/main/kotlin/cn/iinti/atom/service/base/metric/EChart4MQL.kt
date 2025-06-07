@@ -50,7 +50,7 @@ class EChart4MQL {
                 tagDisplayIds.add(tags.values.iterator().next())
             } else {
                 tags.forEach { (tag: String?, value: String?) -> tagDisplayIds.add("$tag#$value") }
-                Collections.sort(tagDisplayIds)
+                tagDisplayIds.sort()
             }
             if (!singleVar) {
                 tagDisplayIds.add(0, varName)
@@ -78,9 +78,9 @@ class EChart4MQL {
                         // 指标为空，代表整个指标都被过滤了,此时保护指标，后续流程会填充0值
                         legendSet.add(varName)
                     } else {
-                        metricVos.forEach(Consumer { metricVo: MetricVo ->  // many sub tag data for an xAxis
+                        metricVos.forEach { metricVo: MetricVo ->  // many sub tag data for an xAxis
                             legendSet.add(legendId(varName, metricVo, singleVar))
-                        })
+                        }
                     }
                 }
             }
@@ -90,12 +90,12 @@ class EChart4MQL {
             legends.addAll(legendSet)
             val series = eChart4MQL.series
             val serialRef: MutableMap<String, Serial> = Maps.newHashMap()
-            legends.forEach(Consumer<String> { legend: String ->
+            legends.forEach { legend: String ->
                 val serial = Serial()
                 serial.name = legend
                 series.add(serial)
                 serialRef[legend] = serial
-            })
+            }
 
             // 填充数据
             val xAxis = eChart4MQL.xAxis
@@ -106,17 +106,16 @@ class EChart4MQL {
                 val points: MutableSet<Serial?> = Sets.newHashSet(series)
 
                 timeData.forEach { (varName: String, metricVos: List<MetricVo>) ->
-                    metricVos.forEach(
-                        Consumer { metricVo: MetricVo ->
-                            val legend = legendId(varName, metricVo, singleVar)
-                            val line = serialRef[legend]
-                            points.remove(line)
-                            line!!.data.add(metricVo.value!!)
-                        })
+                    metricVos.forEach { metricVo: MetricVo ->
+                        val legend = legendId(varName, metricVo, singleVar)
+                        val line = serialRef[legend]
+                        points.remove(line)
+                        line!!.data.add(metricVo.value!!)
+                    }
                 }
 
                 // 当前X下，没有对应Y值，则设置为0
-                points.forEach(Consumer { doubles: Serial? -> doubles!!.data.add(0.0) })
+                points.forEach { doubles: Serial? -> doubles!!.data.add(0.0) }
             }
             return eChart4MQL
         }

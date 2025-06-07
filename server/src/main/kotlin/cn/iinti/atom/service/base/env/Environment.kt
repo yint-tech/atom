@@ -9,19 +9,11 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.BooleanUtils
 import org.springframework.boot.web.context.WebServerInitializedEvent
 import org.springframework.context.ApplicationContext
-import javax.sql.DataSource
 import java.io.File
 import java.io.IOException
-import java.net.URL
 import java.nio.charset.StandardCharsets
-import java.sql.Connection
-import java.sql.ResultSet
 import java.sql.SQLException
-import java.sql.Statement
-import java.util.ArrayList
-import java.util.Comparator
-import kotlin.jvm.JvmField
-import kotlin.jvm.JvmStatic
+import javax.sql.DataSource
 
 // 手动实现Lombok的Slf4j功能
 private val log = org.slf4j.LoggerFactory.getLogger(Environment::class.java)

@@ -1,11 +1,9 @@
 package cn.iinti.atom.utils
 
 import cn.iinti.atom.service.base.config.Settings
-import lombok.extern.slf4j.Slf4j
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
@@ -17,9 +15,9 @@ import java.util.*
 
 
 object ServerIdentifier {
-    private const val serverIdFileName = "atom_server_id.txt"
+    private const val SERVER_ID_FILE_NAME = "atom_server_id.txt"
     private const val UN_RESOLVE = "un_resolve_"
-    private val log = LoggerFactory.getLogger("cn.iinti.atom.utils.ServerIdentifier")
+    private val log = LoggerFactory.getLogger(ServerIdentifier::class.java)
 
     @Volatile
     private var clientIdInMemory: String? = null
@@ -113,7 +111,7 @@ object ServerIdentifier {
         if (jvmEnvCacheIdFile != null) {
             return jvmEnvCacheIdFile!!
         }
-        jvmEnvCacheIdFile = File(Settings.Storage.root, serverIdFileName)
+        jvmEnvCacheIdFile = File(Settings.Storage.root, SERVER_ID_FILE_NAME)
         return jvmEnvCacheIdFile!!
     }
 }

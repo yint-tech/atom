@@ -32,7 +32,7 @@ class LocalStorage : IStorage {
             return
         }
         val list = dir.list()
-        if (list == null || list.size > 0) {
+        if (list == null || list.isNotEmpty()) {
             return
         }
         FileUtils.deleteQuietly(dir)
@@ -57,8 +57,7 @@ class LocalStorage : IStorage {
     }
 
     override fun genUrl(path: String): String {
-        // todo
-        throw IllegalStateException("not support now")
+        TODO("not support now")
     }
 
     override fun available(): Boolean {

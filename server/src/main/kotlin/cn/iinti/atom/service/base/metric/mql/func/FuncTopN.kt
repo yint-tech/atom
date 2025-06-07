@@ -20,20 +20,20 @@ class FuncTopN(params: List<String>) : MQLFunction(params) {
     private val revers: Boolean
 
     init {
-        check(params.size >= 1) { "must has one param" }
-        varName = params.get(0)
-        if (params.size >= 2) {
-            n = NumberUtils.toInt(params.get(1), 10)
+        check(params.isNotEmpty()) { "must has one param" }
+        varName = params[0]
+        n = if (params.size >= 2) {
+            NumberUtils.toInt(params[1], 10)
         } else {
-            n = 10
+            10
         }
 
         revers = params.size >= 3 && BooleanUtils.toBoolean(params.get(2))
     }
 
 
-    override fun call(context: Context): MQLVar? {
-        val `var`: MQLVar? = context.variables.get(varName)
+    override fun call(context: Context): MQLVar {
+        val `var`: MQLVar? = context.variables[varName]
         checkNotNull(`var`) { "no var : $varName" }
 
         val legendIdValues: MutableMap<String, Double> = Maps.newHashMap()

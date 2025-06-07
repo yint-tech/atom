@@ -11,7 +11,6 @@ import io.micrometer.core.instrument.Meter
 import org.apache.commons.lang3.StringUtils
 import java.lang.Double.sum
 import java.util.function.Consumer
-import java.util.stream.Collectors
 import kotlin.math.max
 
 
@@ -45,9 +44,9 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
             group.computeIfAbsent(StringUtils.join(keySegment, ",")) { s: String? -> Lists.newArrayList() }
                 .add(metricVo)
         })
-        return group.values.stream().map { metricVos: List<MetricVo?> -> this.doAggregate(metricVos) }.collect(
-            Collectors.toList()
-        )
+        return group.values
+            .map { doAggregate(it) }
+            .toMutableList()
     }
 
     private fun doAggregate(metricVos: List<MetricVo?>): MetricVo {
@@ -66,7 +65,7 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
                     .reduce(0.0) { a: Double, b: Double -> sum(a, b) }
 
             Meter.Type.TIMER -> {
-                val timerType = metricVo.tags[MetricEnums.TimeSubType.timer_type]
+                val timerType = metricVo.tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 if (StringUtils.isBlank(timerType) || timerType == MetricEnums.TimeSubType.MAX.metricKey) {
                     // this is aggregated time-max
                     metricVo.value = metricVos.stream()

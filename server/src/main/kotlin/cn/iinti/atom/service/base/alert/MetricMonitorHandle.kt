@@ -35,7 +35,7 @@ class MetricMonitorHandle {
             return
         }
         if (accuracy == null) {
-            accuracy = MetricAccuracy.hours
+            accuracy = MetricAccuracy.HOURS
         }
         if (start != null) {
             trimAccuracy()
@@ -50,18 +50,18 @@ class MetricMonitorHandle {
     }
 
     private fun trimAccuracy() {
-        if (accuracy == MetricAccuracy.days) {
+        if (accuracy == MetricAccuracy.DAYS) {
             return
         }
         if (start!!.isBefore(LocalDateTime.now().minusDays(30))) {
-            accuracy = MetricAccuracy.days
+            accuracy = MetricAccuracy.DAYS
             return
         }
-        if (accuracy == MetricAccuracy.hours) {
+        if (accuracy == MetricAccuracy.HOURS) {
             return
         }
         if (start!!.isBefore(LocalDateTime.now().minusDays(1))) {
-            accuracy = MetricAccuracy.hours
+            accuracy = MetricAccuracy.HOURS
         }
     }
 
@@ -87,7 +87,7 @@ class MetricMonitorHandle {
     private fun merge(metricData: TreeMap<String, MutableList<MetricVo>>): MutableList<MetricVo> {
         val allMetricByTagId = metricData.values.stream()
             .flatMap(Function { metricVos: List<MetricVo> ->
-                metricVos.stream().map { obj: MetricVo -> obj!!.toTagId() }
+                metricVos.stream().map { obj: MetricVo -> obj.toTagId() }
             } as Function<List<MetricVo>, Stream<String>>)
             .collect(Collectors.toSet())
 
@@ -111,7 +111,7 @@ class MetricMonitorHandle {
 
                 Meter.Type.GAUGE -> ret.value = metricVos[metricVos.size - 1]!!.value
                 Meter.Type.TIMER -> {
-                    val timerType = first.tags[MetricEnums.TimeSubType.timer_type]
+                    val timerType = first.tags[MetricEnums.TimeSubType.TIMER_TYPE]
                     if (StringUtils.isBlank(timerType) || timerType == MetricEnums.TimeSubType.MAX.metricKey) {
                         // this is aggregated time-max
                         ret.value = metricVos.stream().map<Double>(MetricVo::value)
@@ -145,7 +145,7 @@ class MetricMonitorHandle {
             if (lastRun == null) {
                 return true
             }
-            val next = cron!!.next(lastRun) ?: return false
+            val next = cron!!.next(lastRun!!) ?: return false
             return !next.isAfter(LocalDateTime.now())
         }
 

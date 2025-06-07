@@ -35,7 +35,7 @@ abstract class MQLFunction(protected var params: List<String>) {
     )
 
     companion object {
-        var functionRegistry: MutableMap<String, Constructor<out MQLFunction?>> = Maps.newHashMap()
+        private var functionRegistry: MutableMap<String, Constructor<out MQLFunction?>> = Maps.newHashMap()
 
         init {
             registryFunc(FuncAggregate::class.java)

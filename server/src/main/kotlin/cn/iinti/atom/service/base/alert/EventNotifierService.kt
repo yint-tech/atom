@@ -10,9 +10,6 @@ import groovy.lang.Closure
 import jakarta.annotation.Resource
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Service
-import java.io.File
-import java.util.*
-import java.util.function.Consumer
 
 @Service
 class EventNotifierService : CommandLineRunner {
@@ -74,15 +71,12 @@ class EventNotifierService : CommandLineRunner {
     }
 
     private fun withScriptExtension(func: (EventScript) -> Unit) {
-        val eventScript = Settings.eventNotifyScript.value
-        if (eventScript == null) {
-            return
-        }
+        val eventScript = Settings.eventNotifyScript.value ?: return
         eventNotifierThread.post { func(eventScript) }
     }
 
     override fun run(vararg args: String?) {
-        eventNotifierThread.scheduleWithRate({ scheduleDiskSpacePoorEvent() }, 30 * 60 * 1000)
-        eventNotifierThread.scheduleWithRate({ scheduleMetricEvent(false) }, 10 * 60 * 1000)
+        eventNotifierThread.scheduleWithRate(30 * 60 * 1000) { scheduleDiskSpacePoorEvent() }
+        eventNotifierThread.scheduleWithRate(10 * 60 * 1000) { scheduleMetricEvent(false) }
     }
 }

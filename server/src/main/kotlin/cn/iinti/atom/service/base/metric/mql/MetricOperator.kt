@@ -10,6 +10,7 @@ import java.util.*
 import java.util.function.BinaryOperator
 import java.util.function.Consumer
 import java.util.function.Function
+import java.util.stream.Collector
 import java.util.stream.Collectors
 
 
@@ -84,18 +85,18 @@ class MetricOperator(
         val ret: TreeMap<String, MutableList<MetricVo>> = Maps.newTreeMap()
 
         timeKeys.forEach(Consumer { timeKey: String ->
-            val leftMetricVos: MutableList<MetricVo> = (leftData[timeKey] as MutableList?) ?: mutableListOf()
-            val rightMetricVos: MutableList<MetricVo> = (rightData[timeKey] as MutableList?) ?: mutableListOf()
+            val leftMetricVos: MutableList<MetricVo> = leftData[timeKey] ?: mutableListOf()
+            val rightMetricVos: MutableList<MetricVo> = rightData[timeKey] ?: mutableListOf()
 
             val leftByGroup: Map<String, MetricVo?> = leftMetricVos.stream().collect(
                 Collectors.toMap(
                     { obj: MetricVo? -> obj!!.toTagId() },
-                    { i: MetricVo? -> i })
+                    { i: MetricVo? -> i }) as Collector<in MetricVo, *, MutableMap<String, MetricVo?>>?
             )
             val rightByGroup: Map<String, MetricVo?> = rightMetricVos.stream().collect(
                 Collectors.toMap(
                     { obj: MetricVo? -> obj!!.toTagId() },
-                    { i: MetricVo? -> i })
+                    { i: MetricVo? -> i }) as Collector<in MetricVo, *, MutableMap<String, MetricVo?>>?
             )
 
             val calcPoint: MutableList<MetricVo> = Lists.newArrayList()

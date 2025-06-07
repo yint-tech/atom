@@ -1,10 +1,8 @@
 package cn.iinti.atom.service.base.env
 
 import org.slf4j.LoggerFactory
-import org.apache.commons.lang3.StringUtils
 import java.io.IOException
-import java.io.InputStream
-import java.util.Properties
+import java.util.*
 
 private val log = LoggerFactory.getLogger(GitProperties::class.java)
 
@@ -16,21 +14,15 @@ object GitProperties {
         load()
     }
 
-    class IT(key: String, defaultValue: String) {
-        val key: String = key
-        private val defaultValue: String = defaultValue
-        val value: String
+    class IT(val key: String, private val defaultValue: String) {
+        // 从properties中加载实际值，如果不存在则使用默认值
+        val value: String = properties.getProperty(key) ?: defaultValue
 
         companion object {
             val GIT_ID = IT("git.commit.id", "")
             val GIT_TIME = IT("git.commit.time", "")
             val GIT_USER_EMAIL = IT("git.commit.user.email", "iinti@iinti.cn")
             val GIT_BRANCH = IT("git.branch", "main")
-        }
-
-        init {
-            // 从properties中加载实际值，如果不存在则使用默认值
-            value = properties.getProperty(key) ?: defaultValue
         }
     }
 
