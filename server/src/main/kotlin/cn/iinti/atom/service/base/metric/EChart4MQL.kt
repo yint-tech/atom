@@ -111,7 +111,7 @@ class EChart4MQL {
                             val legend = legendId(varName, metricVo, singleVar)
                             val line = serialRef[legend]
                             points.remove(line)
-                            line!!.data.add(metricVo.value)
+                            line!!.data.add(metricVo.value!!)
                         })
                 }
 

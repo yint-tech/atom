@@ -144,7 +144,7 @@ class MetricService {
         val metricTag = metricTagService!!.fromKey(name) ?: return emptyList()
         val queryWrapper = metricTagService
             .wrapQueryWithTags<Metric>(
-                QueryWrapper<Metric>().eq(Metric.NAME, name),
+                QueryWrapper<Metric>().eq(Metric.NAME, name!!),
                 query, metricTag
             )
 
@@ -172,19 +172,19 @@ class MetricService {
         val tags = metricVo.tags
         BeanUtils.copyProperties(metric, metricVo)
         if (StringUtils.isNotBlank(metricTag.tag1Name)) {
-            tags[metricTag.tag1Name] = metric.tag1
+            tags[metricTag.tag1Name!!] = metric.tag1!!
         }
         if (StringUtils.isNotBlank(metricTag.tag2Name)) {
-            tags[metricTag.tag2Name] = metric.tag2
+            tags[metricTag.tag2Name!!] = metric.tag2!!
         }
         if (StringUtils.isNotBlank(metricTag.tag3Name)) {
-            tags[metricTag.tag3Name] = metric.tag3
+            tags[metricTag.tag3Name!!] = metric.tag3!!
         }
         if (StringUtils.isNotBlank(metricTag.tag4Name)) {
-            tags[metricTag.tag4Name] = metric.tag4
+            tags[metricTag.tag4Name!!] = metric.tag4!!
         }
         if (StringUtils.isNotBlank(metricTag.tag5Name)) {
-            tags[metricTag.tag5Name] = metric.tag5
+            tags[metricTag.tag5Name!!] = metric.tag5!!
         }
         return metricVo
     }
@@ -215,7 +215,7 @@ class MetricService {
             }
             val now = LocalDateTime.now()
             while (scanStart_!!.isBefore(now)) {
-                val start = stepStartFun.apply(scanStart_)
+                val start = stepStartFun.apply(scanStart_!!)
                 val end = stepFun.apply(start)
                 mergeTimesSpace(start, end, fromAccuracy, toAccuracy, metricName, cleanBefore)
                 scanStart_ = end.plusMinutes(30)
@@ -259,7 +259,7 @@ class MetricService {
 
         tags.forEach(Consumer { tagsMd5: String? ->
             mergeTimesSpaceWithTag(
-                startTime, endTime, from, to, metricName, tagsMd5, timeKey, cleanBefore
+                startTime, endTime, from, to, metricName, tagsMd5!!, timeKey, cleanBefore
             )
         })
     }
