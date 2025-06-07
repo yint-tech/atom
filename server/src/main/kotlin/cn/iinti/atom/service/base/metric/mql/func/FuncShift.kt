@@ -1,0 +1,84 @@
+package cn.iinti.atom.service.base.metric.mql.func
+
+import cn.iinti.atom.service.base.metric.MetricEnums.MetricAccuracy
+import cn.iinti.atom.service.base.metric.MetricVo
+import cn.iinti.atom.service.base.metric.MetricVo.Companion.cloneMetricVo
+import cn.iinti.atom.service.base.metric.mql.Context
+import cn.iinti.atom.service.base.metric.mql.Context.MQLVar
+import cn.iinti.atom.service.base.metric.mql.func.MQLFunction.MQL_FUNC
+import com.google.common.collect.Maps
+import java.time.LocalDateTime
+import java.util.*
+import java.util.function.Function
+import java.util.stream.Collectors
+
+
+@MQL_FUNC("shift")
+class FuncShift(params: List<String>) : MQLFunction(params) {
+    private val shiftVal: String
+    private val shiftFunc: MutableMap<MetricAccuracy, Function<LocalDateTime?, LocalDateTime>> = Maps.newHashMap()
+
+    init {
+        check(!params.isEmpty()) { "shift must has one param" }
+        shiftVal = params.get(0)
+        parseParam(params)
+    }
+
+
+    private fun parseParam(params: List<String>) {
+        var count: Int = 1
+        if (params.size > 1) {
+            count = params.get(1).toInt()
+        }
+        if (params.size > 2) {
+            val func: Function<LocalDateTime?, LocalDateTime> = definitionFun(count, params.get(2))
+            shiftFunc[MetricAccuracy.minutes] = func
+            shiftFunc[MetricAccuracy.hours] = func
+            shiftFunc[MetricAccuracy.days] = func
+        } else {
+            val finalCount: Int = count
+            shiftFunc[MetricAccuracy.minutes] =
+                Function { t: LocalDateTime? -> t!!.minusMinutes(finalCount.toLong()) }
+            shiftFunc[MetricAccuracy.hours] =
+                Function { t: LocalDateTime? -> t!!.minusHours(finalCount.toLong()) }
+            shiftFunc[MetricAccuracy.days] =
+                Function { t: LocalDateTime? -> t!!.minusDays(finalCount.toLong()) }
+        }
+    }
+
+    private fun definitionFun(count: Int, unit: String): Function<LocalDateTime?, LocalDateTime> {
+        when (unit.lowercase(Locale.getDefault())) {
+            "minute" -> return Function { t: LocalDateTime? -> t!!.minusMinutes(count.toLong()) }
+            "hour" -> return Function { t: LocalDateTime? -> t!!.minusHours(count.toLong()) }
+            "day" -> return Function { t: LocalDateTime? -> t!!.minusDays(count.toLong()) }
+            "month" -> return Function { t: LocalDateTime? -> t!!.minusMonths(count.toLong()) }
+            else -> throw IllegalStateException("unknown shift unit")
+        }
+    }
+
+    override fun call(context: Context): MQLVar? {
+        val mqlVar: MQLVar? = context.variables.get(shiftVal)
+        checkNotNull(mqlVar) { "no var : $shiftVal" }
+        val ret: TreeMap<String, MutableList<MetricVo>> = Maps.newTreeMap()
+        mqlVar.data!!.forEach { (timeKey: String, metricVos: MutableList<MetricVo>) ->
+            if (metricVos.isEmpty()) {
+                return@forEach
+            }
+            val nowNode: MetricVo = metricVos.iterator().next()
+            val shiftTime: LocalDateTime = shiftFunc.get(context.metricAccuracy)!!.apply(nowNode.createTime)
+            val shiftTimeStr: String = context.metricAccuracy.timePattern.format(shiftTime)
+            val shiftMetrics: List<MetricVo>? = mqlVar.data!!.get(shiftTimeStr)
+            if (shiftMetrics == null) {
+                return@forEach
+            }
+            ret[timeKey] = shiftMetrics.stream().map { metricVo: MetricVo? ->
+                val ret1: MetricVo = cloneMetricVo(metricVo!!)
+                ret1.createTime = nowNode.createTime
+                ret1.timeKey = timeKey
+                ret1
+            }.collect(Collectors.toList())
+        }
+
+        return MQLVar.newVar(ret)
+    }
+}

@@ -61,7 +61,7 @@ class EChart4MQL {
             return StringUtils.join(tagDisplayIds, "-")
         }
 
-        fun fromMQLResult(exportData: Map<String?, MQLVar?>): EChart4MQL {
+        fun fromMQLResult(exportData: Map<String, MQLVar>): EChart4MQL {
             val eChart4MQL = EChart4MQL()
 
             val legendSet: MutableSet<String> = Sets.newTreeSet()
@@ -70,10 +70,10 @@ class EChart4MQL {
             //------ time------- metric----- value
             val metricGroupByTime = Maps.newTreeMap<String, MutableMap<String, List<MetricVo>>>()
             val singleVar = exportData.size == 1
-            exportData.forEach { (varName: String?, mqlVar: MQLVar?) ->
-                mqlVar!!.data.forEach { (timeStr: String?, metricVos: MutableList<MetricVo>) ->
+            exportData.forEach { (varName: String, mqlVar: MQLVar) ->
+                mqlVar.data!!.forEach { (timeStr: String?, metricVos: List<MetricVo>) ->
                     val mapTime = metricGroupByTime.computeIfAbsent(timeStr) { s: String? -> Maps.newHashMap() }
-                    mapTime[varName!!] = metricVos
+                    mapTime[varName] = metricVos
                     if (metricVos.isEmpty()) {
                         // 指标为空，代表整个指标都被过滤了,此时保护指标，后续流程会填充0值
                         legendSet.add(varName)
