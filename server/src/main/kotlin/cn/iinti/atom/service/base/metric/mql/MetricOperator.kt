@@ -88,19 +88,18 @@ class MetricOperator(
             val leftMetricVos: MutableList<MetricVo> = leftData[timeKey] ?: mutableListOf()
             val rightMetricVos: MutableList<MetricVo> = rightData[timeKey] ?: mutableListOf()
 
-            val leftByGroup: Map<String, MetricVo?> = leftMetricVos.stream().collect(
-                Collectors.toMap(
-                    { obj: MetricVo? -> obj!!.toTagId() },
-                    { i: MetricVo? -> i }) as Collector<in MetricVo, *, MutableMap<String, MetricVo?>>?
+            val leftByGroup = leftMetricVos.associateBy(
+                keySelector = { obj -> obj.toTagId() },
+                valueTransform = { i -> i }
             )
-            val rightByGroup: Map<String, MetricVo?> = rightMetricVos.stream().collect(
-                Collectors.toMap(
-                    { obj: MetricVo? -> obj!!.toTagId() },
-                    { i: MetricVo? -> i }) as Collector<in MetricVo, *, MutableMap<String, MetricVo?>>?
+
+            val rightByGroup = rightMetricVos.associateBy(
+                keySelector = { obj -> obj.toTagId() },
+                valueTransform = { i -> i }
             )
 
             val calcPoint: MutableList<MetricVo> = Lists.newArrayList()
-            ret.put(timeKey, calcPoint)
+            ret[timeKey] = calcPoint
 
             val union: HashSet<String> = HashSet(leftByGroup.keys)
             union.retainAll(rightByGroup.keys)

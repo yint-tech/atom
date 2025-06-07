@@ -43,16 +43,11 @@ class FuncMetric(params: List<String>) : MQLFunction(params) {
         val metrics: List<MetricVo> =
             context.metricService.queryMetric(metricName, filters, context.metricAccuracy)
 
-        val metricWithTime = metrics.groupingBy { it.timeKey!! }
-            .fold(mutableListOf<MetricVo>()) { accumulator, element ->
-                accumulator.apply {
-                    add(element)
-                }
-            }
+        val metricWithTime = metrics.groupBy { it.timeKey!! }
 
         val treeMap: TreeMap<String, MutableList<MetricVo>> = TreeMap()
         for ((key, value) in metricWithTime) {
-            treeMap[key] = value
+            treeMap[key] = value.toMutableList()
         }
         return MQLVar.newVar(treeMap)
     }
