@@ -250,7 +250,7 @@ object Configs {
         val key: String,
         defaultValue: V
     ) {
-        var value: V = defaultValue
+        var value: V? = defaultValue
             protected set
         var sValue: String? = null
             protected set
@@ -321,27 +321,27 @@ object Configs {
 
 
         override fun toByte(): Byte {
-            return configValue.value.toByte()
+            return configValue.value!!.toByte()
         }
 
         override fun toDouble(): Double {
-            return configValue.value.toDouble()
+            return configValue.value!!.toDouble()
         }
 
         override fun toFloat(): Float {
-            return configValue.value.toFloat()
+            return configValue.value!!.toFloat()
         }
 
         override fun toInt(): Int {
-            return configValue.value.toInt()
+            return configValue.value!!.toInt()
         }
 
         override fun toLong(): Long {
-            return configValue.value.toLong()
+            return configValue.value!!.toLong()
         }
 
         override fun toShort(): Short {
-            return configValue.value.toShort()
+            return configValue.value!!.toShort()
         }
     }
 

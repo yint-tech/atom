@@ -19,8 +19,8 @@ class PrivacyFilter : Filter {
         try {
             val httpServletRequest = request as HttpServletRequest
             val requestURI = httpServletRequest.requestURI
-            var block = Settings.blockSwagger.value && isSwaggerAccess(requestURI)
-            if (!block && Settings.blockActuator.value && isActuator(requestURI)) {
+            var block = Settings.blockSwagger.value!! && isSwaggerAccess(requestURI)
+            if (!block && Settings.blockActuator.value!! && isActuator(requestURI)) {
                 block = true
             }
             if (!block) {

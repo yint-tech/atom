@@ -63,9 +63,9 @@ class SysLogAspect {
         // alert
         if (loginAnnotation?.alert == true) {
             eventNotifierService.notifySensitiveOperation(
-                sysLog.username,
+                sysLog.username!!,
                 target,
-                sysLog.params
+                sysLog.params!!
             )
         }
     }

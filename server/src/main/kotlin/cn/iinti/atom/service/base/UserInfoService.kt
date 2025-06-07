@@ -179,7 +179,7 @@ class UserInfoService {
         val adminCount = userMapper.selectCount(QueryWrapper<UserInfo>().eq(UserInfo.IS_ADMIN, true))
 
         val isCallFromAdmin = AppContext.getUser() != null && AppContext.getUser()!!.isAdmin!!
-        if (!isCallFromAdmin && adminCount.toInt() != 0 && !Settings.allowRegisterUser.value) {
+        if (!isCallFromAdmin && adminCount.toInt() != 0 && !Settings.allowRegisterUser.value!!) {
             return CommonRes.failed("当前系统不允许注册新用户，详情请联系管理员")
         }
 

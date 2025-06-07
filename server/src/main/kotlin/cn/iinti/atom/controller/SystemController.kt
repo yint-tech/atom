@@ -8,7 +8,10 @@ import cn.iinti.atom.service.base.env.Environment
 import cn.iinti.atom.utils.ServerIdentifier
 import com.alibaba.fastjson.JSONObject
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(BuildInfo.restfulApiPrefix + "/system")
@@ -42,13 +45,13 @@ class SystemController {
 
     @Operation(summary = "系统通告信息")
     @GetMapping("/systemNotice")
-    fun systemNotice(): CommonRes<String> {
+    fun systemNotice(): CommonRes<String?> {
         return CommonRes.success(Settings.systemNotice.value)
     }
 
     @Operation(summary = "文档首页通告信息")
     @GetMapping("/docNotice")
-    fun docNotice(): CommonRes<String> {
+    fun docNotice(): CommonRes<String?> {
         return CommonRes.success(Settings.docNotice.value)
     }
 }

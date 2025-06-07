@@ -74,7 +74,7 @@ object IpUtil {
     }
     @JvmStatic
     fun getOutIp(): String? {
-        val outIp: String = SimpleHttpInvoker.get(Settings.outIpTestUrl.value)
+        val outIp: String = SimpleHttpInvoker.get(Settings.outIpTestUrl.value!!)
         if (isValidIp(outIp)) {
             return outIp
         }
