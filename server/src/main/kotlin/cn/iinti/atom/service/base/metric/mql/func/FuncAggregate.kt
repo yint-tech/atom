@@ -10,7 +10,7 @@ import com.google.common.collect.Sets
 import io.micrometer.core.instrument.Meter
 import org.apache.commons.lang3.StringUtils
 import java.lang.Double.sum
-import java.util.function.Consumer
+
 import kotlin.math.max
 
 
@@ -32,18 +32,19 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
     override fun apply(metricVos: List<MetricVo>): MutableList<MetricVo> {
         val group: MutableMap<String, MutableList<MetricVo>> = Maps.newHashMap()
 
-        metricVos.forEach(Consumer { metricVo: MetricVo? ->
-            val tags: Map<String, String> = metricVo!!.tags
-            val keySegment: MutableList<String?> = Lists.newArrayList()
-            tags.forEach { (tag: String?, value: String?) ->
+        metricVos.forEach { metricVo: MetricVo ->
+            val tags: Map<String, String> = metricVo.tags
+            val keySegment: MutableList<String> = Lists.newArrayList()
+            tags.forEach { (tag: String, value: String) ->
                 if (!aggregateFields.contains(tag)) {
                     keySegment.add("$tag#-#$value")
                 }
             }
-            keySegment.sortBy { it }
-            group.computeIfAbsent(StringUtils.join(keySegment, ",")) { s: String? -> Lists.newArrayList() }
+            keySegment.sort()
+
+            group.computeIfAbsent(StringUtils.join(keySegment, ",")) { _: String? -> Lists.newArrayList() }
                 .add(metricVo)
-        })
+        }
         return group.values
             .map { doAggregate(it) }
             .toMutableList()
@@ -53,7 +54,7 @@ class FuncAggregate(params: List<String>) : XofVarFunc(params) {
         val metricVo = cloneMetricVo(metricVos[0])
         val tags = metricVo.tags
         //this field will be removed  after filter
-        aggregateFields.forEach(Consumer { o: String -> tags.remove(o) })
+        aggregateFields.forEach { o: String -> tags.remove(o) }
 
         if (metricVos.size == 1) {
             return metricVo

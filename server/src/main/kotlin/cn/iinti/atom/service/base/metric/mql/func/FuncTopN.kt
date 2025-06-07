@@ -9,8 +9,6 @@ import com.google.common.collect.Maps
 import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.math.NumberUtils
 import java.util.*
-import java.util.function.Consumer
-import java.util.stream.Collectors
 
 
 @MQL_FUNC("topN")
@@ -38,14 +36,13 @@ class FuncTopN(params: List<String>) : MQLFunction(params) {
 
         val legendIdValues: MutableMap<String, Double> = Maps.newHashMap()
 
-        `var`.data!!.values.forEach(Consumer { metricVos: List<MetricVo> ->
-            metricVos.forEach(
-                Consumer { metricVo: MetricVo ->
-                    val key: String = legendId(varName, metricVo, true)
-                    val addValue: Double = legendIdValues.computeIfAbsent(key) { it: String? -> 0.0 } + metricVo.value!!
-                    legendIdValues[key] = addValue
-                })
-        })
+        `var`.data!!.values.forEach { metricVos: List<MetricVo> ->
+            metricVos.forEach { metricVo: MetricVo ->
+                val key: String = legendId(varName, metricVo, true)
+                val addValue: Double = legendIdValues.computeIfAbsent(key) { it: String? -> 0.0 } + metricVo.value!!
+                legendIdValues[key] = addValue
+            }
+        }
 
         val keepLines: Set<String> = legendIdValues.entries
             .sortedWith { o1, o2 ->

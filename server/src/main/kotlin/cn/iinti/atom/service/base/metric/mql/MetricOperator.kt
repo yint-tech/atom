@@ -8,10 +8,8 @@ import com.google.common.collect.Maps
 import com.google.common.collect.Sets
 import java.util.*
 import java.util.function.BinaryOperator
-import java.util.function.Consumer
+
 import java.util.function.Function
-import java.util.stream.Collector
-import java.util.stream.Collectors
 
 
 /**
@@ -84,7 +82,7 @@ class MetricOperator(
 
         val ret: TreeMap<String, MutableList<MetricVo>> = Maps.newTreeMap()
 
-        timeKeys.forEach(Consumer { timeKey: String ->
+        timeKeys.forEach { timeKey: String ->
             val leftMetricVos: MutableList<MetricVo> = leftData[timeKey] ?: mutableListOf()
             val rightMetricVos: MutableList<MetricVo> = rightData[timeKey] ?: mutableListOf()
 
@@ -104,7 +102,7 @@ class MetricOperator(
             val union: HashSet<String> = HashSet(leftByGroup.keys)
             union.retainAll(rightByGroup.keys)
 
-            union.forEach(Consumer { unionTag: String ->
+            union.forEach { unionTag: String ->
                 val leftMetricVo: MetricVo? = leftByGroup.get(unionTag)
                 val rightMetricVo: MetricVo? = rightByGroup.get(unionTag)
 
@@ -114,7 +112,7 @@ class MetricOperator(
 
                 leftMetricVos.remove(leftMetricVo)
                 rightMetricVos.remove(rightMetricVo)
-            })
+            }
 
             for (leftRemain: MetricVo? in leftMetricVos) {
                 val metricVo: MetricVo = cloneMetricVo(leftRemain!!)
@@ -126,12 +124,12 @@ class MetricOperator(
                 metricVo.value = doCalculate(0.0, rightRemain.value)
                 calcPoint.add(metricVo)
             }
-        })
+        }
 
         return MQLVar.newVar(ret)
     }
 
-    fun doCalculate(left: Double?, right: Double?): Double? {
+    private fun doCalculate(left: Double?, right: Double?): Double? {
         if (left == null || right == null) {
             return null
         }

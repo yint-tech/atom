@@ -2,7 +2,7 @@ package cn.iinti.atom.entity
 
 import cn.iinti.atom.utils.CommonUtils
 import java.util.concurrent.Callable
-import java.util.function.Consumer
+
 import java.util.function.Function
 
 data class CommonRes<T>(
@@ -73,34 +73,19 @@ data class CommonRes<T>(
         }
     }
 
-    fun accept(consumer: Consumer<CommonRes<T>>) {
-        consumer.accept(this)
+    fun accept(consumer: (CommonRes<T>) -> Unit) {
+        consumer(this)
     }
 
-    fun ifOk(consumer: Consumer<T>): CommonRes<T> {
+    fun ifOk(consumer: (T) -> Unit): CommonRes<T> {
         if (isOk()) {
-            data?.let(consumer::accept)
+            data?.let {
+                consumer(it)
+            }
         }
         return this
     }
 
-    fun acceptIfOk(consumer: Consumer<CommonRes<T>>) {
-        if (isOk()) {
-            consumer.accept(this)
-        }
-    }
-
-    fun <NT> callIfOk(callable: Callable<CommonRes<NT>>): CommonRes<NT> {
-        return if (isOk()) {
-            try {
-                callable.call()
-            } catch (e: Exception) {
-                failed(e)
-            }
-        } else {
-            errorTransfer()
-        }
-    }
 
     fun changeFailed(msg: String) {
         this.status = -1

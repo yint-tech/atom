@@ -26,7 +26,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
-import java.util.function.Consumer
+
 import java.util.function.Function
 
 
@@ -278,7 +278,7 @@ class MetricService {
             val totalTimeList: MutableList<Metric> = Lists.newArrayList()
             val maxList: MutableList<Metric> = Lists.newArrayList()
             val metricTag = metricTagService.fromKey(metricName)!!
-            metrics.forEach(Consumer { metric: Metric ->
+            metrics.forEach { metric: Metric ->
                 val subtype = mapMetric(metric, metricTag).tags[MetricEnums.TimeSubType.TIMER_TYPE]
                 if (MetricEnums.TimeSubType.COUNT.metricKey == subtype) {
                     countList.add(metric)
@@ -287,7 +287,7 @@ class MetricService {
                 } else if (MetricEnums.TimeSubType.MAX.metricKey == subtype) {
                     maxList.add(metric)
                 }
-            })
+            }
             if (countList.isNotEmpty()) {
                 mergedList.add(mergeMetrics(countList, countList[0], SUM))
             }
@@ -349,11 +349,11 @@ class MetricService {
         val type = meter.id.type
 
         if (type == Meter.Type.GAUGE) {
-            val metricTag = metricTagService!!.fromMeter(meter, null)
+            val metricTag = metricTagService.fromMeter(meter, null)
             val metric = makeMetric(timeKey, time, meter, metricTag, null)
             saveGauge(metric, meter as Gauge)
         } else if (type == Meter.Type.COUNTER) {
-            val metricTag = metricTagService!!.fromMeter(meter, null)
+            val metricTag = metricTagService.fromMeter(meter, null)
             val metric = makeMetric(timeKey, time, meter, metricTag, null)
             val count = when (meter) {
                 is Counter -> {
@@ -475,10 +475,10 @@ class MetricService {
         }
     }
 
-    fun eachDao(consumer: Consumer<BaseMapper<Metric>>) {
-        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.DAYS))
-        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.HOURS))
-        consumer.accept(chooseDao(MetricEnums.MetricAccuracy.MINUTES))
+    fun eachDao(consumer: (BaseMapper<Metric>) -> Unit) {
+        consumer(chooseDao(MetricEnums.MetricAccuracy.DAYS))
+        consumer(chooseDao(MetricEnums.MetricAccuracy.HOURS))
+        consumer(chooseDao(MetricEnums.MetricAccuracy.MINUTES))
     }
 
     companion object {

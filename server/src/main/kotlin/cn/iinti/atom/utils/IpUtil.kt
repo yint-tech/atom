@@ -7,7 +7,7 @@ import com.google.common.collect.Sets
 import org.apache.commons.lang3.StringUtils
 import java.net.*
 import java.util.*
-import java.util.function.Consumer
+
 import java.util.regex.Pattern
 
 
@@ -18,7 +18,7 @@ object IpUtil {
      * 解析本机IP
      */
     @Throws(SocketException::class)
-    
+
     fun getLocalIps(): String {
         var ips: MutableSet<String> = Sets.newHashSet()
         val interfaces = NetworkInterface.getNetworkInterfaces()
@@ -56,7 +56,7 @@ object IpUtil {
             // 有docker混部的设备，内网地址特别多,这个时候以A网网段划分，每个A网段取一个
             // 否则数据库字段长度不够，存不下，正常的极其理论上内网地址是不超过两个的才对
             val filterMap: MutableMap<String, String> = Maps.newHashMap()
-            ips.forEach(Consumer { s: String ->
+            ips.forEach { s: String ->
                 val dotIndex = s.indexOf(".")
                 val aSegment = s.substring(0, dotIndex)
                 if (aSegment == "192" || aSegment == "10" || aSegment == "172") {
@@ -66,13 +66,13 @@ object IpUtil {
                     // 外网地址则不进行切割，因为外网地址是重要的通信探测通道
                     filterMap[s] = s
                 }
-            })
+            }
             ips = HashSet(filterMap.values)
         }
 
         return StringUtils.join(ips, ",")
     }
-    
+
     fun getOutIp(): String? {
         val outIp: String = SimpleHttpInvoker.get(Settings.outIpTestUrl.value!!)
         if (isValidIp(outIp)) {

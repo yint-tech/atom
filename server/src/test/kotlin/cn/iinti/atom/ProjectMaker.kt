@@ -17,7 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Consumer
+
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

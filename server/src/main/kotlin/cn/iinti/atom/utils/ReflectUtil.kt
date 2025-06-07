@@ -7,13 +7,13 @@ class ReflectUtil {
     companion object {
         private val fieldCache = ConcurrentHashMap<ClassLoader, HashMap<String, Field?>>()
 
-        fun getOrCreateFieldCache(classLoader: ClassLoader): HashMap<String, Field?> {
+        fun getOrCreateFieldCache(classLoader: ClassLoader?): HashMap<String, Field?> {
             return getOrCreateCache(classLoader, fieldCache)
         }
 
 
         fun <T> getOrCreateCache(
-            classLoader: ClassLoader,
+            classLoader: ClassLoader?,
             cache: Map<ClassLoader, HashMap<String, T?>>
         ): HashMap<String, T?> {
             var loader = classLoader
