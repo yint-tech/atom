@@ -1,7 +1,7 @@
 package cn.iinti.atom
 
-import cn.iinti.atom.utils.Md5Utils.md5Bytes
-import cn.iinti.atom.utils.ResourceUtil.Companion.readLines
+import cn.iinti.katom.utils.Md5Utils.md5Bytes
+import cn.iinti.katom.utils.ResourceUtil.Companion.readLines
 import com.google.common.base.Splitter
 import lombok.Getter
 import lombok.SneakyThrows

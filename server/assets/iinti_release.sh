@@ -17,11 +17,11 @@ cd ${now_dir}
 echo "call iinti proguard toolkit"
 AmsCli Protection --input-dist $1  \
  --proguard-config ${shell_dir}/iinti/proguard.pro \
- --main-jar atom-server \
+ --main-jar katom-server \
  --slave-jar mybatis-plus-extension \
  --insert-bin "${shell_dir}"/iinti/upgrade.sh \
  --inject-rule "${shell_dir}"/iinti/inject_rule.txt \
- --output-dist ${shell_dir}/docker/AtomMain.zip \
+ --output-dist ${shell_dir}/docker/katomMain.zip \
  # --skip-proguard
 if [ $? != 0 ] ; then
     echo "Protection Failed"
@@ -34,37 +34,37 @@ echo $image_version;
 cd ${shell_dir}/docker
 echo "build compose img"
 # compose 模式
-docker build -t registry.cn-beijing.aliyuncs.com/iinti/atom:server-$image_version .
+docker build -t registry.cn-beijing.aliyuncs.com/iinti/katom:server-$image_version .
 if [ $? != 0 ] ; then
     echo "docker build failed"
     exit 10
 fi
-docker tag registry.cn-beijing.aliyuncs.com/iinti/atom:server-$image_version registry.cn-beijing.aliyuncs.com/iinti/atom:latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/atom:latest;
-docker push registry.cn-beijing.aliyuncs.com/iinti/atom:server-$image_version;
+docker tag registry.cn-beijing.aliyuncs.com/iinti/katom:server-$image_version registry.cn-beijing.aliyuncs.com/iinti/katom:latest;
+docker push registry.cn-beijing.aliyuncs.com/iinti/katom:latest;
+docker push registry.cn-beijing.aliyuncs.com/iinti/katom:server-$image_version;
 
 echo "build all-in-one img"
 # all in one 模式
-docker build -f Dockerfile.all-in-one -t registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one-$image_version .
+docker build -f Dockerfile.all-in-one -t registry.cn-beijing.aliyuncs.com/iinti/katom:all-in-one-$image_version .
 if [ $? != 0 ] ; then
     echo "docker build failed"
     exit 11
 fi
-docker tag registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one-$image_version registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one;
-docker push registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one;
-docker push registry.cn-beijing.aliyuncs.com/iinti/atom:all-in-one-$image_version;
+docker tag registry.cn-beijing.aliyuncs.com/iinti/katom:all-in-one-$image_version registry.cn-beijing.aliyuncs.com/iinti/katom:all-in-one;
+docker push registry.cn-beijing.aliyuncs.com/iinti/katom:all-in-one;
+docker push registry.cn-beijing.aliyuncs.com/iinti/katom:all-in-one-$image_version;
 
 echo "upload to oss"
-scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
-scp -o StrictHostKeyChecking=no ${shell_dir}/iinti/quickstart.sh  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/atom/
+scp -o StrictHostKeyChecking=no ${shell_dir}/docker/katomMain.zip  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/katom/
+scp -o StrictHostKeyChecking=no ${shell_dir}/iinti/quickstart.sh  root@oss.iinti.cn:/root/local-deplpy/gohttpserver/data/katom/
 
 echo "deploy demoSite"
-scp -o StrictHostKeyChecking=no ${shell_dir}/docker/AtomMain.zip root@atom.iinti.cn:/opt/atom/
-ssh -o StrictHostKeyChecking=no root@atom.iinti.cn "unzip -o -d /opt/atom /opt/atom/AtomMain.zip"
-scp -o StrictHostKeyChecking=no ${shell_dir}/../../deploy/app_demoSite.properties root@atom.iinti.cn:/opt/atom/conf/application.properties
-ssh -o StrictHostKeyChecking=no root@atom.iinti.cn "/opt/atom/bin/startup.sh"
+scp -o StrictHostKeyChecking=no ${shell_dir}/docker/katomMain.zip root@katom.iinti.cn:/opt/katom/
+ssh -o StrictHostKeyChecking=no root@katom.iinti.cn "unzip -o -d /opt/katom /opt/katom/katomMain.zip"
+scp -o StrictHostKeyChecking=no ${shell_dir}/../../deploy/app_demoSite.properties root@katom.iinti.cn:/opt/katom/conf/application.properties
+ssh -o StrictHostKeyChecking=no root@katom.iinti.cn "/opt/katom/bin/startup.sh"
 
 echo "clean file"
-rm -f ${shell_dir}/docker/AtomMain.zip
+rm -f ${shell_dir}/docker/katomMain.zip
 
 echo "all done"

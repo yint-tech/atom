@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 now_dir=`pwd`
 
-if [ ! -d atom_compose ]; then
-   mkdir "atom"
+if [ ! -d katom_compose ]; then
+   mkdir "katom"
 else
-   rm -rf atom/*
+   rm -rf katom/*
 fi
 
-cd atom;
+cd katom;
 
-curl -o "atom_compose.zip" "https://oss.iinti.cn/atom/atom-compose.zip"
+curl -o "katom_compose.zip" "https://oss.iinti.cn/katom/katom-compose.zip"
 
 (unzip --help) </dev/null >/dev/null 2>&1 || {
   echo
@@ -18,12 +18,12 @@ curl -o "atom_compose.zip" "https://oss.iinti.cn/atom/atom-compose.zip"
 }
 
 
-unzip -o atom_compose.zip
+unzip -o katom_compose.zip
 
-cd atom-compose;
+cd katom-compose;
 
 docker-compose down;
 
-docker pull registry.cn-beijing.aliyuncs.com/iinti/atom:atom-server-latest;
+docker pull registry.cn-beijing.aliyuncs.com/iinti/katom:katom-server-latest;
 
 docker-compose up -d

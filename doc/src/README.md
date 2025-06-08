@@ -1,6 +1,6 @@
 ---
 home: true
-title: atom
+title: katom
 icon: fa6-solid:house
 heroImage: /images/logo.svg
 actions:
@@ -42,4 +42,4 @@ highlights:
 
 ## 开源地址
 
-- [github](https://github.com/yint-tech/atom)
+- [github](https://github.com/yint-tech/katom)

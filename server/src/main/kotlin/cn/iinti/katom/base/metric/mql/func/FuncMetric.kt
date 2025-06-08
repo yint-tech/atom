@@ -1,0 +1,53 @@
+package cn.iinti.katom.base.metric.mql.func
+
+import cn.iinti.katom.base.metric.MetricVo
+import cn.iinti.katom.base.metric.mql.Context
+import cn.iinti.katom.base.metric.mql.Context.MQLVar
+import cn.iinti.katom.base.metric.mql.compile.MQLCompiler.BadGrammarException
+import cn.iinti.katom.base.metric.mql.func.MQLFunction.MQL_FUNC
+import com.google.common.collect.Maps
+import java.util.*
+
+
+@MQL_FUNC("metric")
+class FuncMetric(params: List<String>) : MQLFunction(params) {
+    private val metricName: String
+    private val filters: MutableMap<String, String> = Maps.newHashMap()
+
+
+    init {
+        check(params.isNotEmpty()) { "metric function need param" }
+        metricName = params[0]
+        var key: String? = null
+        for (i in 1..<params.size) {
+            val token = params[i]
+            if (token == "[" || token == "]" || token == "=") {
+                continue
+            }
+            if (key == null) {
+                key = token
+                continue
+            }
+            filters[key] = token
+            key = null
+        }
+
+        if (key != null) {
+            throw BadGrammarException("no filter value for key:$key")
+        }
+    }
+
+
+    override fun call(context: Context): MQLVar {
+        val metrics: List<MetricVo> =
+            context.metricService.queryMetric(metricName, filters, context.metricAccuracy)
+
+        val metricWithTime = metrics.groupBy { it.timeKey!! }
+
+        val treeMap: TreeMap<String, MutableList<MetricVo>> = TreeMap()
+        for ((key, value) in metricWithTime) {
+            treeMap[key] = value.toMutableList()
+        }
+        return MQLVar.newVar(treeMap)
+    }
+}

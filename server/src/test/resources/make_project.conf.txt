@@ -2,11 +2,11 @@
 target:~/Desktop/bar
 
 # 包名替换规则
-pkg:cn.iinti.atom->com.custom.bar
+pkg:cn.iinti.katom->com.custom.bar
 
 # 关键字替换规则
 key:Atom->FooBar
-key:atom->bar
+key:katom->bar
 
 
 # 忽略文件

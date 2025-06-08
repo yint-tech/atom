@@ -146,13 +146,13 @@ distributions.main{
 }
 
 application {
-    mainClass = "cn.iinti.atom.AtomMain"
+    mainClass = "cn.iinti.katom.AtomMain"
     applicationName = "AtomMain"
     applicationDefaultJvmArgs = listOf(
         "-Dfile.encoding=utf-8", "-Duser.timezone=GMT+08", "-XX:-OmitStackTraceInFastThrow"
     )
     // docker compose 使用文件夹名称来命名，未了避免冲突，这里将文件夹带上项目名称
-    applicationDistribution.from("${projectDir}/src/main/resources/develop-atom") {
+    applicationDistribution.from("${projectDir}/src/main/resources/develop-katom") {
         include("ddl.sql")
         into("conf/")
     }
@@ -165,7 +165,7 @@ application {
         into("conf/static/")
     }
     applicationDistribution.from("${rootProject.projectDir}/doc/src/.vuepress/dist") {
-        into("conf/static/atom-doc")
+        into("conf/static/katom-doc")
     }
     // https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
     applicationDistribution.into("/")
@@ -179,7 +179,7 @@ application {
 }
 
 tasks.named<Jar>("jar") {
-    archiveBaseName.set("atom-server")
+    archiveBaseName.set("katom-server")
 }
 
 tasks.getByPath("startScripts").doFirst {
@@ -239,7 +239,7 @@ fun configDeployTask4Preset(presetFile: File, outputZipFile: Supplier<File>) {
     config.getProperty("deploy.host")?.trim()?.split(',')?.let { deployServerList ->
         val name = presetFile.name
         val preset = name.subSequence("app_".length, name.lastIndexOf("."))
-        val deployPath = config.getConfig("deploy.workdir", "/opt/atom/").ensureSlash()
+        val deployPath = config.getConfig("deploy.workdir", "/opt/katom/").ensureSlash()
         val connParam = config.shellParam("deploy")
 
         config.getProperty("deploy.jump.host").apply {

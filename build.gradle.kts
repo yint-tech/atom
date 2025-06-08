@@ -3,11 +3,11 @@ import java.time.format.DateTimeFormatter
 
 var versionCode by extra(1)
 var versionName by extra("1.0.0-SNAPSHOT")
-var applicationId by extra("cn.iinti.atom")
-var docPath by extra("atom-doc")
+var applicationId by extra("cn.iinti.katom")
+var docPath by extra("katom-doc")
 var userLoginTokenKey by extra("Atom-Token")
-var restfulApiPrefix by extra("/atom-api")
-var appName by extra("atom")
+var restfulApiPrefix by extra("/katom-api")
+var appName by extra("katom")
 var enableAmsNotice by extra(false)
 
 var buildTime: String by extra(

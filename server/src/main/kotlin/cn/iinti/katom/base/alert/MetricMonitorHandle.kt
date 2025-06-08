@@ -1,0 +1,173 @@
+package cn.iinti.katom.base.alert
+
+import cn.iinti.katom.base.alert.events.MetricMonitorConfig.MetricData
+import cn.iinti.katom.base.metric.MetricEnums
+import cn.iinti.katom.base.metric.MetricEnums.MetricAccuracy
+import cn.iinti.katom.base.metric.MetricService
+import cn.iinti.katom.base.metric.MetricVo
+import cn.iinti.katom.base.metric.MetricVo.Companion.cloneMetricVo
+import cn.iinti.katom.base.metric.mql.Context.MQLVar
+import cn.iinti.katom.base.metric.mql.MQL
+import groovy.lang.Closure
+import io.micrometer.core.instrument.Meter
+import org.apache.commons.lang3.StringUtils
+import org.springframework.scheduling.support.CronExpression
+import java.time.LocalDateTime
+import java.util.*
+import java.util.function.Predicate
+
+
+class MetricMonitorHandle {
+    private var mql: MQL? = null
+    private var cron: CronExpression? = null
+    private var start: LocalDateTime? = null
+    private var end: LocalDateTime? = null
+    private var accuracy: MetricAccuracy? = null
+    private var callback: Closure<*>? = null
+
+    private var lastRun: LocalDateTime? = null
+
+    fun evaluate(metricService: MetricService, force: Boolean) {
+        if (!force && !isCronRunTime) {
+            return
+        }
+        if (accuracy == null) {
+            accuracy = MetricAccuracy.HOURS
+        }
+        if (start != null) {
+            trimAccuracy()
+        }
+        lastRun = LocalDateTime.now()
+        val metricData = mql!!.run(accuracy!!, metricService)
+        val map = filterAndMerge(metricData)
+
+        val delegate = MetricData(map)
+        callback!!.rehydrate(delegate, callback!!.owner, callback!!.thisObject)
+            .call()
+    }
+
+    private fun trimAccuracy() {
+        if (accuracy == MetricAccuracy.DAYS) {
+            return
+        }
+        if (start!!.isBefore(LocalDateTime.now().minusDays(30))) {
+            accuracy = MetricAccuracy.DAYS
+            return
+        }
+        if (accuracy == MetricAccuracy.HOURS) {
+            return
+        }
+        if (start!!.isBefore(LocalDateTime.now().minusDays(1))) {
+            accuracy = MetricAccuracy.HOURS
+        }
+    }
+
+    private var timeFilter =
+        Predicate { metricVos: List<MetricVo> ->
+            val anyOne = metricVos[0]
+            if (start != null && anyOne.createTime!!.isBefore(start)) {
+                return@Predicate false
+            }
+            end == null || !anyOne.createTime!!.isAfter(end)
+        }
+
+    private fun filterAndMerge(metricData: Map<String, MQLVar>): Map<String, List<MetricVo>> {
+        val ret: MutableMap<String, MutableList<MetricVo>> = HashMap()
+        metricData.forEach { (k: String, v: MQLVar) ->
+            val filtered = filter(v.data!!)
+            val merged = merge(filtered)
+            ret[k] = merged
+        }
+        return ret
+    }
+
+    private fun merge(metricData: TreeMap<String, MutableList<MetricVo>>): MutableList<MetricVo> {
+        val allMetricByTagId = metricData.flatMap { (_, value) ->
+            value.map { obj: MetricVo -> obj.toTagId() }
+        }.toSet()
+
+        return allMetricByTagId.mapNotNull { s: String ->
+            val metricVos = metricData.values.mapNotNull { metricVoWithTags: List<MetricVo> ->
+                metricVoWithTags.find { it.toTagId() == s }
+            }.toList()
+            if (metricVos.isEmpty()) {
+                return@mapNotNull null
+            }
+            val first = metricVos[0]
+            val ret = cloneMetricVo(first)
+            when (first.type) {
+                Meter.Type.COUNTER -> ret.value = metricVos.sumOf { it.value!! }
+                Meter.Type.GAUGE -> ret.value = metricVos[metricVos.size - 1].value
+                Meter.Type.TIMER -> {
+                    val timerType = first.tags[MetricEnums.TimeSubType.TIMER_TYPE]
+                    if (StringUtils.isBlank(timerType) ||
+                        timerType == MetricEnums.TimeSubType.MAX.metricKey
+                    ) {
+                        // this is aggregated time-max
+                        ret.value = metricVos.maxOf { it.value!! }
+                    } else if (timerType == MetricEnums.TimeSubType.TIME.metricKey ||
+                        timerType == MetricEnums.TimeSubType.COUNT.metricKey
+                    ) {
+                        ret.value = metricVos.sumOf { it.value!! }
+                    }
+                }
+
+                else -> {
+                    throw IllegalStateException("error type:${first.type}")
+                }
+            }
+            ret
+        }.toMutableList()
+    }
+
+    private fun filter(data: TreeMap<String, MutableList<MetricVo>>): TreeMap<String, MutableList<MetricVo>> {
+        val filtered = TreeMap<String, MutableList<MetricVo>>()
+        data.forEach { (k: String, v: MutableList<MetricVo>) ->
+            if (timeFilter.test(v)) {
+                filtered[k] = v
+            }
+        }
+        return filtered
+    }
+
+    private val isCronRunTime: Boolean
+        get() {
+            if (lastRun == null) {
+                return true
+            }
+            val next = cron!!.next(lastRun!!) ?: return false
+            return !next.isAfter(LocalDateTime.now())
+        }
+
+    fun setMql(mql: MQL?) {
+        this.mql = mql
+    }
+
+    fun setCron(cron: CronExpression?) {
+        this.cron = cron
+    }
+
+    fun setStart(start: LocalDateTime?) {
+        this.start = start
+    }
+
+    fun setEnd(end: LocalDateTime?) {
+        this.end = end
+    }
+
+    fun setAccuracy(accuracy: MetricAccuracy?) {
+        this.accuracy = accuracy
+    }
+
+    fun setCallback(callback: Closure<*>?) {
+        this.callback = callback
+    }
+
+    fun setLastRun(lastRun: LocalDateTime?) {
+        this.lastRun = lastRun
+    }
+
+    fun setTimeFilter(timeFilter: Predicate<List<MetricVo>>) {
+        this.timeFilter = timeFilter
+    }
+}

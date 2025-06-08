@@ -1,5 +1,5 @@
 #!/bin/sh
-echo 'shutdown atom  server'
+echo 'shutdown katom  server'
 now_dir=`pwd`
 
 cd `dirname $0`
@@ -21,16 +21,16 @@ function prepareShutdown() {
       if [[ -n ${work_port} ]] ;then
         counter=0
         while [ $counter -lt 10 ]; do
-            response=$(curl -s "http://localhost:${work_port}/atom-api/system/prepareShutdown")
+            response=$(curl -s "http://localhost:${work_port}/katom-api/system/prepareShutdown")
             if [ $? != 0 ] ; then
                 # server status bad
                 break
             fi
             if [ "$response" = "0" ]; then
-                echo "the atom service can be shutdown safety"
+                echo "the katom service can be shutdown safety"
                 break
             else
-                echo "waiting atom service shutdown ${counter} times"
+                echo "waiting katom service shutdown ${counter} times"
             fi
             ((counter++))
             sleep 10
@@ -50,7 +50,7 @@ if [[ -n "${remote_pid}" ]] ;then
     rm -f ../conf/pid
 fi
 
-echo "start atom server"
+echo "start katom server"
 sleep 2
 remote_pid=`getPid`
 if [[ -n "${remote_pid}" ]] ;then

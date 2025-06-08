@@ -1,4 +1,4 @@
-rootProject.name = "atom"
+rootProject.name = "katom"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

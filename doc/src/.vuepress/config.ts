@@ -4,10 +4,10 @@ import theme from "./theme.js";
 import viteBundler from "@vuepress/bundler-vite";
 
 export default defineUserConfig({
-    base: "/atom-doc/",
+    base: "/katom-doc/",
     head,
     lang: 'zh-CN',
-    title: 'atom',
+    title: 'katom',
     description: 'java单体全栈开发脚手架',
     bundler: viteBundler(),
     theme

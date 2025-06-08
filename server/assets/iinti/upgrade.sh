@@ -10,9 +10,9 @@ cd ..
 cp conf/application.properties conf/application.properties.backup
 
 echo "download assets"
-curl -o AtomMain.zip https://oss.iinti.cn/atom/AtomMain.zip
+curl -o AtomMain.zip https://oss.iinti.cn/katom/AtomMain.zip
 
-echo "unzip archive in atom server ..."
+echo "unzip archive in katom server ..."
 
 unzip -q -o -d . AtomMain.zip
 

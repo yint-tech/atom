@@ -1,7 +1,7 @@
 {
-  "name": "atom-doc",
+  "name": "katom-doc",
   "version": "1.0",
-  "description": "atom document",
+  "description": "katom document",
   "main": "index.js",
   "author": "iinti",
   "license": "Apache-2.0",

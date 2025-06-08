@@ -1,4 +1,4 @@
-import cn.iinti.atom.service.base.alert.EventScript
+import cn.iinti.katom.base.alert.EventScript
 import groovy.json.JsonBuilder
 import groovy.transform.BaseScript
 

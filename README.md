@@ -1,5 +1,7 @@
-# Atom
-Atom是一个以java和react为基础的，面向单体应用的web应用脚手架，他提供了大型互联网公司几乎所有的中间件能力，但是不依赖任何外部中间件。
-他是一个仅使用java+mysql的环境就可以获得一个完整应用功能的基础环境，非常适合中作为小型系统和独立软件产品基础框架。
+# Katom
+Katom是一个以java和react为基础的，面向单体应用的web应用脚手架， 他是[atom](https://atom.iinti.cn/atom-doc/)的kotlin版本，
+相对于Atom，Katom将会使用更加激进的技术栈，用于获得更高的性能、更强的能力、更加紧凑的代码
 
-更多文档请参考在线文档: [atom-doc](https://atom.iinti.cn/atom-doc/)
+- 使用协程
+- 不限制使用高级语法糖
+- pg数据库（替代mysql）
