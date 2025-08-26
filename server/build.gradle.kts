@@ -155,6 +155,14 @@ application {
     applicationDistribution.from("${projectDir}/src/main/resources/application.properties") {
         into("conf/")
     }
+    applicationDistribution.from("${projectDir}/assets/startup.sh") {
+        into("bin/")
+        eachFile {
+            // 在windows上面构建代码的话，权限和回车可能不对，这里修复一下
+            mode = 755
+            filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
+        }
+    }
 
     applicationDistribution.from("${rootProject.projectDir}/frontend/build") {
         into("conf/static/")
@@ -164,13 +172,6 @@ application {
     }
     // https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
     applicationDistribution.into("/")
-    applicationDistribution.eachFile {
-        // 在windows上面构建代码的话，权限和回车可能不对，这里修复一下
-        if (name.endsWith(".sh") && path.startsWith("bin")) {
-            mode = 755
-            filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
-        }
-    }
 }
 
 tasks.named<Jar>("jar") {
@@ -333,10 +334,10 @@ afterEvaluate {
     tasks.compileJava {
         dependsOn(generateJavaCode)
     }
-    tasks.startScripts {
-        dependsOn(":frontend:yarnBuild")
-        dependsOn(":doc:yarnBuild")
-    }
+//    tasks.startScripts {
+//        dependsOn(":frontend:yarnBuild")
+//        dependsOn(":doc:yarnBuild")
+//    }
 }
 
 
