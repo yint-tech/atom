@@ -18,20 +18,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BuildConfig.restfulApiPrefix + "/system")
 public class SystemController {
 
-    // todo，开源后需要考虑安全，此接口需要做内部鉴权
     @Operation(summary = "内部接口,获取当前设备的clientId")
     @GetMapping("/exchangeClientId")
-    public CommonRes<String> exchangeClientId() {
+    public CommonRes<String> exchangeClientId(String internalAPIKey) {
+        if (!BuildConfig.internalAPIKey.equals(internalAPIKey)) {
+            return CommonRes.failed("api key invalid:" + internalAPIKey);
+        }
         return CommonRes.success(ServerIdentifier.id());
     }
 
-    // todo，开源后需要考虑安全，此接口需要做内部鉴权
     @Operation(summary = "内部接口，触发广播")
     @GetMapping("/triggerBroadcast")
-    public CommonRes<String> triggerBroadcast(String topic) {
+    public CommonRes<String> triggerBroadcast(String topic, String internalAPIKey) {
+        if (!BuildConfig.internalAPIKey.equals(internalAPIKey)) {
+            return CommonRes.failed("api key invalid:" + internalAPIKey);
+        }
         return CommonRes.success(BroadcastService.callListener(topic));
     }
 
+    @Operation(summary = "停机通知（软件更新或者升级前，通知业务模块做收尾工作）,返回当前pending任务数量，当数据为0则代表可以安全停机")
+    @GetMapping("/prepareShutdown")
+    public Integer prepareShutdown(String internalAPIKey) {
+        if (!BuildConfig.internalAPIKey.equals(internalAPIKey)) {
+            return Integer.MAX_VALUE;
+        }
+        return Environment.prepareShutdown();
+    }
 
     @Operation(summary = "系统信息")
     @GetMapping("/systemInfo")
@@ -39,11 +51,6 @@ public class SystemController {
         return Environment.buildInfo();
     }
 
-    @Operation(summary = "停机通知（软件更新或者升级前，通知业务模块做收尾工作）,返回当前pending任务数量，当数据为0则代表可以安全停机")
-    @GetMapping("/prepareShutdown")
-    public Integer prepareShutdown() {
-        return Environment.prepareShutdown();
-    }
 
     @Operation(summary = "系统通告信息")
     @GetMapping("/systemNotice")

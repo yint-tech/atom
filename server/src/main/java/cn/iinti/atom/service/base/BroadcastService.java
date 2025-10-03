@@ -150,7 +150,10 @@ public class BroadcastService implements ApplicationListener<WebServerInitialize
     }
 
     private static boolean checkNodeServer(String ip, ServerNode serverNode) {
-        String url = buildOtherNodeURL(ip, serverNode.getPort(), "exchangeClientId");
+        String url = buildOtherNodeURL(ip, serverNode.getPort(),
+                "exchangeClientId?internalAPIKey=" + BuildConfig.internalAPIKey
+        );
+
         String response = SimpleHttpInvoker.get(url);
         if (StringUtils.isBlank(response)) {
             log.info("exchangeClientId with ioException :{}", url, SimpleHttpInvoker.getIoException());
@@ -247,7 +250,9 @@ public class BroadcastService implements ApplicationListener<WebServerInitialize
             log.error("can not resolve server node ,skip broadcast message");
             return;
         }
-        String url = buildOtherNodeURL(serverNode.getIp(), serverNode.getPort(), "triggerBroadcast?topic=" + topic);
+        String url = buildOtherNodeURL(serverNode.getIp(), serverNode.getPort(),
+                "triggerBroadcast?topic=" + topic + "&internalAPIKey=" + BuildConfig.internalAPIKey
+        );
         String response = SimpleHttpInvoker.get(url);
         if (StringUtils.isBlank(url)) {
             log.error("call remote node IO error", SimpleHttpInvoker.getIoException());

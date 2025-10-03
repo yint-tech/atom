@@ -21,7 +21,7 @@ function prepareShutdown() {
       if [[ -n ${work_port} ]] ;then
         counter=0
         while [ $counter -lt 10 ]; do
-            response=$(curl -s "http://localhost:${work_port}/atom-api/system/prepareShutdown")
+            response=$(curl -s "http://localhost:${work_port}/atom-api/system/prepareShutdown?internalAPIKey=@internalAPIKey@")
             if [ $? != 0 ] ; then
                 # server status bad
                 break

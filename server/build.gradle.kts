@@ -1,5 +1,7 @@
 import org.apache.hc.core5.function.Supplier
 import org.apache.tools.ant.filters.FixCrLfFilter
+import org.apache.tools.ant.filters.ReplaceTokens
+import org.apache.tools.ant.taskdefs.Replace
 import org.gradle.api.internal.plugins.DefaultJavaAppStartScriptGenerationDetails
 import org.hidetake.groovy.ssh.connection.AllowAnyHosts
 import org.hidetake.groovy.ssh.core.Remote
@@ -70,6 +72,7 @@ var docPath: String by rootProject.extra
 var userLoginTokenKey: String by rootProject.extra
 var restfulApiPrefix: String by rootProject.extra
 var appName: String by rootProject.extra
+val internalAPIKey = UUID.randomUUID().toString().substringBefore('-')
 
 var yIntProject: Boolean by rootProject.extra
 
@@ -159,9 +162,14 @@ application {
     applicationDistribution.from("${projectDir}/assets/startup.sh") {
         into("bin/")
         eachFile {
-            // 在windows上面构建代码的话，权限和回车可能不对，这里修复一下
-            mode = 755
             filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
+            filter<ReplaceTokens>("tokens" to mapOf("internalAPIKey" to internalAPIKey))
+            permissions {
+                // 在windows上面构建代码的话，权限和回车可能不对，这里修复一下
+                listOf<ConfigurableUserClassFilePermissions>(user, group, other).forEach {
+                    it.execute = true
+                }
+            }
         }
     }
 
@@ -212,6 +220,7 @@ buildConfig {
         buildConfigField("userLoginTokenKey", userLoginTokenKey)
         buildConfigField("restfulApiPrefix", restfulApiPrefix)
         buildConfigField("appName", appName)
+        buildConfigField("internalAPIKey", internalAPIKey)
     }
 }
 
