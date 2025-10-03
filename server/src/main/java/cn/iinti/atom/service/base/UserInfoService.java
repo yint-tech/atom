@@ -1,7 +1,7 @@
 package cn.iinti.atom.service.base;
 
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.entity.UserInfo;
 import cn.iinti.atom.mapper.UserInfoMapper;
@@ -40,7 +40,7 @@ public class UserInfoService {
     @Resource
     private DbCacheManager dbCacheManager;
 
-    private static final String salt = BuildInfo.appName + "2023V2!@&*(";
+    private static final String salt = BuildConfig.appName + "2023V2!@&*(";
 
     public CommonRes<UserInfo> login(String account, String password) {
         UserInfo userInfo = userMapper

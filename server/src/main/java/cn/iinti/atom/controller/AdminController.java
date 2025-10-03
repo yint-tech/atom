@@ -1,6 +1,6 @@
 package cn.iinti.atom.controller;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.*;
 import cn.iinti.atom.mapper.ServerNodeMapper;
 import cn.iinti.atom.mapper.SysLogMapper;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(BuildInfo.restfulApiPrefix + "/admin-op")
+@RequestMapping(BuildConfig.restfulApiPrefix + "/admin-op")
 public class AdminController {
     @Resource
     private UserInfoService userInfoService;

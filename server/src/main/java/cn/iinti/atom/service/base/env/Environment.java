@@ -1,6 +1,6 @@
 package cn.iinti.atom.service.base.env;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.service.base.config.Configs;
 import cn.iinti.atom.utils.CommonUtils;
@@ -49,10 +49,10 @@ public class Environment {
         return CommonRes.success(new JSONObject()
                 .fluentPut("buildInfo",
                         new JSONObject()
-                                .fluentPut("versionCode", BuildInfo.versionCode)
-                                .fluentPut("versionName", BuildInfo.versionName)
-                                .fluentPut("buildTime", BuildInfo.buildTime)
-                                .fluentPut("buildUser", BuildInfo.buildUser)
+                                .fluentPut("versionCode", BuildConfig.versionCode)
+                                .fluentPut("versionName", BuildConfig.versionName)
+                                .fluentPut("buildTime", BuildConfig.buildTime)
+                                .fluentPut("buildUser", BuildConfig.buildUser)
                                 .fluentPut("gitId", GitProperties.GIT_ID.value)
                 ).fluentPut("env",
                         new JSONObject()
@@ -82,7 +82,7 @@ public class Environment {
             return;
         }
         doLocalUpGradeTask(new File(runtimeClassPathDir, "versionCode.txt"));
-        System.out.println("app: " + BuildInfo.appName + " version:(" + BuildInfo.versionCode + ":" + BuildInfo.versionName + ") buildTime:" + BuildInfo.buildTime);
+        System.out.println("app: " + BuildConfig.appName + " version:(" + BuildConfig.versionCode + ":" + BuildConfig.versionName + ") buildTime:" + BuildConfig.buildTime);
     }
 
     @SuppressWarnings("all")
@@ -91,8 +91,8 @@ public class Environment {
 
     @SuppressWarnings("all")
     private static final String UPDATE_DB_VERSION_SQL =
-            "insert into sys_config (`config_comment`,`config_key`,`config_value`) values ('_atom_framework','_atom_framework_version','" + BuildInfo.versionCode + "') " +
-                    "on duplicate key update `config_value`='" + BuildInfo.versionCode + "'";
+            "insert into sys_config (`config_comment`,`config_key`,`config_value`) values ('_atom_framework','_atom_framework_version','" + BuildConfig.versionCode + "') " +
+                    "on duplicate key update `config_value`='" + BuildConfig.versionCode + "'";
 
     private static void doDbUpGradeTask(DataSource dataSource) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -135,7 +135,7 @@ public class Environment {
         }
 
 
-        FileUtils.write(versionCodeFile, String.valueOf(BuildInfo.versionCode), StandardCharsets.UTF_8);
+        FileUtils.write(versionCodeFile, String.valueOf(BuildConfig.versionCode), StandardCharsets.UTF_8);
     }
 
     private static File resolveClassPathDir() {
@@ -156,7 +156,7 @@ public class Environment {
 
     private static File resolveStorageRoot() {
         if (isIdeDevelopment) {
-            return new File(FileUtils.getUserDirectory(), BuildInfo.appName);
+            return new File(FileUtils.getUserDirectory(), BuildConfig.appName);
         }
         return new File(runtimeClassPathDir.getParent(), "data");
     }

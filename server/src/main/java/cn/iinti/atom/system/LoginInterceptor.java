@@ -1,7 +1,7 @@
 package cn.iinti.atom.system;
 
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.entity.UserInfo;
 import cn.iinti.atom.service.base.UserInfoService;
@@ -38,11 +38,11 @@ public class LoginInterceptor implements HandlerInterceptor {
         List<String> tokenList = Lists.newArrayList();
 
         // header 不区分大小写
-        String operatorToken = request.getHeader(BuildInfo.userLoginTokenKey);
+        String operatorToken = request.getHeader(BuildConfig.userLoginTokenKey);
         if (StringUtils.isNotBlank(operatorToken)) {
             tokenList.add(operatorToken);
         }
-        operatorToken = request.getParameter(BuildInfo.userLoginTokenKey);
+        operatorToken = request.getParameter(BuildConfig.userLoginTokenKey);
         if (StringUtils.isNotBlank(operatorToken)) {
             tokenList.add(operatorToken);
         }
@@ -50,7 +50,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(BuildInfo.userLoginTokenKey)) {
+                if (cookie.getName().equals(BuildConfig.userLoginTokenKey)) {
                     tokenList.add(cookie.getValue());
                 }
             }

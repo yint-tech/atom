@@ -47,6 +47,7 @@ fun Properties.shellParam(prefix: String): MutableMap<String, Any> {
 
 plugins {
     java
+    id("com.github.gmazzo.buildconfig") version "5.6.7"
     id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
@@ -136,7 +137,7 @@ tasks.test {
 
 // https://stackoverflow.com/questions/35427830/gradle-how-to-create-distzip-without-parent-directory
 // reset parent
-distributions.main{
+distributions.main {
     contents.into("/")
 }
 
@@ -199,31 +200,19 @@ tasks.getByPath("startScripts").doFirst {
     }
 }
 
-
-val generateJavaCode = tasks.register("generateJavaCode") {
-    val genTarget = "build/generated/java"
-    sourceSets.main.get().java.srcDir(genTarget)
-    val generatedDir = file(genTarget).resolve(applicationId.replace('.', '/')).apply { mkdirs() }
-
-    val className = "BuildInfo"
-    val sourceFile = File(generatedDir, "$className.java")
-
-    sourceFile.writeText(
-        """
-            package ${applicationId};
-
-            public class $className {
-                    public static final int versionCode = ${versionCode};
-                    public static final String versionName = "$versionName";
-                    public static final String buildTime ="$buildTime";
-                    public static final String buildUser ="$buildUser";
-                    public static final String docPath ="$docPath";
-                    public static final String userLoginTokenKey ="$userLoginTokenKey";
-                    public static final String restfulApiPrefix ="$restfulApiPrefix";
-                    public static final String appName ="$appName";
-            }
-        """.trimIndent()
-    )
+buildConfig {
+    useJavaOutput()
+    buildConfig {
+        packageName = applicationId
+        buildConfigField("versionCode", versionCode)
+        buildConfigField("versionName", versionName)
+        buildConfigField("buildTime", buildTime)
+        buildConfigField("buildUser", buildUser)
+        buildConfigField("docPath", docPath)
+        buildConfigField("userLoginTokenKey", userLoginTokenKey)
+        buildConfigField("restfulApiPrefix", restfulApiPrefix)
+        buildConfigField("appName", appName)
+    }
 }
 
 
@@ -331,13 +320,10 @@ if (yIntProject && !isWindows && yIntReleaseShell.exists()) {
 
 
 afterEvaluate {
-    tasks.compileJava {
-        dependsOn(generateJavaCode)
+    tasks.startScripts {
+        dependsOn(":frontend:yarnBuild")
+        dependsOn(":doc:yarnBuild")
     }
-//    tasks.startScripts {
-//        dependsOn(":frontend:yarnBuild")
-//        dependsOn(":doc:yarnBuild")
-//    }
 }
 
 

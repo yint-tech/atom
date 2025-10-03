@@ -1,6 +1,6 @@
 package cn.iinti.atom.system;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.service.base.config.Settings;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class PrivacyFilter implements Filter {
     }
 
     private static boolean isActuator(String uri) {
-        return uri.startsWith(BuildInfo.restfulApiPrefix + "/actuator");
+        return uri.startsWith(BuildConfig.restfulApiPrefix + "/actuator");
     }
 
     @Override

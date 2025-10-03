@@ -1,7 +1,7 @@
 package cn.iinti.atom.controller;
 
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.entity.UserInfo;
 import cn.iinti.atom.mapper.UserInfoMapper;
@@ -33,7 +33,7 @@ import java.util.UUID;
  * @since 2022-02-22
  */
 @RestController
-@RequestMapping(BuildInfo.restfulApiPrefix + "/user-info")
+@RequestMapping(BuildConfig.restfulApiPrefix + "/user-info")
 public class UserInfoController {
     @Resource
     private UserInfoService userInfoService;
@@ -62,7 +62,7 @@ public class UserInfoController {
     public void cookieLogin(String userName, String password, HttpServletResponse httpServletResponse) {
         CommonRes<UserInfo> commonRes = userInfoService.login(userName, password);
         if (commonRes.isOk()) {
-            Cookie cookie = new Cookie(BuildInfo.userLoginTokenKey, commonRes.getData().getLoginToken());
+            Cookie cookie = new Cookie(BuildConfig.userLoginTokenKey, commonRes.getData().getLoginToken());
             // cookie是一个临时的存储，我们只给他60s的有效时间
             cookie.setMaxAge(60);
             httpServletResponse.addCookie(cookie);

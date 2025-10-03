@@ -1,6 +1,6 @@
 package cn.iinti.atom.system;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -28,7 +28,7 @@ public class SystemConfiguration {
         return new OpenAPI()
                 .info(new Info().title("Atom")
                         .description("atom系统")
-                        .version("v" + BuildInfo.versionName)
+                        .version("v" + BuildConfig.versionName)
                         .license(new License().name("Apache 2.0")
                                 .url("https://atom.iinti.cn/atom-doc")))
                 .externalDocs(new ExternalDocumentation()
@@ -56,7 +56,7 @@ public class SystemConfiguration {
             }
             operation.setSummary(StringUtils.join(newSummary, " "));
             Parameter parameter = new QueryParameter()
-                    .name(BuildInfo.userLoginTokenKey)
+                    .name(BuildConfig.userLoginTokenKey)
                     .description("接口Token")
                     .required(true)
                     .allowEmptyValue(false);

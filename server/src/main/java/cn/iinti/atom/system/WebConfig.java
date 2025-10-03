@@ -1,6 +1,6 @@
 package cn.iinti.atom.system;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor);
     }
 
-    private static final String docPath = "/" + BuildInfo.docPath;
+    private static final String docPath = "/" + BuildConfig.docPath;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

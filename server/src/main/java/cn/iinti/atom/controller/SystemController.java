@@ -1,6 +1,6 @@
 package cn.iinti.atom.controller;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.service.base.BroadcastService;
 import cn.iinti.atom.service.base.config.Settings;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(BuildInfo.restfulApiPrefix + "/system")
+@RequestMapping(BuildConfig.restfulApiPrefix + "/system")
 public class SystemController {
 
     // todo，开源后需要考虑安全，此接口需要做内部鉴权

@@ -1,6 +1,6 @@
 package cn.iinti.atom.service.base.config;
 
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.service.base.alert.EventScript;
 import cn.iinti.atom.service.base.env.Environment;
 import cn.iinti.atom.utils.CommonUtils;
@@ -127,38 +127,38 @@ public class Settings {
 
 
     public static final Configs.BooleanConfigValue allowRegisterUser = newBooleanConfig(
-            BuildInfo.appName + ".user.allowRegister", false, "是否允许注册用户",
+            BuildConfig.appName + ".user.allowRegister", false, "是否允许注册用户",
             "设置不允许注册新用户，则可以避免用户空白注册，规避系统安全机制不完善，让敏感数据通过注册泄漏"
     );
 
     public static final Configs.BooleanConfigValue blockSwagger = newBooleanConfig(
-            BuildInfo.appName + ".user.blockSwagger", false, "拦截Swagger",
+            BuildConfig.appName + ".user.blockSwagger", false, "拦截Swagger",
             "系统如果部署在公网，swagger将会展示接口信息，实例在政府机构内部部署等情况将会被安全扫组件判定为数据泄露"
     );
 
     public static final Configs.BooleanConfigValue blockActuator = newBooleanConfig(
-            BuildInfo.appName + ".user.blockActuator", false, "拦截Actuator",
+            BuildConfig.appName + ".user.blockActuator", false, "拦截Actuator",
             "系统如果部署在公网，Actuator可以导出监控指标数据，实例在政府机构内部部署等情况将会被安全扫组件判定为数据泄露"
     );
 
     public static final Configs.StringConfigValue outIpTestUrl = newStringConfig(
-            BuildInfo.appName + ".outIpTestUrl", "https://iinti.cn/conn/getPublicIp?scene=" + BuildInfo.appName,
+            BuildConfig.appName + ".outIpTestUrl", "https://iinti.cn/conn/getPublicIp?scene=" + BuildConfig.appName,
             "出口ip探测URL", "计算当前服务器节点的出口IP，用于多节点部署在公网时多节点事件通讯"
     );
 
 
     public static final Configs.StringConfigValue systemNotice = newStringConfig(
-            BuildInfo.appName + ".systemNotice", "",
+            BuildConfig.appName + ".systemNotice", "",
             "系统通告信息", "在框架前端系统，将会在用户avatar推送消息"
     );
 
     public static final Configs.StringConfigValue docNotice = newStringConfig(
-            BuildInfo.appName + ".docNotice", "",
+            BuildConfig.appName + ".docNotice", "",
             "文档首页通告信息", "在框架文档系统中，将会推送一段消息展示在文档中（此配置是html片段，故支持任意）"
     );
 
     public static Configs.ConfigValue<EventScript> eventNotifyScript = newCustomConfig(CustomConfigBuilder.<EventScript>builder()
-            .configKey(BuildInfo.appName + ".eventNotifyScript")
+            .configKey(BuildConfig.appName + ".eventNotifyScript")
             .transformFunc((value, type) -> {
                 if (StringUtils.isNotBlank(value)) {
                     return EventScript.compileScript(value);

@@ -1,7 +1,7 @@
 package cn.iinti.atom.controller;
 
 import cn.iinti.atom.AtomMain;
-import cn.iinti.atom.BuildInfo;
+import cn.iinti.atom.BuildConfig;
 import cn.iinti.atom.entity.CommonRes;
 import cn.iinti.atom.entity.metric.Metric;
 import cn.iinti.atom.entity.metric.MetricDay;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 @RestController
 @Tag(name = "监控指标相关")
-@RequestMapping(BuildInfo.restfulApiPrefix + "/metric")
+@RequestMapping(BuildConfig.restfulApiPrefix + "/metric")
 @Validated
 @Slf4j
 public class MetricController {

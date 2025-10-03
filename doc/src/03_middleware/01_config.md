@@ -74,7 +74,7 @@ Configs提供一个模型抽象，``ConfigValue<V>``,其中``V``便是抽象模�
 
 ```java
     public static final Configs.BooleanConfigValue allowRegisterUser = newBooleanConfig(
-            BuildInfo.appName + ".user.allowRegister", false, "是否允许注册用户",
+            BuildConfig.appName + ".user.allowRegister", false, "是否允许注册用户",
             "设置不允许注册新用户，则可以避免用户空白注册，规避系统安全机制不完善，让敏感数据通过注册泄漏"
     );
 ```
@@ -92,7 +92,7 @@ Configs提供一个模型抽象，``ConfigValue<V>``,其中``V``便是抽象模�
 在内置模板中，存在一个用于报警的扩展脚本模块，他的配置是一段groovy脚本代码，你可以参考他的声明方法
 ```java
     public static Configs.ConfigValue<EventScript> eventNotifyScript = newCustomConfig(CustomConfigBuilder.<EventScript>builder()
-            .configKey(BuildInfo.appName + ".eventNotifyScript")
+            .configKey(BuildConfig.appName + ".eventNotifyScript")
             .transformFunc((value, type) -> {
                 if (StringUtils.isNotBlank(value)) {
                     // 在这里调用脚本编译器将文本编译为一个java对象，系统保证只有配置改变了才会触发此编译刷新流程

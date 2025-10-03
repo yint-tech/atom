@@ -80,8 +80,8 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
     @Keep
     public static void main(String[] args) {
         List<String> argList = Lists.newArrayList(args);
-        argList.add("--env.versionCode=" + BuildInfo.versionCode);
-        argList.add("--env.versionName=" + BuildInfo.versionName);
+        argList.add("--env.versionCode=" + BuildConfig.versionCode);
+        argList.add("--env.versionName=" + BuildConfig.versionName);
 
         // setup log dir
         boolean hasSetupLogDir = argList.stream().anyMatch(s -> s.contains("--LogbackDir"));
@@ -148,10 +148,10 @@ public class AtomMain implements ApplicationListener<WebServerInitializedEvent> 
         }
 
         // setup metric config
-        checkAddPram(argList, "spring.application.name", BuildInfo.appName);
+        checkAddPram(argList, "spring.application.name", BuildConfig.appName);
         checkAddPram(argList, "management.endpoints.web.exposure.include", "*");
-        checkAddPram(argList, "management.endpoints.web.base-path", BuildInfo.restfulApiPrefix + "/actuator");
-        checkAddPram(argList, "management.metrics.tags.application", BuildInfo.appName);
+        checkAddPram(argList, "management.endpoints.web.base-path", BuildConfig.restfulApiPrefix + "/actuator");
+        checkAddPram(argList, "management.metrics.tags.application", BuildConfig.appName);
 
         // setup mbp
         checkAddPram(argList, "mybatis-plus.configuration.default-enum-type-handler", EnumOrdinalTypeHandler.class.getName());
