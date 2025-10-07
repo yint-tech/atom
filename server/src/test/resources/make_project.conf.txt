@@ -51,7 +51,7 @@ keepContent:Atomic
 keepContent:atomic
 
 # 生成文件之后执行的命令
-cmd:chmod +x server/src/dist/bin/startup.sh
+cmd:chmod +x server/assets/startup.sh
 cmd:chmod +x server/assets/iinti_release.sh
 cmd:chmod +x gradlew
 
