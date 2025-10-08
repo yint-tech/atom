@@ -1,12 +1,12 @@
 import org.apache.hc.core5.function.Supplier
 import org.apache.tools.ant.filters.FixCrLfFilter
 import org.apache.tools.ant.filters.ReplaceTokens
-import org.apache.tools.ant.taskdefs.Replace
 import org.gradle.api.internal.plugins.DefaultJavaAppStartScriptGenerationDetails
 import org.hidetake.groovy.ssh.connection.AllowAnyHosts
 import org.hidetake.groovy.ssh.core.Remote
 import org.hidetake.groovy.ssh.core.RunHandler
 import org.hidetake.groovy.ssh.session.SessionHandler
+import java.security.MessageDigest
 import java.util.*
 
 
@@ -72,7 +72,15 @@ var docPath: String by rootProject.extra
 var userLoginTokenKey: String by rootProject.extra
 var restfulApiPrefix: String by rootProject.extra
 var appName: String by rootProject.extra
-val internalAPIKey = UUID.randomUUID().toString().substringBefore('-')
+val internalAPIKey = "some_key_$appName".run {
+    // 这里不能使用随机数，否则每次编译不一样，会导致startup脚本在发布后重启时无法调用停机接口
+    // 那么对于商业项目，此处需要给每个产品配置一个密码，避免互联网用户猜想得到密钥
+    // 当然此密钥将不会引起业务数据泄漏，安全影响也不是特别大
+    val md = MessageDigest.getInstance("MD5")
+    val messageDigest = md.digest(toByteArray())
+    messageDigest.joinToString("") { byte -> "%02x".format(byte) }
+        .substring(0..10)
+}
 
 var yIntProject: Boolean by rootProject.extra
 
