@@ -3,7 +3,6 @@ import {zhNavbar, zhSidebar} from "./configs";
 
 export default hopeTheme({
     hostname: "https://github.com/yint-tech",
-    iconAssets: "iconify",
 
     logo: "/images/logo.svg",
     docsDir: "src",
@@ -30,8 +29,11 @@ export default hopeTheme({
     },
 
     plugins: {
-        mdEnhance: {
-            codetabs: true,
-        },
+        icon: {
+            assets: "iconify"
+        }
     },
+    markdown: {
+        codeTabs: true
+    }
 });
