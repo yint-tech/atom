@@ -3,6 +3,7 @@ WORKDIR /opt/atom
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./AtomMain.zip /opt/atom/
 RUN unzip AtomMain.zip
+RUN rm -f AtomMain.zip
 RUN cp /opt/atom/conf/ddl.sql /docker-entrypoint-initdb.d/ddl.sql
 
 ENV TZ=Asia/Shanghai

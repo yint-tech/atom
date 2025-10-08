@@ -1,7 +1,12 @@
 import React, {useContext} from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {AccountBox, Home, SettingsApplications, ShowChart} from "@mui/icons-material"
+import {
+    AccountBox,
+    Home,
+    SettingsApplications,
+    ShowChart
+} from "@mui/icons-material"
 import {AppContext} from "adapter";
 import {Divider, Drawer} from "@mui/material";
 

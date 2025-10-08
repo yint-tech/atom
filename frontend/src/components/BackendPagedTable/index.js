@@ -54,6 +54,7 @@ const DataTable = props => {
             <CardContent className={classes.tableContent}>
                 <Table
                     {...rest}
+                    loading={loading}
                     collapse={!!renderCollapse}
                     renderCollapse={renderCollapse}
                     data={data}

@@ -1,5 +1,6 @@
 -keep class cn.iinti.atom.mapper.** {*;}
 -keep class cn.iinti.atom.entity.** {*;}
+-keep class cn.iinti.atom.service.base.alert.** {*;}
 -keep @cn.iinti.atom.service.base.metric.mql.func.MQLFunction$MQL_FUNC class * {*;}
 
 # 也是 spring 依赖,  调试时可以加上： SourceFile,LineNumberTable

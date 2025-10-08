@@ -69,7 +69,7 @@ public class UserInfoController {
             httpServletResponse.sendRedirect("/");
             return;
         }
-        ServletUtil.writeRes(httpServletResponse, commonRes);
+        ServletUtil.writeRes(commonRes);
     }
 
     @Operation(summary = "注册")
