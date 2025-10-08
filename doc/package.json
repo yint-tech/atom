@@ -11,9 +11,10 @@
   },
   "packageManager": "yarn@4.1.1",
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.14",
-    "vue": "^3.4.34",
-    "vuepress": "2.0.0-rc.14",
-    "vuepress-theme-hope": "2.0.0-rc.52"
+    "@vuepress/bundler-vite": "2.0.0-rc.25",
+    "sass-embedded": "1.93.2",
+    "vue": "3.5.22",
+    "vuepress": "2.0.0-rc.25",
+    "vuepress-theme-hope": "2.0.0-rc.94"
   }
 }
