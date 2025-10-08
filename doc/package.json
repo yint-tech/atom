@@ -9,7 +9,7 @@
     "dev": "vuepress dev src",
     "build": "vuepress build src"
   },
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.14",
     "vue": "^3.4.34",

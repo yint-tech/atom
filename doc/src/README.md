@@ -5,13 +5,13 @@ icon: fa6-solid:house
 heroImage: /images/logo.svg
 actions:
 
-- text: 序言
-  link: /01_preamble/
-  type: primary
 - text: 开发者文档
   link: /02_developer/
+  type: primary
+- text: 中间件
+  link: /03_middleware/
   type: secondary
-
+  
 highlights:
 
 - header: 简单

@@ -7,7 +7,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 plugins {
-    id("com.github.node-gradle.node") version "7.0.2"
+    id("com.github.node-gradle.node") version "7.1.0"
 }
 val applicationId: String by rootProject.extra
 var versionCode: Int by rootProject.extra
@@ -77,7 +77,6 @@ tasks.withType(YarnSetupTask::class.java).configureEach {
 
 task<YarnTask>("yarnBuild") {
     group = "build"
-    dependsOn(tasks.yarnSetup)
     dependsOn(tasks.yarn)
     args = listOf("run", "build")
     environment = mapOf("BUILD_VERSION" to versionName, "BUILD_TIME" to buildTime)

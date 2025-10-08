@@ -29,7 +29,7 @@ var buildUser: String by extra {
 
 // 前端工具链相关
 val yarnVersionStr by extra("4.1.1")
-val nodeVersionStr by extra("20.10.0")
+val nodeVersionStr by extra("22.20.0")
 var nodeDistMirror by extra("https://mirrors.ustc.edu.cn/node")
 
 // 因体产品开关
