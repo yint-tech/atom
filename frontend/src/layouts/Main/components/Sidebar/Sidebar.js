@@ -112,7 +112,39 @@ const Sidebar = props => {
         <SidebarNav className={classes.nav} pages={pages} />
         <div className={classes.footer}>
           <Typography variant="caption">
-            © 2024 Atom Platform
+            Atom-系统框架
+          </Typography>
+          <br />
+          <Typography variant="caption">
+            © 2025 因体信息公司
+          </Typography>
+          <br />
+          <Typography variant='caption'>
+            {' '}
+            &nbsp;{t('footer.products')} &nbsp;|{' '}
+            <a
+              href='http://majora.iinti.cn/majora-doc'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Majora
+            </a>
+            &nbsp;|{' '}
+            <a
+              href='http://sekiro.iinti.cn/sekiro-doc'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Sekiro
+            </a>
+            &nbsp;|{' '}
+            <a
+              href='https://malenia.iinti.cn/malenia-doc/index.html'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Malenia
+            </a>
           </Typography>
         </div>
       </div>
