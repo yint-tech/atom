@@ -1,22 +1,24 @@
 import React, { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AppContext } from 'adapter';
 import { Card, CardContent, Divider, Typography } from '@mui/material';
 
 const BuildInfo = () => {
+  const { t } = useTranslation();
   const { systemInfo } = useContext(AppContext);
   const buildInfo = systemInfo.buildInfo;
   return (
     <Card>
       <CardContent>
         <Typography gutterBottom variant='h4'>
-          构建时间
+          {t('system.buildTime')}
         </Typography>
         <Typography gutterBottom variant='subtitle2'>
           {buildInfo.buildTime}
         </Typography>
         <Divider />
         <Typography gutterBottom variant='h4'>
-          编译主机
+          {t('system.buildHost')}
         </Typography>
         <Typography gutterBottom variant='subtitle2'>
           {buildInfo.buildUser}
@@ -31,7 +33,7 @@ const BuildInfo = () => {
 
         <Divider />
         <Typography gutterBottom variant='h4'>
-          版本
+          {t('system.version')}
         </Typography>
         <Typography gutterBottom variant='subtitle2'>
           {buildInfo.versionName}
@@ -39,7 +41,7 @@ const BuildInfo = () => {
 
         <Divider />
         <Typography gutterBottom variant='h4'>
-          版本号
+          {t('system.versionNumber')}
         </Typography>
         <Typography gutterBottom variant='subtitle2'>
           {buildInfo.versionCode}

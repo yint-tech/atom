@@ -13,6 +13,7 @@ import { useHistory } from 'react-router-dom';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import Permission from './Permission';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const LOGIN_USER_MOCK_KEY = config.login_user_key + '-MOCK';
 
@@ -46,18 +47,19 @@ const CreateUserDialog = props => {
   const theme = useTheme();
   const classes = useStyles({ theme });
   const { api } = useContext(AppContext);
+  const { t } = useTranslation();
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
 
   return (
     <OpeDialog
-      title='添加用户'
+      title={t('userManagement.addUser')}
       opeContent={
         <>
           <Grid container spacing={6} wrap='wrap'>
             <Grid item xs={6}>
               <Typography gutterBottom variant='h6'>
-                账号
+                {t('userManagement.account')}
               </Typography>
               <TextField
                 className={classes.dialogInput}
@@ -69,7 +71,7 @@ const CreateUserDialog = props => {
             </Grid>
             <Grid item xs={6}>
               <Typography gutterBottom variant='h6'>
-                密码
+                {t('userManagement.password')}
               </Typography>
               <TextField
                 className={classes.dialogInput}
@@ -97,7 +99,7 @@ const CreateUserDialog = props => {
             }
           });
       }}
-      okText='保存'
+      okText={t('common.save')}
       okType='primary'
     />
   );
@@ -108,6 +110,7 @@ const AccountList = () => {
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles({ theme });
+  const { t } = useTranslation();
 
   const [openCreateUserDialog, setOpenCreateUserDialog] = useState(false);
 
@@ -177,25 +180,25 @@ const AccountList = () => {
             variant='contained'
             onClick={() => setOpenCreateUserDialog(true)}
           >
-            添加用户
+            {t('userManagement.addUser')}
           </Button>
         }
         loadDataFun={loadApi}
         columns={[
           {
-            label: '账号',
+            label: t('userManagement.account'),
             key: 'userName',
           },
           {
-            label: '密码',
+            label: t('userManagement.password'),
             key: 'password',
           },
           {
-            label: '管理员',
-            render: item => (item.isAdmin ? <p>是</p> : <p>否</p>),
+            label: t('userManagement.admin'),
+            render: item => (item.isAdmin ? <p>{t('common.yes')}</p> : <p>{t('common.no')}</p>),
           },
           {
-            label: '操作',
+            label: t('common.actions'),
             render: item => (
               <>
                 <Button
@@ -206,7 +209,7 @@ const AccountList = () => {
                   onClick={() => travelToUser(item)}
                   variant='contained'
                 >
-                  登录
+                  {t('auth.login')}
                 </Button>
                 <Button
                   startIcon={<PermIdentity style={{ fontSize: 16 }} />}
@@ -219,7 +222,7 @@ const AccountList = () => {
                   }}
                   variant='contained'
                 >
-                  配置权限
+                  {t('userManagement.configurePermissions')}
                 </Button>
                 <Button
                   startIcon={<SupervisorAccount style={{ fontSize: 16 }} />}
@@ -229,7 +232,7 @@ const AccountList = () => {
                   onClick={() => grantAdmin(item)}
                   variant='contained'
                 >
-                  {item.isAdmin ? '移除管理员' : '升级管理员'}
+                  {item.isAdmin ? t('userManagement.removeAdmin') : t('userManagement.upgradeAdmin')}
                 </Button>
               </>
             ),
@@ -244,8 +247,8 @@ const AccountList = () => {
       />
 
       <OpeDialog
-        title={'编辑权限:' + permOpAccount.userName}
-        okText={'确认'}
+        title={t('userManagement.editPermissions') + ':' + permOpAccount.userName}
+        okText={t('common.confirm')}
         openDialog={showPermOpDialog}
         fullScreen
         setOpenDialog={setShowPermOpDialog}

@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AppContext } from 'adapter';
 import { BackendPagedTable } from 'components';
 import moment from 'moment/moment';
 
 const LogPanel = () => {
+  const { t } = useTranslation();
   const { api } = useContext(AppContext);
   const [searchParam, setSearchParam] = useState({
     key: '',
@@ -15,19 +17,19 @@ const LogPanel = () => {
       searchParam={searchParam}
       columns={[
         {
-          label: '操作人',
+          label: t('system.operator'),
           key: 'username',
         },
         {
-          label: '操作',
+          label: t('common.actions'),
           key: 'operation',
         },
         {
-          label: '参数',
+          label: t('system.parameters'),
           key: 'params',
         },
         {
-          label: '时间',
+          label: t('system.time'),
           render: item =>
             moment(new Date(item.createTime)).format('YYYY-MM-DD HH:mm:ss'),
         },

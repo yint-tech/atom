@@ -15,25 +15,26 @@ import moment from 'moment';
 import configs from 'config';
 import { createUseStyles, useTheme } from 'react-jss';
 import config from '../../config';
+import { useTranslation } from 'react-i18next';
 
-const schema = {
+const getSchema = (t) => ({
   oa: {
-    presence: { allowEmpty: false, message: '不能为空' },
+    presence: { allowEmpty: false, message: t('errors.cannotBeEmpty') },
     length: {
       maximum: 64,
     },
   },
   password: {
-    presence: { allowEmpty: false, message: '不能为空' },
+    presence: { allowEmpty: false, message: t('errors.cannotBeEmpty') },
     length: {
       maximum: 128,
     },
   },
   policy: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: t('errors.isRequired') },
     checked: true,
   },
-};
+});
 
 const useStyles = createUseStyles({
   root: {
@@ -145,6 +146,7 @@ const useStyles = createUseStyles({
 const SignIn = props => {
   const { history } = props;
   const { setUser, api } = useContext(AppContext);
+  const { t } = useTranslation();
 
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -157,14 +159,14 @@ const SignIn = props => {
   });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, getSchema(t));
 
     setFormState(formState => ({
       ...formState,
       isValid: !errors,
       errors: errors || {},
     }));
-  }, [formState.values]);
+  }, [formState.values, t]);
 
   const handleChange = event => {
     event.persist();
@@ -229,14 +231,14 @@ const SignIn = props => {
                   {configs.app}
                 </Typography>
                 <Typography color='textSecondary' gutterBottom>
-                  账号注册
+                  {t('auth.accountRegister')}
                 </Typography>
                 <TextField
                   className={classes.textField}
                   error={hasError('oa')}
                   fullWidth
                   helperText={hasError('oa') ? formState.errors.oa[0] : null}
-                  label='账号'
+                  label={t('userManagement.account')}
                   name='oa'
                   onChange={handleChange}
                   type='text'
@@ -250,7 +252,7 @@ const SignIn = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label='密码'
+                  label={t('userManagement.password')}
                   name='password'
                   onChange={handleChange}
                   type='password'
@@ -270,7 +272,7 @@ const SignIn = props => {
                     color='textSecondary'
                     variant='body1'
                   >
-                    勾选即已阅读并同意{' '}
+                    {t('auth.agreeToTerms')}{' '}
                     <Link
                       color='primary'
                       component={RouterLink}
@@ -278,7 +280,7 @@ const SignIn = props => {
                       underline='always'
                       variant='h6'
                     >
-                      {configs.app} 用户协议
+                      {t('auth.userAgreement', { appName: configs.app })}
                     </Link>
                   </Typography>
                 </div>
@@ -291,12 +293,12 @@ const SignIn = props => {
                   type='submit'
                   variant='contained'
                 >
-                  注册
+                  {t('auth.register')}
                 </Button>
                 <Typography color='textSecondary' variant='body1'>
-                  已有账号?{' '}
+                  {t('auth.hasAccount')}{' '}
                   <Link component={RouterLink} to='/sign-in' variant='h6'>
-                    去登录
+                    {t('auth.goToLogin')}
                   </Link>
                 </Typography>
               </form>

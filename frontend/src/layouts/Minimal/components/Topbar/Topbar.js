@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar } from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { LanguageToggle } from 'components';
 import { createUseStyles, useTheme } from 'react-jss';
 import config from '../../../../config';
 
@@ -41,6 +42,8 @@ const Topbar = props => {
             src={process.env.PUBLIC_URL + config.logo_path}
           />
         </RouterLink>
+        <div className={classes.flexGrow} />
+        <LanguageToggle variant="light" />
       </Toolbar>
     </AppBar>
   );

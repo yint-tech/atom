@@ -11,7 +11,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import config from 'config';
 import Notice from '../../../Notice';
+import { LanguageToggle } from 'components';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const LOGIN_USER_MOCK_KEY = config.login_user_key + '-MOCK';
 
@@ -61,6 +63,7 @@ const Topbar = props => {
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles({ theme });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!process.env.ENABLE_AMS_NOTICE) {
@@ -83,6 +86,8 @@ const Topbar = props => {
     history.push('/accountList');
   };
 
+
+
   const gitbook = (
     <IconButton
       className={classes.signOutButton}
@@ -95,7 +100,7 @@ const Topbar = props => {
           variant='caption'
           style={{ color: '#FFFFFF', marginLeft: 5, marginTop: 3 }}
         >
-          系统文档
+          {t('navigation.systemDoc')}
         </Typography>
       </Hidden>
     </IconButton>
@@ -131,7 +136,7 @@ const Topbar = props => {
           variant='caption'
           style={{ color: '#FFFFFF', marginLeft: 5, marginTop: 3 }}
         >
-          安全退出
+          {t('common.logout')}
         </Typography>
       </Hidden>
     </IconButton>
@@ -145,7 +150,7 @@ const Topbar = props => {
     >
       <EmojiNatureIcon />
       <Typography variant='caption' style={{ color: '#FFFFFF', marginLeft: 5 }}>
-        退出 {user.userName}
+        {t('common.exit')} {user.userName}
       </Typography>
     </IconButton>
   );
@@ -170,6 +175,7 @@ const Topbar = props => {
           )}
         </Hidden>
         <div className={classes.flexGrow} />
+        <LanguageToggle variant="light" />
         <Hidden lgUp>
           <IconButton color='inherit' onClick={onSidebarOpen}>
             <MenuIcon />

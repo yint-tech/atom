@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionDetails,
@@ -69,6 +70,7 @@ function SingleInputItem({
   type = 'String',
   reload = () => {},
 }) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles({ theme });
   const { api } = useContext(AppContext);
@@ -80,7 +82,7 @@ function SingleInputItem({
   const doSave = () => {
     api.setConfig({ key: initKey, value }).then(res => {
       if (res.status === 0) {
-        api.successToast('修改成功');
+        api.successToast(t('common.modifySuccess'));
       }
       reload();
     });
@@ -126,13 +128,14 @@ function SingleInputItem({
         color='primary'
         onClick={doSave}
       >
-        保存
+        {t('common.save')}
       </Button>
     </Grid>
   );
 }
 
 const Form = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles({ theme });
   const [configs, setConfigs] = useState([]);
@@ -162,7 +165,7 @@ const Form = () => {
               <AccordionDetails>
                 <div style={{ width: '100%' }}>
                   <Typography className={classes.desc}>
-                    填写说明：{item.detailDesc}
+                    {t('system.configDescription')}{item.detailDesc}
                   </Typography>
                   <Divider className={classes.divider} />
                   <Grid container spacing={6} wrap='wrap'>

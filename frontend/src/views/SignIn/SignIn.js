@@ -8,21 +8,22 @@ import validate from 'validate.js';
 import configs from 'config';
 import { createUseStyles, useTheme } from 'react-jss';
 import config from '../../config';
+import { useTranslation } from 'react-i18next';
 
-const schema = {
+const getSchema = (t) => ({
   oa: {
-    presence: { allowEmpty: false, message: '不能为空' },
+    presence: { allowEmpty: false, message: t('errors.cannotBeEmpty') },
     length: {
       maximum: 64,
     },
   },
   password: {
-    presence: { allowEmpty: false, message: '不能为空' },
+    presence: { allowEmpty: false, message: t('errors.cannotBeEmpty') },
     length: {
       maximum: 128,
     },
   },
-};
+});
 
 const useStyles = createUseStyles({
   root: {
@@ -126,6 +127,7 @@ const useStyles = createUseStyles({
 const SignIn = props => {
   const { history } = props;
   const { setUser, api } = useContext(AppContext);
+  const { t } = useTranslation();
 
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -138,7 +140,7 @@ const SignIn = props => {
   });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, getSchema(t));
 
     setFormState(formState => ({
       ...formState,
@@ -210,14 +212,14 @@ const SignIn = props => {
                   {configs.app}
                 </Typography>
                 <Typography color='textSecondary' gutterBottom>
-                  账号登录
+                  {t('auth.accountLogin')}
                 </Typography>
                 <TextField
                   className={classes.textField}
                   error={hasError('oa')}
                   fullWidth
                   helperText={hasError('oa') ? formState.errors.oa[0] : null}
-                  label='账号'
+                  label={t('userManagement.account')}
                   name='oa'
                   onChange={handleChange}
                   type='text'
@@ -231,7 +233,7 @@ const SignIn = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label='密码'
+                  label={t('userManagement.password')}
                   name='password'
                   onChange={handleChange}
                   type='password'
@@ -247,12 +249,12 @@ const SignIn = props => {
                   type='submit'
                   variant='contained'
                 >
-                  登录
+                  {t('auth.login')}
                 </Button>
                 <Typography color='textSecondary' variant='body1'>
-                  没有账号?{' '}
+                  {t('auth.noAccount')}{' '}
                   <Link component={RouterLink} to='/sign-up' variant='h6'>
-                    立即注册
+                    {t('auth.registerNow')}
                   </Link>
                 </Typography>
               </form>

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AppContext } from 'adapter';
 import { BackendPagedTable, SearchInput } from 'components';
@@ -22,6 +23,7 @@ const useStyles = createUseStyles({
 });
 
 const SeverNodeList = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles({ theme });
 
@@ -34,7 +36,7 @@ const SeverNodeList = () => {
   const handleChange = item => {
     api.setServerStatus({ id: item.id, enable: !item.enable }).then(res => {
       if (res.status === 0) {
-        api.successToast('操作成功');
+        api.successToast(t('common.operationSuccess'));
         setRefresh(+new Date());
       }
     });
@@ -52,7 +54,7 @@ const SeverNodeList = () => {
                 key: v,
               });
             }}
-            placeholder='请输入关键词进行查询'
+            placeholder={t('common.searchPlaceholder')}
           />
           <span className={classes.spacer} />
         </>
@@ -67,19 +69,19 @@ const SeverNodeList = () => {
           key: 'id',
         },
         {
-          label: '节点ID',
+          label: t('system.nodeId'),
           key: 'serverId',
         },
         {
-          label: '出口',
+          label: t('system.exitIp'),
           key: 'outIp',
         },
         {
-          label: 'web端口',
+          label: t('system.webPort'),
           render: item => item.port || '-',
         },
         {
-          label: '心跳时间',
+          label: t('system.heartbeatTime'),
           key: 'lastActiveTime',
         },
         {

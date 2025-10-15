@@ -7,6 +7,7 @@ import BuildInfo from './BuildInfo';
 import SeverNodeList from './SeverNodeList';
 import configs from 'config';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {
@@ -28,6 +29,7 @@ const systemDashboardConfigTabKey = configs.app + '-system-dashboard-tab';
 function System() {
   const theme = useTheme();
   const classes = useStyles({ theme });
+  const { t } = useTranslation();
 
   let initValue =
     Number(localStorage.getItem(systemDashboardConfigTabKey)) || 0;
@@ -49,10 +51,10 @@ function System() {
           textColor='primary'
           onChange={handleChange}
         >
-          <Tab label='系统设置' />
-          <Tab label='服务器节点' />
-          <Tab label='用户操作日志' />
-          <Tab label='构建信息' />
+          <Tab label={t('tabs.systemSettings')} />
+          <Tab label={t('tabs.serverNodes')} />
+          <Tab label={t('tabs.userOperationLog')} />
+          <Tab label={t('tabs.buildInfo')} />
         </Tabs>
         <div className={classes.content}>
           <TabPanel value={value} index={0}>

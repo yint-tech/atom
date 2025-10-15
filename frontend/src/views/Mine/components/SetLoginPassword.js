@@ -8,15 +8,17 @@ import {
   TextField,
 } from '@mui/material';
 import { AppContext } from 'adapter';
+import { useTranslation } from 'react-i18next';
 
 const SetLoginPassword = () => {
   const { api } = useContext(AppContext);
+  const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState('');
   const [newSecondPassword, setNewSecondPassword] = useState('');
 
   const saveNewPassword = () => {
     if (newPassword !== newSecondPassword) {
-      api.errorToast('两次输入的密码不一致，请修正。');
+      api.errorToast(t('userDashboard.passwordMismatch'));
       return;
     }
     api
@@ -25,14 +27,14 @@ const SetLoginPassword = () => {
       })
       .then(res => {
         if (res.status === 0) {
-          api.successToast('操作成功');
+          api.successToast(t('common.operationSuccess'));
         }
       });
   };
 
   return (
     <>
-      <CardHeader title='修改密码' />
+      <CardHeader title={t('userDashboard.changePassword')} />
       <Divider />
       <CardContent>
         <Grid container spacing={2}>
@@ -40,7 +42,7 @@ const SetLoginPassword = () => {
             <TextField
               style={{ width: '100%' }}
               size='small'
-              label='新密码'
+              label={t('userDashboard.newPassword')}
               type='password'
               variant='outlined'
               value={newPassword}
@@ -51,7 +53,7 @@ const SetLoginPassword = () => {
             <TextField
               style={{ width: '100%' }}
               size='small'
-              label='再次输入密码'
+              label={t('userDashboard.confirmPassword')}
               type='password'
               variant='outlined'
               value={newSecondPassword}
@@ -65,7 +67,7 @@ const SetLoginPassword = () => {
               color='primary'
               onClick={saveNewPassword}
             >
-              应用
+              {t('common.apply')}
             </Button>
           </Grid>
         </Grid>

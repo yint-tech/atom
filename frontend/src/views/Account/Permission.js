@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
@@ -49,6 +50,7 @@ const parsePermsExp = exp => {
 };
 
 function Permission(props) {
+  const { t } = useTranslation();
   const { api } = useContext(AppContext);
   const { account, setRefresh } = props;
   const [permScopes, setPermScopes] = useState([]);
@@ -128,7 +130,7 @@ function Permission(props) {
   return (
     <div className={classes.root}>
       <Card>
-        <CardHeader title={'权限类型'} />
+        <CardHeader title={t('permissionType')} />
         <CardContent>
           {permScopes.map(item => (
             <Button
@@ -158,7 +160,7 @@ function Permission(props) {
       <Grid className={classes.content} container spacing={1} wrap='wrap'>
         <Grid item xs={6}>
           <Card>
-            <CardHeader title={'可选权限'} />
+            <CardHeader title={t('availablePermissions')} />
             <CardContent>
               {availablePermItems.map(item => (
                 <Button
@@ -179,7 +181,7 @@ function Permission(props) {
         </Grid>
         <Grid item xs={6}>
           <Card>
-            <CardHeader title={'持有权限'} />
+            <CardHeader title={t('heldPermissions')} />
             <CardContent>
               {selectedPermItems.map(item => (
                 <Button

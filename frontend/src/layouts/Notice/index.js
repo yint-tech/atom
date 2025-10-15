@@ -3,6 +3,7 @@ import moment from 'moment';
 import apis from 'apis';
 
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   flexGrow: {
@@ -27,6 +28,7 @@ const useStyles = createUseStyles({
 const Notice = () => {
   const theme = useTheme();
   const classes = useStyles({ theme });
+  const { t } = useTranslation();
 
   const [intPushMsg, setIntPushMsg] = useState('');
   const [certificate, setCertificate] = useState({});
@@ -51,7 +53,7 @@ const Notice = () => {
       {intPushMsg ? <div>{intPushMsg}</div> : null}
       {certificate.expire ? (
         <div>
-          过期时间：
+          {t('license.expireTime')}：
           <strong>
             {moment(new Date(Number(certificate.expire))).format(
               'YYYY-MM-DD HH:mm'
@@ -59,10 +61,10 @@ const Notice = () => {
           </strong>
           、
           {certificate.user === '0' ? (
-            <strong>试用版本</strong>
+            <strong>{t('license.trialVersion')}</strong>
           ) : (
             <p>
-              授权人：<strong>{certificate.user}</strong>
+              {t('license.authorizedUser')}：<strong>{certificate.user}</strong>
             </p>
           )}
         </div>

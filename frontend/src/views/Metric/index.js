@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Paper, Tab, Tabs } from '@mui/material';
 
 import GlobalMetric from './GlobalMetric';
@@ -26,6 +27,7 @@ function TabPanel(props) {
 const metricConfigTabKey = configs.app + '-metric-tab';
 
 function Metrics() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles({ theme });
 
@@ -48,10 +50,10 @@ function Metrics() {
           textColor='primary'
           onChange={handleChange}
         >
-          <Tab label='业务大盘' />
-          <Tab label='系统监控' />
-          <Tab label='MQL编辑器' />
-          <Tab label='指标列表' />
+          <Tab label={t('metrics.businessDashboard')} />
+            <Tab label={t('metrics.systemMonitoring')} />
+            <Tab label={t('metrics.mqlEditor')} />
+            <Tab label={t('metrics.metricList')} />
         </Tabs>
         <div className={classes.content}>
           <TabPanel value={value} index={0}>

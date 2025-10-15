@@ -11,6 +11,7 @@ import {
 import MetricCharsV2 from 'components/MetricCharts';
 import CodeMirror from '@uiw/react-codemirror';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {
@@ -27,22 +28,24 @@ const useStyles = createUseStyles({
   },
 });
 
-const demoMQL = `
-# 负载
-服务器分钟负载 = metric(system.load.average.1m);
-show(服务器分钟负载);
-
-系统CPU使用率 = metric(system.cpu.usage);
-进程CPU使用率 = metric(process.cpu.usage);
-show(系统CPU使用率,进程CPU使用率);
-`;
-
 const MQLViewer = () => {
   const theme = useTheme();
   const classes = useStyles({ theme });
+  const { t } = useTranslation();
+  
+  const demoMQL = `
+# ${t('metrics.load')}
+${t('metrics.serverMinuteLoad')} = metric(system.load.average.1m);
+show(${t('metrics.serverMinuteLoad')});
+
+${t('metrics.systemCpuUsage')} = metric(system.cpu.usage);
+${t('metrics.processCpuUsage')} = metric(process.cpu.usage);
+show(${t('metrics.systemCpuUsage')},${t('metrics.processCpuUsage')});
+`;
+
   const [accuracy, setAccuracy] = useState('minutes');
 
-  const [errMsg, setErrMsg] = useState('请输入MQL脚本');
+  const [errMsg, setErrMsg] = useState(t('systemMetrics.pleaseEnterMQLScript'));
   const [mql, setMql] = useState('');
 
   let initMQL = localStorage.getItem('ViewMQLScript') || demoMQL;
@@ -81,7 +84,7 @@ const MQLViewer = () => {
                   setErrMsg('');
                 }}
               >
-                确认
+                {t('common.confirm')}
               </Button>
               <Button
                 className={classes.tableButton}
@@ -91,7 +94,7 @@ const MQLViewer = () => {
                   setEditMql(demoMQL);
                 }}
               >
-                加载默认MQL
+                {t('systemMetrics.loadDefaultMQL')}
               </Button>
             </>
           }
@@ -112,7 +115,7 @@ const MQLViewer = () => {
             <MetricCharsV2
               onLoadMsg={setErrMsg}
               className={classes.marginTop}
-              title={'MQL调试指标'}
+              title={t('systemMetrics.mqlDebugMetrics')}
               accuracy={accuracy}
               mql={mql}
             />

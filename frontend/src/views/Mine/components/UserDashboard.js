@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { AppContext } from 'adapter';
+import { useTranslation } from 'react-i18next';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CachedIcon from '@mui/icons-material/Cached';
@@ -81,6 +82,7 @@ const UserDashboard = props => {
   const { user, setUser } = useContext(AppContext);
   const { api } = useContext(AppContext);
   const apiUrl = user.apiToken;
+  const { t } = useTranslation();
 
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -122,7 +124,7 @@ const UserDashboard = props => {
               {apiUrl}
               <CopyToClipboard
                 text={apiUrl}
-                onCopy={() => api.successToast('复制成功')}
+                onCopy={() => api.successToast(t('common.copySuccess'))}
               >
                 <IconButton
                   style={{ marginLeft: 15 }}
@@ -158,10 +160,9 @@ const UserDashboard = props => {
                 <div className={classes.pop}>
                   <Alert severity='warning'>
                     <AlertTitle>
-                      APIToken 刷新后，通过 API 访问 {configs.app}{' '}
-                      后台的请求将会被阻断
+                      {t('userDashboard.apiTokenRefreshWarning', { appName: configs.app })}
                     </AlertTitle>
-                    如果 APIToken 没有泄漏，不建议重制 Token
+                    {t('userDashboard.apiTokenAdvice')}
                   </Alert>
                   <div className={classes.popBtns}>
                     <Button
@@ -170,7 +171,7 @@ const UserDashboard = props => {
                       aria-label='upload picture'
                       component='span'
                     >
-                      取消
+                      {t('common.cancel')}
                     </Button>
                     <Button
                       onClick={() => {
@@ -182,7 +183,7 @@ const UserDashboard = props => {
                       aria-label='upload picture'
                       component='span'
                     >
-                      确定
+                      {t('common.confirm')}
                     </Button>
                   </div>
                 </div>

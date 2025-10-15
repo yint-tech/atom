@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-const GlobalMetrics = res => {
-  return <p>todo：请根据业务本身设计本页面</p>;
+const GlobalMetrics = () => {
+  const { t } = useTranslation();
+  return <p>{t('metrics.todoBusinessDesign')}</p>;
 };
 
 export default GlobalMetrics;

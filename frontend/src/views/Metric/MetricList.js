@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../adapter';
 import { MetricCharsV2, OpeDialog, SimpleTable } from '../../components';
 import {
@@ -145,6 +146,7 @@ const MetricChart = props => {
 };
 
 const MetricList = () => {
+  const { t } = useTranslation();
   const { api } = useContext(AppContext);
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -162,7 +164,7 @@ const MetricList = () => {
       })
       .then(res => {
         if (res.status === 0) {
-          api.successToast('操作成功');
+          api.successToast(t('common.operationSuccess'));
           setRefresh(+new Date());
         }
       });
@@ -176,21 +178,21 @@ const MetricList = () => {
           <OpeDialog
             fullWidth
             maxWidth={'lg'}
-            title={'查看指标' + showMetric.name}
+            title={t('metrics.viewMetric') + showMetric.name}
             opeContent={
               <MetricChart showMetric={showMetric} height={'500px'} />
             }
             openDialog={openDialog}
             setOpenDialog={setOpenDialog}
-            okText='确认'
+            okText={t('common.confirm')}
             okType='primary'
           />
           <OpeDialog
-            title={'确认删除指标'}
+            title={t('metrics.confirmDeleteMetric')}
             opeContent={
               <>
                 <Typography gutterBottom variant='h6'>
-                  指标删除后不可恢复，请确认删除如下指标：
+                  {t('metrics.deleteWarning')}
                 </Typography>
                 {confirmDelete}
               </>
@@ -200,14 +202,14 @@ const MetricList = () => {
             }}
             openDialog={openDeleteConfirmDialog}
             setOpenDialog={setOpenDeleteConfirmDialog}
-            okText='确认'
+            okText={t('common.confirm')}
             okType='primary'
           />
         </>
       }
       columns={[
         {
-          label: '指标名称',
+          label: t('metrics.metricName'),
           key: 'name',
         },
         {
@@ -231,34 +233,32 @@ const MetricList = () => {
           key: 'tag5Name',
         },
         {
-          label: '操作',
+          label: t('common.actions'),
           render: item => (
             <>
               <Button
-                startIcon={<DeleteIcon style={{ fontSize: 16 }} />}
+                className={classes.tableButton}
                 size='small'
-                color='primary'
+                variant='outlined'
                 onClick={() => {
                   setConfirmDelete(item.name);
                   setOpenDeleteConfirmDialog(true);
                 }}
-                className={classes.tableButton}
-                variant='contained'
               >
-                删除
+                <DeleteIcon />
+                {t('common.delete')}
               </Button>
               <Button
-                startIcon={<DetailsIcon style={{ fontSize: 16 }} />}
+                className={classes.tableButton}
                 size='small'
-                color='primary'
+                variant='outlined'
                 onClick={() => {
                   setShowMetric(item);
                   setOpenDialog(true);
                 }}
-                className={classes.tableButton}
-                variant='contained'
               >
-                查看指标
+                <DetailsIcon />
+                {t('metrics.viewMetric')}
               </Button>
             </>
           ),

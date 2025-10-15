@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Typography } from '@mui/material';
 import config from 'config';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {
@@ -13,6 +14,7 @@ const useStyles = createUseStyles({
 
 const Footer = props => {
   const { className, ...rest } = props;
+  const { t } = useTranslation();
 
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -23,7 +25,7 @@ const Footer = props => {
       <Typography variant='caption'>&copy; {config.copyRight}</Typography>
       <Typography variant='caption'>
         {' '}
-        &nbsp;因体产品 &nbsp;|{' '}
+        &nbsp;{t('footer.products')} &nbsp;|{' '}
         <a
           href='http://majora.iinti.cn/majora-doc'
           target='_blank'

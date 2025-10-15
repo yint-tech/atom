@@ -12,6 +12,7 @@ import { Divider, Drawer } from '@mui/material';
 
 import { Profile, SidebarNav } from './components';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   drawer: ({ theme }) => ({
@@ -39,13 +40,14 @@ const useStyles = createUseStyles({
 const Sidebar = props => {
   const { user } = useContext(AppContext);
   const { open, variant, onClose, className, ...rest } = props;
+  const { t } = useTranslation();
 
   const theme = useTheme();
   const classes = useStyles({ theme });
 
   let pages = [
     {
-      title: '我的',
+      title: t('navigation.mine'),
       href: '/mine',
       icon: <Home />,
     },
@@ -55,17 +57,17 @@ const Sidebar = props => {
     pages[pages.length - 1].divider = true;
     pages = pages.concat([
       {
-        title: '监控指标',
+        title: t('navigation.metrics'),
         href: '/metrics',
         icon: <ShowChart />,
       },
       {
-        title: '账号列表',
+        title: t('navigation.accountList'),
         href: '/accountList',
         icon: <AccountBox />,
       },
       {
-        title: '系统面板',
+        title: t('navigation.systemSettings'),
         href: '/systemSettings',
         icon: <SettingsApplications />,
       },

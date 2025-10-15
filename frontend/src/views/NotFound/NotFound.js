@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { createUseStyles, useTheme } from 'react-jss';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {
@@ -21,14 +22,15 @@ const useStyles = createUseStyles({
 const NotFound = () => {
   const theme = useTheme();
   const classes = useStyles({ theme });
+  const { t } = useTranslation();
 
   return (
     <div className={classes.root}>
       <Grid container justifyContent='center' spacing={4}>
         <Grid item lg={6} xs={12}>
           <div className={classes.content}>
-            <Typography variant='h1'>404: 未找到页面</Typography>
-            <Typography variant='subtitle2'>请打开正确的 url</Typography>
+            <Typography variant='h1'>{t('errors.pageNotFound')}</Typography>
+            <Typography variant='subtitle2'>{t('errors.pleaseOpenCorrectUrl')}</Typography>
             <img
               alt='Under development'
               className={classes.image}
