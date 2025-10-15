@@ -7,5 +7,5 @@ export default {
   logo_path: '/images/logos/logo.svg',
   main_site: 'https://www.baidu.com',
   footer: 'atom-系统框架',
-  copyRight: '2023 因体信息公司',
+  copyRight: '2025 因体信息公司',
 };
