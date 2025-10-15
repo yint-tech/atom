@@ -8,7 +8,7 @@ import {
   ShowChart,
 } from '@mui/icons-material';
 import { AppContext } from 'adapter';
-import { Divider, Drawer } from '@mui/material';
+import { Divider, Drawer, Typography } from '@mui/material';
 
 import { Profile, SidebarNav } from './components';
 import { createUseStyles, useTheme } from 'react-jss';
@@ -16,24 +16,49 @@ import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   drawer: ({ theme }) => ({
-    width: 240,
+    width: 260,
     [theme.breakpoints.up('lg')]: {
       marginTop: 65.5,
       height: 'calc(100% - 65.5px)',
     },
+    '& .MuiDrawer-paper': {
+      background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 50%, #f1f3f4 100%)',
+      borderRight: 'none',
+      boxShadow: '4px 0 20px rgba(0, 0, 0, 0.06), 2px 0 8px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.04)',
+      position: 'relative',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        width: '1px',
+        background: 'linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.05) 20%, rgba(0, 0, 0, 0.05) 80%, transparent 100%)',
+      },
+    },
   }),
   root: {
-    backgroundColor: ({ theme }) => theme.palette.white,
+    backgroundColor: 'transparent',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    padding: ({ theme }) => theme.spacing(2),
-  },
-  divider: {
-    margin: ({ theme }) => theme.spacing(2, 0),
+    padding: ({ theme }) => theme.spacing(2, 1.5),
   },
   nav: {
     marginBottom: ({ theme }) => theme.spacing(2),
+    marginLeft: ({ theme }) => theme.spacing(-0.5),
+    flex: 1,
+  },
+  footer: {
+    marginTop: 'auto',
+    padding: ({ theme }) => theme.spacing(2, 1),
+    textAlign: 'center',
+    borderTop: '1px solid #e9ecef',
+    '& .MuiTypography-root': {
+      fontSize: '12px',
+      color: '#6c757d',
+      fontWeight: 400,
+    },
   },
 });
 
@@ -84,8 +109,12 @@ const Sidebar = props => {
     >
       <div {...rest} className={clsx(classes.root, className)}>
         <Profile />
-        <Divider className={classes.divider} />
         <SidebarNav className={classes.nav} pages={pages} />
+        <div className={classes.footer}>
+          <Typography variant="caption">
+            © 2024 Atom Platform
+          </Typography>
+        </div>
       </div>
     </Drawer>
   );

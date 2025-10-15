@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
     },
   }),
   shiftContent: {
-    paddingLeft: 240,
+    paddingLeft: 260,
   },
   content: {
     height: '100%',

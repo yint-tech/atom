@@ -6,28 +6,39 @@ import { Link as RouterLink } from 'react-router-dom';
 import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
-  avatar: {
-    width: 60,
-    height: 60,
+  container: {
+    padding: ({ theme }) => theme.spacing(1.5),
+    borderRadius: '8px',
+    background: '#f8f9fa',
+    border: '1px solid #e9ecef',
+    marginBottom: ({ theme }) => theme.spacing(1.5),
   },
   user: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: ({ theme }) => theme.spacing(1),
+    gap: ({ theme }) => theme.spacing(1.5),
   },
-  line: {
-    height: ({ theme }) => theme.spacing(2),
-    marginLeft: ({ theme }) => theme.spacing(1),
-    marginRight: ({ theme }) => theme.spacing(1),
+  avatar: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#4facfe',
+    color: '#ffffff',
+    fontSize: '16px',
+    fontWeight: 500,
   },
   name: {
-    marginLeft: ({ theme }) => theme.spacing(1),
+    color: '#495057',
+    fontSize: '14px',
+    fontWeight: 500,
+    flex: 1,
   },
-  setting: {
-    fontSize: 14,
-    display: 'flex',
-    alignItems: 'center',
+  notice: {
+    marginTop: ({ theme }) => theme.spacing(1),
+    '& .MuiAlert-root': {
+      borderRadius: '6px',
+      fontSize: '12px',
+      padding: ({ theme }) => theme.spacing(0.5, 1),
+    },
   },
 });
 
@@ -38,15 +49,21 @@ const Profile = () => {
 
   return (
     <div>
-      <div className={classes.user}>
-        <Avatar className={classes.purple} component={RouterLink} to='/'>
-          {user.userName ? user.userName[0] : ''}
-        </Avatar>
-        <Typography className={classes.name} variant='h3'>
-          {user.userName}
-        </Typography>
+      <div className={classes.container}>
+        <div className={classes.user}>
+          <Avatar className={classes.avatar} component={RouterLink} to='/'>
+            {user.userName ? user.userName[0].toUpperCase() : 'U'}
+          </Avatar>
+          <Typography className={classes.name} variant='h6'>
+            {user.userName || 'User'}
+          </Typography>
+        </div>
       </div>
-      {notice ? <Alert severity='info'>{notice}</Alert> : null}
+      {notice ? (
+        <div className={classes.notice}>
+          <Alert severity='info'>{notice}</Alert>
+        </div>
+      ) : null}
     </div>
   );
 };
