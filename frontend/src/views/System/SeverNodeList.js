@@ -19,6 +19,14 @@ const useStyles = createUseStyles({
   },
   searchInput: {
     marginBottom: ({ theme }) => theme.spacing(2),
+    '& .MuiTextField-root': {
+      '& .MuiInputBase-input': {
+        fontSize: '14px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '14px',
+      },
+    },
   },
 });
 

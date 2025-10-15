@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Paper, Tab, Tabs } from '@mui/material';
+import { Paper, Tab, Tabs, Container, Card } from '@mui/material';
 import Config from './Config';
 import Log from './Log';
 import BuildInfo from './BuildInfo';
@@ -11,11 +11,40 @@ import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {
-    flexGrow: 1,
-    padding: ({ theme }) => theme.spacing(3),
+    minHeight: '100vh',
+    backgroundColor: '#f8f9fa',
+    paddingTop: ({ theme }) => theme.spacing(3),
+    paddingBottom: ({ theme }) => theme.spacing(3),
+  },
+  container: {
+    maxWidth: '1200px',
+  },
+  card: {
+    borderRadius: '12px',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+    border: '1px solid rgba(0, 0, 0, 0.06)',
+    overflow: 'hidden',
+  },
+  tabs: {
+    borderBottom: '1px solid #e9ecef',
+    '& .MuiTab-root': {
+      fontSize: '14px',
+      fontWeight: 500,
+      textTransform: 'none',
+      minHeight: '48px',
+      color: '#5a6c7d',
+      '&.Mui-selected': {
+        color: '#4facfe',
+        fontWeight: 600,
+      },
+    },
+    '& .MuiTabs-indicator': {
+      backgroundColor: '#4facfe',
+      height: '2px',
+    },
   },
   content: {
-    marginTop: ({ theme }) => theme.spacing(2),
+    padding: ({ theme }) => theme.spacing(3),
   },
 });
 
@@ -44,33 +73,34 @@ function System() {
 
   return (
     <div className={classes.root}>
-      <Paper>
-        <Tabs
-          value={value}
-          indicatorColor='primary'
-          textColor='primary'
-          onChange={handleChange}
-        >
-          <Tab label={t('tabs.systemSettings')} />
-          <Tab label={t('tabs.serverNodes')} />
-          <Tab label={t('tabs.userOperationLog')} />
-          <Tab label={t('tabs.buildInfo')} />
-        </Tabs>
-        <div className={classes.content}>
-          <TabPanel value={value} index={0}>
-            <Config />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <SeverNodeList />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <Log />
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <BuildInfo />
-          </TabPanel>
-        </div>
-      </Paper>
+      <Container className={classes.container}>
+        <Card className={classes.card}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            className={classes.tabs}
+          >
+            <Tab label={t('tabs.systemSettings')} />
+            <Tab label={t('tabs.serverNodes')} />
+            <Tab label={t('tabs.userOperationLog')} />
+            <Tab label={t('tabs.buildInfo')} />
+          </Tabs>
+          <div className={classes.content}>
+            <TabPanel value={value} index={0}>
+              <Config />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <SeverNodeList />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <Log />
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+              <BuildInfo />
+            </TabPanel>
+          </div>
+        </Card>
+      </Container>
     </div>
   );
 }

@@ -19,34 +19,50 @@ import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
   root: {
-    margin: ({ theme }) => theme.spacing(4),
+    margin: 0,
   },
   heading: {
-    fontSize: ({ theme }) => theme.typography.pxToRem(15),
+    fontSize: '14px',
+    fontWeight: 600,
+    color: '#495057',
     flexBasis: '33.33%',
     flexShrink: 0,
   },
   secondaryHeading: {
-    fontSize: ({ theme }) => theme.typography.pxToRem(15),
-    color: ({ theme }) => theme.palette.text.secondary,
+    fontSize: '14px',
+    color: '#6c757d',
     maxWidth: '300px',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
   desc: {
-    fontSize: ({ theme }) => theme.typography.pxToRem(15),
-    color: ({ theme }) => theme.palette.text.secondary,
+    fontSize: '14px',
+    color: '#6c757d',
+    lineHeight: 1.5,
   },
   input: {
     display: 'flex',
     alignItems: 'center',
+    gap: ({ theme }) => theme.spacing(2),
   },
   inputItem: {
     width: '100%',
+    '& .MuiTextField-root': {
+      '& .MuiInputBase-input': {
+        fontSize: '14px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '14px',
+      },
+    },
   },
   inputBtn: {
-    marginLeft: ({ theme }) => theme.spacing(2),
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(1, 2),
   },
   gutterTop: {
     marginTop: ({ theme }) => theme.spacing(2),

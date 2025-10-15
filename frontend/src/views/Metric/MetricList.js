@@ -16,9 +16,22 @@ import DetailsIcon from '@mui/icons-material/Details';
 import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
-  root: {},
-  content: {
+  root: {
     padding: 0,
+  },
+  card: {
+    borderRadius: '12px',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+    border: '1px solid rgba(0, 0, 0, 0.06)',
+  },
+  cardHeader: {
+    '& .MuiCardHeader-title': {
+      fontSize: '16px',
+      fontWeight: 600,
+      color: '#1a1a1a',
+    },
+  },
+  content: {
   },
   nameContainer: {
     display: 'flex',
@@ -34,17 +47,54 @@ const useStyles = createUseStyles({
   },
   tableButton: {
     marginRight: ({ theme }) => theme.spacing(1),
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(0.5, 1.5),
   },
   groupButton: {
-    border: '1px dashed #f0f0f0',
+    border: '1px solid #e0e0e0',
+    backgroundColor: '#fff',
+    color: '#546e7a',
     marginRight: ({ theme }) => theme.spacing(1),
+    marginBottom: ({ theme }) => theme.spacing(1),
+    fontSize: '14px',
+    fontWeight: 500,
     textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(0.5, 1.5),
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+      borderColor: '#d0d0d0',
+    },
   },
   groupButtonActive: {
-    border: '1px dashed #2196f3',
+    border: '1px solid #2196f3',
     backgroundColor: '#2196f3',
+    color: '#fff',
     marginRight: ({ theme }) => theme.spacing(1),
+    marginBottom: ({ theme }) => theme.spacing(1),
+    fontSize: '14px',
+    fontWeight: 500,
     textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(0.5, 1.5),
+    '&:hover': {
+      backgroundColor: '#1976d2',
+    },
+  },
+  select: {
+    width: '200px',
+    height: '40px',
+    marginRight: ({ theme }) => theme.spacing(1),
+    '& .MuiSelect-select': {
+      fontSize: '14px',
+      padding: ({ theme }) => theme.spacing(1, 1.5),
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderRadius: '8px',
+    },
   },
 });
 
@@ -76,8 +126,10 @@ const MetricChart = props => {
   }, [showMetric]);
 
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardHeader
+        className={classes.cardHeader}
+        title={showMetric.name}
         action={
           <>
             {availableTags.map(item => (
@@ -110,7 +162,7 @@ const MetricChart = props => {
               </Button>
             ))}
             <Select
-              style={{ width: '200px', height: '40px', overflow: 'hidden' }}
+              className={classes.select}
               variant='outlined'
               value={accuracy}
               onChange={e => {
@@ -126,7 +178,7 @@ const MetricChart = props => {
           </>
         }
       />
-      <CardContent>
+      <CardContent className={classes.content}>
         <MetricCharsV2
           height={height}
           title={showMetric.name}

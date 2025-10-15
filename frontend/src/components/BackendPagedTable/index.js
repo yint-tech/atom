@@ -14,9 +14,6 @@ import PropTypes from 'prop-types';
 import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
-  root: {
-    padding: ({ theme }) => theme.spacing(3),
-  },
   content: {
     marginTop: ({ theme }) => theme.spacing(2),
   },

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { OpeDialog, SimpleTable } from 'components';
 import { AppContext } from 'adapter';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Typography, Container, Card } from '@mui/material';
 import {
   DirectionsRailway,
   PermIdentity,
@@ -18,9 +18,22 @@ import { useTranslation } from 'react-i18next';
 const LOGIN_USER_MOCK_KEY = config.login_user_key + '-MOCK';
 
 const useStyles = createUseStyles({
-  root: {},
+  root: {
+    minHeight: '100vh',
+    backgroundColor: '#f8f9fa',
+    paddingTop: ({ theme }) => theme.spacing(3),
+    paddingBottom: ({ theme }) => theme.spacing(3),
+  },
+  container: {
+    maxWidth: '1200px',
+  },
+  card: {
+    borderRadius: '12px',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+    border: '1px solid rgba(0, 0, 0, 0.06)',
+    overflow: 'hidden',
+  },
   content: {
-    padding: 0,
   },
   nameContainer: {
     display: 'flex',
@@ -36,9 +49,39 @@ const useStyles = createUseStyles({
   },
   tableButton: {
     marginRight: ({ theme }) => theme.spacing(1),
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(0.5, 1.5),
+  },
+  addButton: {
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(1, 2),
+    marginBottom: ({ theme }) => theme.spacing(2),
   },
   dialogInput: {
     width: '100%',
+    '& .MuiTextField-root': {
+      '& .MuiInputBase-input': {
+        fontSize: '14px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '14px',
+      },
+    },
+  },
+  dialogTitle: {
+    fontSize: '16px',
+    fontWeight: 600,
+    color: '#1a1a1a',
+    marginBottom: ({ theme }) => theme.spacing(1),
+  },
+  dialogGrid: {
+    marginTop: ({ theme }) => theme.spacing(1),
   },
 });
 
@@ -56,9 +99,9 @@ const CreateUserDialog = props => {
       title={t('userManagement.addUser')}
       opeContent={
         <>
-          <Grid container spacing={6} wrap='wrap'>
+          <Grid container spacing={3} wrap='wrap' className={classes.dialogGrid}>
             <Grid item xs={6}>
-              <Typography gutterBottom variant='h6'>
+              <Typography className={classes.dialogTitle}>
                 {t('userManagement.account')}
               </Typography>
               <TextField
@@ -70,7 +113,7 @@ const CreateUserDialog = props => {
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography gutterBottom variant='h6'>
+              <Typography className={classes.dialogTitle}>
                 {t('userManagement.password')}
               </Typography>
               <TextField
@@ -170,19 +213,23 @@ const AccountList = () => {
   }, [api]);
 
   return (
-    <div>
-      <SimpleTable
-        refresh={refresh}
-        actionEl={
-          <Button
-            startIcon={<EmojiPeopleIcon />}
-            color='primary'
-            variant='contained'
-            onClick={() => setOpenCreateUserDialog(true)}
-          >
-            {t('userManagement.addUser')}
-          </Button>
-        }
+    <div className={classes.root}>
+      <Container className={classes.container}>
+        <Card className={classes.card}>
+          <div className={classes.content}>
+            <SimpleTable
+              refresh={refresh}
+              actionEl={
+                <Button
+                  startIcon={<EmojiPeopleIcon />}
+                  color='primary'
+                  variant='contained'
+                  className={classes.addButton}
+                  onClick={() => setOpenCreateUserDialog(true)}
+                >
+                  {t('userManagement.addUser')}
+                </Button>
+              }
         loadDataFun={loadApi}
         columns={[
           {
@@ -238,26 +285,29 @@ const AccountList = () => {
             ),
           },
         ]}
-      />
+              />
+            </div>
+          </Card>
+        </Container>
 
-      <CreateUserDialog
-        openCreateUserDialog={openCreateUserDialog}
-        setOpenCreateUserDialog={setOpenCreateUserDialog}
-        setRefresh={setRefresh}
-      />
+        <CreateUserDialog
+          openCreateUserDialog={openCreateUserDialog}
+          setOpenCreateUserDialog={setOpenCreateUserDialog}
+          setRefresh={setRefresh}
+        />
 
-      <OpeDialog
-        title={t('userManagement.editPermissions') + ':' + permOpAccount.userName}
-        okText={t('common.confirm')}
-        openDialog={showPermOpDialog}
-        fullScreen
-        setOpenDialog={setShowPermOpDialog}
-        opeContent={
-          <Permission account={permOpAccount} setRefresh={setRefresh} />
-        }
-      />
-    </div>
-  );
+        <OpeDialog
+          title={t('userManagement.editPermissions') + ':' + permOpAccount.userName}
+          okText={t('common.confirm')}
+          openDialog={showPermOpDialog}
+          fullScreen
+          setOpenDialog={setShowPermOpDialog}
+          opeContent={
+            <Permission account={permOpAccount} setRefresh={setRefresh} />
+          }
+        />
+      </div>
+    );
 };
 
 export default AccountList;

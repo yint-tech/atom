@@ -15,16 +15,47 @@ import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {
-    padding: ({ theme }) => theme.spacing(3),
+    padding: 0,
+  },
+  card: {
+    borderRadius: '12px',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+    border: '1px solid rgba(0, 0, 0, 0.06)',
+  },
+  cardHeader: {
+    '& .MuiCardHeader-title': {
+      fontSize: '16px',
+      fontWeight: 600,
+      color: '#1a1a1a',
+    },
   },
   content: {
-    marginTop: ({ theme }) => theme.spacing(2),
   },
   item: {
-    marginTop: ({ theme }) => theme.spacing(5),
+    marginTop: ({ theme }) => theme.spacing(3),
   },
   tableButton: {
     marginRight: ({ theme }) => theme.spacing(1),
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(0.5, 1.5),
+  },
+  select: {
+    width: '200px',
+    height: '40px',
+    marginRight: ({ theme }) => theme.spacing(1),
+    '& .MuiSelect-select': {
+      fontSize: '14px',
+      padding: ({ theme }) => theme.spacing(1, 1.5),
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderRadius: '8px',
+    },
+  },
+  divider: {
+    margin: ({ theme }) => theme.spacing(3, 0),
   },
 });
 
@@ -56,13 +87,14 @@ show(${t('metrics.systemCpuUsage')},${t('metrics.processCpuUsage')});
 
   return (
     <div className={classes.root}>
-      <Card>
+      <Card className={classes.card}>
         <CardHeader
+          className={classes.cardHeader}
+          title={t('metrics.mqlEditor')}
           action={
             <>
               <Select
-                className={classes.tableButton}
-                style={{ width: '200px', height: '40px', overflow: 'hidden' }}
+                className={classes.select}
                 variant='outlined'
                 value={accuracy}
                 onChange={e => {
@@ -108,13 +140,13 @@ show(${t('metrics.systemCpuUsage')},${t('metrics.processCpuUsage')});
             }}
           />
 
-          <Divider />
+          <Divider className={classes.divider} />
           {!!errMsg ? (
             <CodeMirror height='200px' value={errMsg} />
           ) : (
             <MetricCharsV2
               onLoadMsg={setErrMsg}
-              className={classes.marginTop}
+              className={classes.item}
               title={t('systemMetrics.mqlDebugMetrics')}
               accuracy={accuracy}
               mql={mql}

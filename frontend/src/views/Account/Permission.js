@@ -8,24 +8,66 @@ import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
   root: {
-    padding: ({ theme }) => theme.spacing(2),
   },
   content: {
     marginTop: ({ theme }) => theme.spacing(2),
   },
+  card: {
+    borderRadius: '8px',
+    boxShadow: 'none',
+    border: '1px solid #e9ecef',
+    marginBottom: ({ theme }) => theme.spacing(2),
+  },
+  cardHeader: {
+    backgroundColor: '#f8f9fa',
+    '& .MuiCardHeader-title': {
+      fontSize: '14px',
+      fontWeight: 600,
+      color: '#495057',
+    },
+  },
+  cardContent: {
+    padding: ({ theme }) => theme.spacing(2),
+  },
   groupButton: {
-    border: '1px dashed #f0f0f0',
-    backgroundColor: '#F3AD21FF',
+    border: '1px solid #e9ecef',
+    backgroundColor: '#fff3cd',
+    color: '#856404',
     marginRight: ({ theme }) => theme.spacing(1),
     marginTop: ({ theme }) => theme.spacing(1),
     textTransform: 'none',
+    fontSize: '12px',
+    fontWeight: 500,
+    borderRadius: '6px',
+    padding: ({ theme }) => theme.spacing(0.5, 1),
+    '&:hover': {
+      backgroundColor: '#ffeaa7',
+      borderColor: '#fdcb6e',
+    },
   },
   groupButtonActive: {
-    border: '1px dashed #2196f3',
-    backgroundColor: '#2196f3',
+    border: '1px solid #4facfe',
+    backgroundColor: '#4facfe',
+    color: '#ffffff',
     marginRight: ({ theme }) => theme.spacing(1),
     marginTop: ({ theme }) => theme.spacing(1),
     textTransform: 'none',
+    fontSize: '12px',
+    fontWeight: 500,
+    borderRadius: '6px',
+    padding: ({ theme }) => theme.spacing(0.5, 1),
+    '&:hover': {
+      backgroundColor: '#74b9ff',
+      borderColor: '#0984e3',
+    },
+  },
+  saveButton: {
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(1, 2),
+    marginTop: ({ theme }) => theme.spacing(2),
   },
 });
 
@@ -129,9 +171,12 @@ function Permission(props) {
 
   return (
     <div className={classes.root}>
-      <Card>
-        <CardHeader title={t('permissionType')} />
-        <CardContent>
+      <Card className={classes.card}>
+        <CardHeader 
+          title={t('permissionType')} 
+          className={classes.cardHeader}
+        />
+        <CardContent className={classes.cardContent}>
           {permScopes.map(item => (
             <Button
               key={item}
@@ -145,23 +190,19 @@ function Permission(props) {
                   : classes.groupButton
               }
             >
-              <Typography
-                variant='subtitle2'
-                style={{
-                  color: item === selectedPermScope ? '#fff' : '#546e7a',
-                }}
-              >
-                {item}
-              </Typography>
+              {item}
             </Button>
           ))}
         </CardContent>
       </Card>
-      <Grid className={classes.content} container spacing={1} wrap='wrap'>
+      <Grid className={classes.content} container spacing={2} wrap='wrap'>
         <Grid item xs={6}>
-          <Card>
-            <CardHeader title={t('availablePermissions')} />
-            <CardContent>
+          <Card className={classes.card}>
+            <CardHeader 
+              title={t('availablePermissions')} 
+              className={classes.cardHeader}
+            />
+            <CardContent className={classes.cardContent}>
               {availablePermItems.map(item => (
                 <Button
                   key={item}
@@ -169,20 +210,21 @@ function Permission(props) {
                   onClick={() => {
                     addPerm(item);
                   }}
-                  className={classes.groupButtonActive}
+                  className={classes.groupButton}
                 >
-                  <Typography variant='subtitle2' style={{ color: '#0ff' }}>
-                    {item}
-                  </Typography>
+                  {item}
                 </Button>
               ))}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card>
-            <CardHeader title={t('heldPermissions')} />
-            <CardContent>
+          <Card className={classes.card}>
+            <CardHeader 
+              title={t('heldPermissions')} 
+              className={classes.cardHeader}
+            />
+            <CardContent className={classes.cardContent}>
               {selectedPermItems.map(item => (
                 <Button
                   key={item}
@@ -190,11 +232,9 @@ function Permission(props) {
                   onClick={() => {
                     removePerm(item);
                   }}
-                  className={classes.groupButton}
+                  className={classes.groupButtonActive}
                 >
-                  <Typography variant='subtitle2' style={{ color: '#546e7a' }}>
-                    {item}
-                  </Typography>
+                  {item}
                 </Button>
               ))}
             </CardContent>

@@ -5,8 +5,31 @@ import PropTypes from 'prop-types';
 import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
+  card: {
+    borderRadius: '12px',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+    border: '1px solid rgba(0, 0, 0, 0.06)',
+  },
+  cardHeader: {
+    '& .MuiCardHeader-title': {
+      fontSize: '16px',
+      fontWeight: 600,
+      color: '#1a1a1a',
+    },
+  },
+  select: {
+    width: '200px',
+    height: '40px',
+    '& .MuiSelect-select': {
+      fontSize: '14px',
+      padding: ({ theme }) => theme.spacing(1, 1.5),
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderRadius: '8px',
+    },
+  },
   item: {
-    marginTop: ({ theme }) => theme.spacing(5),
+    marginTop: ({ theme }) => theme.spacing(3),
   },
 });
 
@@ -16,11 +39,12 @@ const MetricPage = props => {
   const classes = useStyles({ theme });
   const [accuracy, setAccuracy] = useState('hours');
   return (
-    <Card {...rest}>
+    <Card {...rest} className={classes.card}>
       <CardHeader
+        className={classes.cardHeader}
         action={
           <Select
-            style={{ width: '200px', height: '40px', overflow: 'hidden' }}
+            className={classes.select}
             variant='outlined'
             value={accuracy}
             onChange={e => {
