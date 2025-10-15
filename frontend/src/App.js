@@ -9,29 +9,27 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
-import { ThemeProvider } from "react-jss";
+import { ThemeProvider } from 'react-jss';
 
 const hashHistory = createHashHistory();
 
 validate.validators = {
-    ...validate.validators,
-    ...validators
+  ...validate.validators,
+  ...validators,
 };
 
 function App() {
-
-    return (
-        <ThemeProvider theme={theme}>
-            <SnackbarProvider maxSnack={3}>
-                <Adapter>
-                    <Router history={hashHistory}>
-                        <Routes />
-                    </Router>
-                </Adapter>
-            </SnackbarProvider>
-        </ThemeProvider>
-    );
-
+  return (
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3}>
+        <Adapter>
+          <Router history={hashHistory}>
+            <Routes />
+          </Router>
+        </Adapter>
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;

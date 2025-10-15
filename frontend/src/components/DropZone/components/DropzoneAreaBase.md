@@ -8,8 +8,8 @@ import { DropzoneAreaBase } from 'material-ui-dropzone';
 
 ```jsx
 <DropzoneAreaBase
-  onAdd={(fileObjs) => console.log('Added Files:', fileObjs)}
-  onDelete={(fileObj) => console.log('Removed File:', fileObj)}
+  onAdd={fileObjs => console.log('Added Files:', fileObjs)}
+  onDelete={fileObj => console.log('Removed File:', fileObj)}
   onAlert={(message, variant) => console.log(`${variant}: ${message}`)}
 />
 ```
@@ -19,8 +19,8 @@ import { DropzoneAreaBase } from 'material-ui-dropzone';
 ```jsx
 <DropzoneAreaBase
   acceptedFiles={['image/*']}
-  dropzoneText={"Drag and drop an image here or click"}
-  onChange={(files) => console.log('Files:', files)}
+  dropzoneText={'Drag and drop an image here or click'}
+  onChange={files => console.log('Files:', files)}
   onAlert={(message, variant) => console.log(`${variant}: ${message}`)}
 />
 ```
@@ -32,18 +32,18 @@ import { AttachFile } from '@mui/icons-material';
 
 <DropzoneAreaBase
   Icon={AttachFile}
-  dropzoneText={"Drag and drop an image here or click"}
-  onChange={(files) => console.log('Files:', files)}
+  dropzoneText={'Drag and drop an image here or click'}
+  onChange={files => console.log('Files:', files)}
   onAlert={(message, variant) => console.log(`${variant}: ${message}`)}
-/>
+/>;
 ```
 
 ### Reset button
 
 ```jsx
 <DropzoneAreaBase
-  onAdd={(fileObjs) => console.log('Added Files:', fileObjs)}
-  onDelete={(fileObj) => console.log('Removed File:', fileObj)}
+  onAdd={fileObjs => console.log('Added Files:', fileObjs)}
+  onDelete={fileObj => console.log('Removed File:', fileObj)}
   onAlert={(message, variant) => console.log(`${variant}: ${message}`)}
   reset={{
     onClick: () => console.log('reset'),
@@ -57,10 +57,14 @@ Allow to pass any valid DOM node valid to react to use custom reset button
 
 ```jsx
 <DropzoneAreaBase
-  onAdd={(fileObjs) => console.log('Added Files:', fileObjs)}
-  onDelete={(fileObj) => console.log('Removed File:', fileObj)}
+  onAdd={fileObjs => console.log('Added Files:', fileObjs)}
+  onDelete={fileObj => console.log('Removed File:', fileObj)}
   onAlert={(message, variant) => console.log(`${variant}: ${message}`)}
-  reset={<button style={{ margin: '20px 0' }} onClick={() => console.log('reset')}>reset</button>}
+  reset={
+    <button style={{ margin: '20px 0' }} onClick={() => console.log('reset')}>
+      reset
+    </button>
+  }
 />
 ```
 
@@ -68,34 +72,40 @@ Allow to pass any valid DOM node valid to react to use custom reset button
 
 Demonstration of how to customize the preview icon for:
 
-* PDF files
-* Video
-* Audio
-* Word Documents
+- PDF files
+- Video
+- Audio
+- Word Documents
 
 ```jsx
 import React, { useState } from 'react';
-import { AttachFile, AudioTrack, Description, PictureAsPdf, Theaters } from '@mui/icons-material';
+import {
+  AttachFile,
+  AudioTrack,
+  Description,
+  PictureAsPdf,
+  Theaters,
+} from '@mui/icons-material';
 
 const handlePreviewIcon = (fileObject, classes) => {
-  const {type} = fileObject.file
+  const { type } = fileObject.file;
   const iconProps = {
-    className : classes.image,
-  }
+    className: classes.image,
+  };
 
-  if (type.startsWith("video/")) return <Theaters {...iconProps} />
-  if (type.startsWith("audio/")) return <AudioTrack {...iconProps} />
+  if (type.startsWith('video/')) return <Theaters {...iconProps} />;
+  if (type.startsWith('audio/')) return <AudioTrack {...iconProps} />;
 
   switch (type) {
-    case "application/msword":
-    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-      return <Description {...iconProps} />
-    case "application/pdf":
-      return <PictureAsPdf {...iconProps} />
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      return <Description {...iconProps} />;
+    case 'application/pdf':
+      return <PictureAsPdf {...iconProps} />;
     default:
-      return <AttachFile {...iconProps} />
+      return <AttachFile {...iconProps} />;
   }
-}
+};
 
 const [fileObjects, setFileObjects] = useState([]);
 
@@ -109,5 +119,5 @@ const [fileObjects, setFileObjects] = useState([]);
     console.log('onDelete', deleteFileObj);
   }}
   getPreviewIcon={handlePreviewIcon}
-/>
+/>;
 ```

@@ -1,1 +1,1 @@
-export {default} from './System';
+export { default } from './System';

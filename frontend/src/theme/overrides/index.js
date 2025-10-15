@@ -6,12 +6,12 @@ import MuiTableHead from './MuiTableHead';
 import MuiTypography from './MuiTypography';
 
 const overrides = {
-    MuiButton,
-    MuiIconButton,
-    MuiPaper,
-    MuiTableCell,
-    MuiTableHead,
-    MuiTypography
+  MuiButton,
+  MuiIconButton,
+  MuiPaper,
+  MuiTableCell,
+  MuiTableHead,
+  MuiTypography,
 };
 
 export default overrides;

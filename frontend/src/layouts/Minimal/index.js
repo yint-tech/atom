@@ -1,1 +1,1 @@
-export {default} from './Minimal';
+export { default } from './Minimal';
