@@ -25,55 +25,75 @@ import { createUseStyles, useTheme } from 'react-jss';
 const useStyles = createUseStyles({
   root: {
     height: '100%',
+    border: 'none',
+    boxShadow: 'none',
+  },
+  header: {
+    padding: ({ theme }) => theme.spacing(3),
+    paddingBottom: ({ theme }) => theme.spacing(2),
+    '& .MuiCardHeader-title': {
+      fontSize: '1.25rem',
+      fontWeight: 600,
+      color: '#2c3e50',
+    },
   },
   content: {
-    alignItems: 'center',
-    display: 'flex',
+    padding: ({ theme }) => theme.spacing(0, 3, 3, 3),
   },
-  title: {
-    fontWeight: 700,
-  },
-  avatar: {
-    backgroundColor: ({ theme }) => theme.palette.success.main,
-    height: 56,
-    width: 56,
-  },
-  icon: {
-    height: 32,
-    width: 32,
-  },
-  mt: {
-    marginTop: ({ theme }) => theme.spacing(4),
-  },
-  mr: {
-    marginRight: ({ theme }) => theme.spacing(6),
-  },
-  pd: {
-    width: ({ theme }) => theme.spacing(18),
-    paddingLeft: ({ theme }) => theme.spacing(1),
-    textAlign: 'center',
+  tokenContainer: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(2),
+    border: '1px solid #e9ecef',
   },
   url: {
     display: 'flex',
     alignItems: 'center',
-    fontSize: 16,
-    lineHeight: '1.2em',
+    fontSize: '14px',
+    lineHeight: '1.4em',
     wordBreak: 'break-all',
-    cursor: 'pointer',
+    fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+    color: '#495057',
+    backgroundColor: 'transparent',
+    padding: 0,
+    margin: 0,
   },
-  padding: {
-    padding: ({ theme }) => theme.spacing(2),
+  actionButtons: {
+    display: 'flex',
+    gap: ({ theme }) => theme.spacing(1),
+    marginLeft: ({ theme }) => theme.spacing(2),
   },
-  formControl: {
-    width: ({ theme }) => theme.spacing(20),
-    margin: ({ theme }) => theme.spacing(2),
+  iconButton: {
+    padding: ({ theme }) => theme.spacing(1),
+    borderRadius: '6px',
+    backgroundColor: '#ffffff',
+    border: '1px solid #dee2e6',
+    '&:hover': {
+      backgroundColor: '#f8f9fa',
+      borderColor: '#4facfe',
+    },
+    '& .MuiSvgIcon-root': {
+      fontSize: '18px',
+      color: '#6c757d',
+    },
   },
   pop: {
-    padding: ({ theme }) => theme.spacing(2),
+    padding: ({ theme }) => theme.spacing(3),
+    maxWidth: '400px',
   },
   popBtns: {
     marginTop: ({ theme }) => theme.spacing(2),
-    textAlign: 'center',
+    display: 'flex',
+    gap: ({ theme }) => theme.spacing(1),
+    justifyContent: 'flex-end',
+  },
+  alertTitle: {
+    fontSize: '16px',
+    fontWeight: 600,
+  },
+  alertContent: {
+    fontSize: '14px',
+    lineHeight: '1.5',
   },
 });
 
@@ -110,87 +130,76 @@ const UserDashboard = props => {
   };
 
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
-      <CardHeader title='API TOKEN' />
-      <Divider />
-      <CardContent>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography
-              className={classes.url}
-              color='textSecondary'
-              variant='caption'
-            >
-              {apiUrl}
+    <Card className={classes.root}>
+      <CardHeader
+        className={classes.header}
+        title="API Token"
+        titleTypographyProps={{
+          variant: 'h6',
+        }}
+      />
+      <CardContent className={classes.content}>
+        <div className={classes.tokenContainer}>
+          <div className={classes.url}>
+            {apiUrl}
+            <div className={classes.actionButtons}>
               <CopyToClipboard
                 text={apiUrl}
                 onCopy={() => api.successToast(t('common.copySuccess'))}
               >
                 <IconButton
-                  style={{ marginLeft: 15 }}
-                  color='primary'
-                  aria-label='upload picture'
-                  component='span'
+                  className={classes.iconButton}
+                  title="复制到剪贴板"
                 >
                   <FileCopyIcon />
                 </IconButton>
               </CopyToClipboard>
-              <IconButton
+              <IconButton 
+                className={classes.iconButton}
                 onClick={handleClick}
-                style={{ marginLeft: 15 }}
-                color='primary'
-                aria-label='upload picture'
-                component='span'
+                title="刷新Token"
               >
                 <CachedIcon />
               </IconButton>
-              <Popover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
+            </div>
+          </div>
+        </div>
+        
+        <Popover
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <div className={classes.pop}>
+            <Alert severity="warning">
+              <AlertTitle className={classes.alertTitle}>
+                {t('userDashboard.apiTokenRefreshWarning', { appName: configs.app })}
+              </AlertTitle>
+              <div className={classes.alertContent}>
+                {t('userDashboard.apiTokenAdvice')}
+              </div>
+            </Alert>
+            <div className={classes.popBtns}>
+              <Button onClick={handleClose} color="primary" variant="outlined">
+                {t('common.cancel')}
+              </Button>
+              <Button 
+                onClick={() => {
+                  doRefreshApiToken();
+                  handleClose();
+                }} 
+                color="error" 
+                variant="contained"
               >
-                <div className={classes.pop}>
-                  <Alert severity='warning'>
-                    <AlertTitle>
-                      {t('userDashboard.apiTokenRefreshWarning', { appName: configs.app })}
-                    </AlertTitle>
-                    {t('userDashboard.apiTokenAdvice')}
-                  </Alert>
-                  <div className={classes.popBtns}>
-                    <Button
-                      onClick={handleClose}
-                      color='primary'
-                      aria-label='upload picture'
-                      component='span'
-                    >
-                      {t('common.cancel')}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        doRefreshApiToken();
-                        handleClose();
-                      }}
-                      style={{ marginLeft: 15 }}
-                      color='primary'
-                      aria-label='upload picture'
-                      component='span'
-                    >
-                      {t('common.confirm')}
-                    </Button>
-                  </div>
-                </div>
-              </Popover>
-            </Typography>
-          </Grid>
-        </Grid>
+                {t('common.confirm')}
+              </Button>
+            </div>
+          </div>
+        </Popover>
       </CardContent>
     </Card>
   );
