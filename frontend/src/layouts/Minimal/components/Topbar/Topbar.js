@@ -19,6 +19,19 @@ const useStyles = createUseStyles({
   flexGrow: {
     flexGrow: 1,
   },
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: ({ theme }) => theme.spacing(2),
+  },
+  logo: {
+    height: 45,
+    width: 'auto',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.05)',
+    },
+  },
 });
 
 const Topbar = props => {
@@ -35,13 +48,15 @@ const Topbar = props => {
       position='fixed'
     >
       <Toolbar>
-        <RouterLink to='/'>
-          <img
-            alt='Logo'
-            style={{ height: 60 }}
-            src={process.env.PUBLIC_URL + config.logo_path}
-          />
-        </RouterLink>
+        <div className={classes.logoContainer}>
+          <RouterLink to='/'>
+            <img
+              alt='Logo'
+              className={classes.logo}
+              src={process.env.PUBLIC_URL + config.logo_path}
+            />
+          </RouterLink>
+        </div>
         <div className={classes.flexGrow} />
         <LanguageToggle variant="light" />
       </Toolbar>

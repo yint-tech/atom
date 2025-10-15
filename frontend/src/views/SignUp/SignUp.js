@@ -38,108 +38,118 @@ const getSchema = (t) => ({
 
 const useStyles = createUseStyles({
   root: {
-    backgroundColor: ({ theme }) => theme.palette.background.default,
-    height: '100%',
-  },
-  grid: {
-    height: '100%',
-  },
-  quoteContainer: ({ theme }) => ({
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
-    },
-  }),
-  quote: {
-    backgroundColor: ({ theme }) => theme.palette.neutral,
-    height: '100%',
-    width: '100%',
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+    position: 'relative',
     overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
+    padding: ({ theme }) => theme.spacing(2),
   },
-  quoteImg: {
-    margin: '0 auto',
-    height: '400px',
+  '@keyframes float': {
+    '0%, 100%': {
+      transform: 'translateY(0px)',
+    },
+    '50%': {
+      transform: 'translateY(-20px)',
+    },
   },
-  quoteIframe: {
+  signupCard: {
+    background: 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '20px',
+    padding: ({ theme }) => theme.spacing(4),
+    boxShadow: '0 25px 45px rgba(0, 0, 0, 0.1)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    maxWidth: '450px',
     width: '100%',
-    height: '300px',
-  },
-  quoteInner: {
-    textAlign: 'center',
-    flexBasis: '600px',
-  },
-  quoteText: {
-    color: ({ theme }) => theme.palette.white,
-    fontWeight: 300,
-  },
-  name: {
-    marginTop: ({ theme }) => theme.spacing(3),
-    color: ({ theme }) => theme.palette.white,
-  },
-  bio: {
-    color: ({ theme }) => theme.palette.white,
-  },
-  contentContainer: {},
-  content: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  contentHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingTop: ({ theme }) => theme.spacing(5),
-    paddingBototm: ({ theme }) => theme.spacing(2),
-    paddingLeft: ({ theme }) => theme.spacing(2),
-    paddingRight: ({ theme }) => theme.spacing(2),
-  },
-  logoImage: {
-    marginLeft: ({ theme }) => theme.spacing(4),
-  },
-  contentBody: ({ theme }) => ({
-    flexGrow: 1,
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'center',
+    position: 'relative',
+    zIndex: 1,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      boxShadow: '0 35px 55px rgba(0, 0, 0, 0.15)',
     },
-  }),
-  form: ({ theme }) => ({
-    paddingLeft: 100,
-    paddingRight: 100,
-    paddingBottom: 125,
-    flexBasis: 700,
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: ({ theme }) => theme.spacing(2),
-      paddingRight: ({ theme }) => theme.spacing(2),
-    },
-  }),
+  },
+  logoContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: ({ theme }) => theme.spacing(3),
+  },
+  logo: {
+    height: '60px',
+    width: 'auto',
+  },
   title: {
-    marginTop: ({ theme }) => theme.spacing(3),
+    textAlign: 'center',
+    marginBottom: ({ theme }) => theme.spacing(1),
+    color: '#333',
+    fontWeight: 600,
   },
-  socialButtons: {
-    marginTop: ({ theme }) => theme.spacing(3),
-  },
-  socialIcon: {
-    marginRight: ({ theme }) => theme.spacing(1),
-  },
-  sugestion: {
-    marginTop: ({ theme }) => theme.spacing(2),
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: ({ theme }) => theme.spacing(3),
+    color: '#666',
   },
   textField: {
-    marginTop: ({ theme }) => theme.spacing(2),
-  },
-  signInButton: {
-    margin: ({ theme }) => theme.spacing(2, 0),
+    marginBottom: ({ theme }) => theme.spacing(2),
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '12px',
+      '&:hover fieldset': {
+        borderColor: '#4facfe',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#4facfe',
+      },
+    },
   },
   policy: {
-    marginTop: ({ theme }) => theme.spacing(1),
+    marginBottom: ({ theme }) => theme.spacing(2),
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   policyCheckbox: {
-    marginLeft: '-14px',
+    marginLeft: '-9px',
+    marginTop: '-9px',
+    color: '#4facfe',
+    '&.Mui-checked': {
+      color: '#4facfe',
+    },
+  },
+  policyText: {
+    marginTop: '2px',
+    marginLeft: ({ theme }) => theme.spacing(1),
+    fontSize: '0.875rem',
+    lineHeight: 1.4,
+  },
+  signInButton: {
+    marginBottom: ({ theme }) => theme.spacing(2),
+    borderRadius: '12px',
+    background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    color: 'white',
+    fontWeight: 600,
+    textTransform: 'none',
+    fontSize: '16px',
+    padding: ({ theme }) => theme.spacing(1.5),
+    '&:hover': {
+      background: 'linear-gradient(135deg, #43a3f5 0%, #00d9fe 100%)',
+      boxShadow: '0 10px 20px rgba(79, 172, 254, 0.3)',
+    },
+    '&:disabled': {
+      background: '#ccc',
+      color: '#666',
+    },
+  },
+  loginLink: {
+    textAlign: 'center',
+    '& a': {
+      color: '#4facfe',
+      textDecoration: 'none',
+      fontWeight: 600,
+      '&:hover': {
+        textDecoration: 'underline',
+      },
+    },
   },
 });
 
@@ -213,99 +223,90 @@ const SignIn = props => {
 
   return (
     <div className={classes.root}>
-      <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
-          <div className={classes.quote}>
-            <img
-              className={classes.quoteImg}
-              src={process.env.PUBLIC_URL + config.logo_path}
-              alt=''
+      <div className={classes.signupCard}>
+        <div className={classes.logoContainer}>
+          <img
+            className={classes.logo}
+            src={process.env.PUBLIC_URL + config.logo_path}
+            alt=''
+          />
+        </div>
+        <form onSubmit={handleSignIn}>
+          <Typography className={classes.title} variant='h4'>
+            {configs.app}
+          </Typography>
+          <Typography className={classes.subtitle} color='textSecondary'>
+            {t('auth.accountRegister')}
+          </Typography>
+          <TextField
+            className={classes.textField}
+            error={hasError('oa')}
+            fullWidth
+            helperText={hasError('oa') ? formState.errors.oa[0] : null}
+            label={t('userManagement.account')}
+            name='oa'
+            onChange={handleChange}
+            type='text'
+            value={formState.values.oa || ''}
+            variant='outlined'
+          />
+          <TextField
+            className={classes.textField}
+            error={hasError('password')}
+            fullWidth
+            helperText={
+              hasError('password') ? formState.errors.password[0] : null
+            }
+            label={t('userManagement.password')}
+            name='password'
+            onChange={handleChange}
+            type='password'
+            value={formState.values.password || ''}
+            variant='outlined'
+          />
+          <div className={classes.policy}>
+            <Checkbox
+              checked={formState.values.policy || false}
+              className={classes.policyCheckbox}
+              color='primary'
+              name='policy'
+              onChange={handleChange}
             />
+            <Typography
+              className={classes.policyText}
+              color='textSecondary'
+              variant='body2'
+            >
+              {t('auth.agreeToTerms')}{' '}
+              <Link
+                color='primary'
+                component={RouterLink}
+                to='#'
+                underline='always'
+                variant='body2'
+              >
+                {t('auth.userAgreement', { appName: configs.app })}
+              </Link>
+            </Typography>
           </div>
-        </Grid>
-        <Grid className={classes.content} item lg={7}>
-          <div className={classes.content}>
-            <div className={classes.contentBody}>
-              <form className={classes.form} onSubmit={handleSignIn}>
-                <Typography className={classes.title} variant='h2'>
-                  {configs.app}
-                </Typography>
-                <Typography color='textSecondary' gutterBottom>
-                  {t('auth.accountRegister')}
-                </Typography>
-                <TextField
-                  className={classes.textField}
-                  error={hasError('oa')}
-                  fullWidth
-                  helperText={hasError('oa') ? formState.errors.oa[0] : null}
-                  label={t('userManagement.account')}
-                  name='oa'
-                  onChange={handleChange}
-                  type='text'
-                  value={formState.values.oa || ''}
-                  variant='outlined'
-                />
-                <TextField
-                  className={classes.textField}
-                  error={hasError('password')}
-                  fullWidth
-                  helperText={
-                    hasError('password') ? formState.errors.password[0] : null
-                  }
-                  label={t('userManagement.password')}
-                  name='password'
-                  onChange={handleChange}
-                  type='password'
-                  value={formState.values.password || ''}
-                  variant='outlined'
-                />
-                <div className={classes.policy}>
-                  <Checkbox
-                    checked={formState.values.policy || false}
-                    className={classes.policyCheckbox}
-                    color='primary'
-                    name='policy'
-                    onChange={handleChange}
-                  />
-                  <Typography
-                    className={classes.policyText}
-                    color='textSecondary'
-                    variant='body1'
-                  >
-                    {t('auth.agreeToTerms')}{' '}
-                    <Link
-                      color='primary'
-                      component={RouterLink}
-                      to='#'
-                      underline='always'
-                      variant='h6'
-                    >
-                      {t('auth.userAgreement', { appName: configs.app })}
-                    </Link>
-                  </Typography>
-                </div>
-                <Button
-                  className={classes.signInButton}
-                  color='primary'
-                  disabled={!formState.isValid}
-                  fullWidth
-                  size='large'
-                  type='submit'
-                  variant='contained'
-                >
-                  {t('auth.register')}
-                </Button>
-                <Typography color='textSecondary' variant='body1'>
-                  {t('auth.hasAccount')}{' '}
-                  <Link component={RouterLink} to='/sign-in' variant='h6'>
-                    {t('auth.goToLogin')}
-                  </Link>
-                </Typography>
-              </form>
-            </div>
-          </div>
-        </Grid>
-      </Grid>
+          <Button
+            className={classes.signInButton}
+            disabled={!formState.isValid}
+            fullWidth
+            size='large'
+            type='submit'
+            variant='contained'
+          >
+            {t('auth.register')}
+          </Button>
+          <Typography className={classes.loginLink} color='textSecondary' variant='body2'>
+            {t('auth.hasAccount')}{' '}
+            <Link component={RouterLink} to='/sign-in'>
+              {t('auth.goToLogin')}
+            </Link>
+          </Typography>
+        </form>
+      </div>
     </div>
   );
 };

@@ -32,6 +32,42 @@ const useStyles = createUseStyles({
   signOutButton: {
     marginLeft: ({ theme }) => theme.spacing(1),
   },
+  modernButton: {
+    marginLeft: ({ theme }) => theme.spacing(1),
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    padding: '8px 16px',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    transition: 'all 0.3s ease',
+    color: '#fff',
+    minHeight: 40,
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      transform: 'translateY(-1px)',
+    },
+  },
+  modernButtonText: {
+    fontSize: 12,
+    fontWeight: 500,
+    marginLeft: 8,
+    textTransform: 'none',
+  },
+  modernButtonIcon: {
+    fontSize: 18,
+  },
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: ({ theme }) => theme.spacing(2),
+  },
+  logo: {
+    height: 45,
+    width: 'auto',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.05)',
+    },
+  },
   download: {
     padding: ({ theme }) => theme.spacing(2),
     display: 'flex',
@@ -90,16 +126,12 @@ const Topbar = props => {
 
   const gitbook = (
     <IconButton
-      className={classes.signOutButton}
-      color='inherit'
+      className={classes.modernButton}
       onClick={() => window.open(config.doc_path, '_blank')}
     >
-      <MenuBookIcon />
+      <MenuBookIcon className={classes.modernButtonIcon} />
       <Hidden xsDown>
-        <Typography
-          variant='caption'
-          style={{ color: '#FFFFFF', marginLeft: 5, marginTop: 3 }}
-        >
+        <Typography className={classes.modernButtonText}>
           {t('navigation.systemDoc')}
         </Typography>
       </Hidden>
@@ -108,16 +140,12 @@ const Topbar = props => {
 
   const gitlab = (
     <IconButton
-      className={classes.signOutButton}
-      color='inherit'
+      className={classes.modernButton}
       onClick={() => window.open(config.main_site, '_blank')}
     >
-      <GitHubIcon />
+      <GitHubIcon className={classes.modernButtonIcon} />
       <Hidden xsDown>
-        <Typography
-          variant='caption'
-          style={{ color: '#FFFFFF', marginLeft: 5, marginTop: 3 }}
-        >
+        <Typography className={classes.modernButtonText}>
           GitLab
         </Typography>
       </Hidden>
@@ -126,16 +154,12 @@ const Topbar = props => {
 
   const logoutBtn = (
     <IconButton
-      className={classes.signOutButton}
-      color='inherit'
+      className={classes.modernButton}
       onClick={onLogout}
     >
-      <InputIcon />
+      <InputIcon className={classes.modernButtonIcon} />
       <Hidden xsDown>
-        <Typography
-          variant='caption'
-          style={{ color: '#FFFFFF', marginLeft: 5, marginTop: 3 }}
-        >
+        <Typography className={classes.modernButtonText}>
           {t('common.logout')}
         </Typography>
       </Hidden>
@@ -144,12 +168,11 @@ const Topbar = props => {
 
   const logoutMockBtn = (
     <IconButton
-      className={classes.signOutButton}
-      color='inherit'
+      className={classes.modernButton}
       onClick={onMockOut}
     >
-      <EmojiNatureIcon />
-      <Typography variant='caption' style={{ color: '#FFFFFF', marginLeft: 5 }}>
+      <EmojiNatureIcon className={classes.modernButtonIcon} />
+      <Typography className={classes.modernButtonText}>
         {t('common.exit')} {user.userName}
       </Typography>
     </IconButton>
@@ -158,13 +181,15 @@ const Topbar = props => {
   return (
     <AppBar {...rest} className={clsx(classes.root, className)}>
       <Toolbar>
-        <RouterLink to='/'>
-          <img
-            alt='Logo'
-            style={{ height: 60 }}
-            src={process.env.PUBLIC_URL + config.logo_path}
-          />
-        </RouterLink>
+        <div className={classes.logoContainer}>
+          <RouterLink to='/'>
+            <img
+              alt='Logo'
+              className={classes.logo}
+              src={process.env.PUBLIC_URL + config.logo_path}
+            />
+          </RouterLink>
+        </div>
         <Hidden xsDown>
           {process.env.ENABLE_AMS_NOTICE ? (
             <div className={classes.flexGrow}>
