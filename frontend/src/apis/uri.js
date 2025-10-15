@@ -9,7 +9,6 @@ export default {
     getIntPushMsg: "/yint-stub/certificate/getIntPushMsg", // 授权信息(仅限因体加密环境)
     getNowCertificate: "/yint-stub/certificate/getNowCertificate", // 授权证书(仅限因体加密环境)
 
-
     // admin
     travelToUser: api_prefix + "/admin-op/travelToUser", // 模拟登录
     userAdd: api_prefix + "/admin-op/createUser", // 创建用户
@@ -23,7 +22,6 @@ export default {
     grantAdmin: api_prefix + "/admin-op/grantAdmin", // 授权
     logList: api_prefix + "/admin-op/listSystemLog", // 日志
 
-
     // user
     login: api_prefix + "/user-info/login post query", // 登录
     register: api_prefix + "/user-info/register post query", // 注册
@@ -35,7 +33,6 @@ export default {
     permItemsOfScope: api_prefix + "/user-info/permItemsOfScope",
     editUserPerm: api_prefix + "/user-info/editUserPerm post query",
 
-
     // metric
     queryMetric: api_prefix + "/metric/queryMetric",// 查询指标
     metricNames: api_prefix + "/metric/metricNames",// 指标列表
@@ -43,7 +40,6 @@ export default {
     deleteMetric: api_prefix + "/metric/deleteMetric",// 删除一个指标
     mqlQuery: api_prefix + "/metric/mqlQuery post query",// 使用mql查询指标数据，mql支持指标内容的加工
     allMetricConfig: api_prefix + "/metric/allMetricConfig",
-
 
     // 下列为各业务自定义接口
 };

@@ -1,13 +1,13 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, { createContext, useEffect, useState } from "react";
 import moment from 'moment';
 import apis from 'apis';
-import {useSnackbar} from "notistack";
-import {Loading} from "../components";
+import { useSnackbar } from "notistack";
+import { Loading } from "../components";
 
 export const AppContext = createContext({});
 
 const Adapter = (props) => {
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [user, setUser] = useState({});
     const [api, setApi] = useState({});
     const [notice, setNotice] = useState('');
@@ -132,7 +132,7 @@ const Adapter = (props) => {
                 systemInfo// 后端的服务器配置信息，目前主要包括后端构建数据，后端系统系统配置等，一般来说前端根据这些配置进行一些功能性质的开关选型
             }}
         >
-            {firstLogin ? props.children : <Loading/>}
+            {firstLogin ? props.children : <Loading />}
         </AppContext.Provider>
     );
 };

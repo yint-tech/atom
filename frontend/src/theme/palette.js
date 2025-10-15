@@ -1,4 +1,4 @@
-import {colors} from '@mui/material';
+import { colors } from '@mui/material';
 
 const white = '#FFFFFF';
 const black = '#000000';

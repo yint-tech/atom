@@ -1,10 +1,10 @@
-import React, {useContext} from "react";
-import {Redirect, Switch} from "react-router-dom";
+import React, { useContext } from "react";
+import { Redirect, Switch } from "react-router-dom";
 
-import {RouteWithLayout} from "./components";
-import {Main as MainLayout, Minimal as MinimalLayout} from "./layouts";
+import { RouteWithLayout } from "./components";
+import { Main as MainLayout, Minimal as MinimalLayout } from "./layouts";
 import loadable from '@loadable/component';
-import {AppContext} from "adapter";
+import { AppContext } from "adapter";
 
 const AccountView = loadable(() => import('./views/Account'));
 const MineView = loadable(() => import('./views/Mine'));
@@ -15,8 +15,8 @@ const SystemView = loadable(() => import('./views/System'));
 const MetricsView = loadable(() => import('./views/Metric'));
 // custom
 
-const PrivateRoute = ({...rest}) => {
-    const {user} = useContext(AppContext);
+const PrivateRoute = ({ ...rest }) => {
+    const { user } = useContext(AppContext);
     return !user.overdue ? (
         <RouteWithLayout {...rest} />
     ) : (
@@ -80,7 +80,7 @@ const Routes = () => {
                 path="/metrics"
             />
             {/* custom begin */}
-            <Redirect to="/not-found"/>
+            <Redirect to="/not-found" />
         </Switch>
     );
 };

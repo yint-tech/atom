@@ -1,11 +1,11 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 
-import {AppContext} from "adapter";
-import {BackendPagedTable} from "components";
+import { AppContext } from "adapter";
+import { BackendPagedTable } from "components";
 import moment from "moment/moment";
 
 const LogPanel = () => {
-    const {api} = useContext(AppContext);
+    const { api } = useContext(AppContext);
     const [searchParam, setSearchParam] = useState({
         "key": ""
     })

@@ -28,7 +28,7 @@ function doRequest(request) {
     let user = reqs.getStore();
     return new Promise((resolve, reject) => {
         let newHeaders = request.headers ? request.headers : {};
-        newHeaders = {...newHeaders}
+        newHeaders = { ...newHeaders }
         if (user) {
             newHeaders[config.login_token_key] = user['loginToken'];
         }
@@ -63,7 +63,7 @@ function doGet(uri, params = "", route = false) {
     } else {
         // 组装参数
         let p = [];
-        for (let i of Object.keys({...params})) {
+        for (let i of Object.keys({ ...params })) {
             if (params[i] == null) {
                 continue;
             }
@@ -84,7 +84,7 @@ function doGet(uri, params = "", route = false) {
 function doPost(uri, data, query) {
     let postForm = function () {
         let p = [];
-        for (let i of Object.keys({...data})) {
+        for (let i of Object.keys({ ...data })) {
             if (data[i] != null) {
                 let key = encodeURIComponent(i);
                 let value = encodeURIComponent(data[i]);
@@ -103,7 +103,7 @@ function doPost(uri, data, query) {
 
 function doForm(uri, data) {
     let form = new FormData();
-    for (let i of Object.keys({...data})) {
+    for (let i of Object.keys({ ...data })) {
         if (data[i] != null) {
             form.append(i, data[i]);
         }
