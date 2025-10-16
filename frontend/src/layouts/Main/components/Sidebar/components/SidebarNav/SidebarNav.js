@@ -51,7 +51,7 @@ const useStyles = createUseStyles({
       bottom: 0,
       width: '3px',
       backgroundColor: 'transparent',
-      borderRadius: '0 2px 2px 0',
+      borderRadius: '5px 0 0 5px',
       transition: 'background-color 0.2s ease',
     },
   },

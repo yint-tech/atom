@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import clsx from 'clsx';
 import { Loading, SearchInput } from '../index';
@@ -39,6 +40,7 @@ const useStyles = createUseStyles({
 });
 
 const Toolbar = props => {
+  const { t } = useTranslation();
   const { onInputChange, ActionEl } = props;
 
   const theme = useTheme();
@@ -49,13 +51,14 @@ const Toolbar = props => {
       <SearchInput
         className={classes.searchInput}
         onChange={v => onInputChange(v)}
-        placeholder='请输入关键词进行查询'
+        placeholder={t('common.searchPlaceholder')}
       />
       <span className={classes.spacer} />
       {ActionEl ? ActionEl : <></>}
     </div>
   );
 };
+
 const DataTable = props => {
   const {
     className,

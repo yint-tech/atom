@@ -199,13 +199,13 @@ const Topbar = props => {
             <Notice />
           )}
         </Hidden>
-        <div className={classes.flexGrow} />
-        <LanguageToggle variant="light" />
         <Hidden lgUp>
           <IconButton color='inherit' onClick={onSidebarOpen}>
             <MenuIcon />
           </IconButton>
         </Hidden>
+        <div className={classes.flexGrow} />
+        <LanguageToggle variant="light" />
         {user.mock ? (
           logoutMockBtn
         ) : (

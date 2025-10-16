@@ -47,6 +47,7 @@ const useStyles = createUseStyles({
   nav: {
     marginBottom: ({ theme }) => theme.spacing(2),
     marginLeft: ({ theme }) => theme.spacing(-0.5),
+    marginRight: ({ theme }) => theme.spacing(0.5),
     flex: 1,
   },
   footer: {
