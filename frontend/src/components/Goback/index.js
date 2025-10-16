@@ -1,1 +1,1 @@
-export {default} from './Goback';
+export { default } from './Goback';

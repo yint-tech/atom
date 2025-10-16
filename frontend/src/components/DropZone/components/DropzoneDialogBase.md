@@ -18,15 +18,16 @@ const dialogTitle = () => (
   <>
     <span>Upload file</span>
     <IconButton
-      style={{right: '12px', top: '8px', position: 'absolute'}}
-      onClick={() => setOpen(false)}>
+      style={{ right: '12px', top: '8px', position: 'absolute' }}
+      onClick={() => setOpen(false)}
+    >
       <CloseIcon />
     </IconButton>
   </>
 );
 
 <div>
-  <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+  <Button variant='contained' color='primary' onClick={() => setOpen(true)}>
     Add Image
   </Button>
 
@@ -34,8 +35,8 @@ const dialogTitle = () => (
     dialogTitle={dialogTitle()}
     acceptedFiles={['image/*']}
     fileObjects={fileObjects}
-    cancelButtonText={"cancel"}
-    submitButtonText={"submit"}
+    cancelButtonText={'cancel'}
+    submitButtonText={'submit'}
     maxFileSize={5000000}
     open={open}
     onAdd={newFileObjs => {
@@ -53,5 +54,5 @@ const dialogTitle = () => (
     showPreviews={true}
     showFileNamesInPreview={true}
   />
-</div>
+</div>;
 ```

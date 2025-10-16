@@ -1,194 +1,208 @@
-import React, {useContext} from "react";
+import React, { useContext } from 'react';
 import {
-    Alert,
-    AlertTitle,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
-    Grid,
-    IconButton,
-    Popover,
-    Typography
-} from "@mui/material";
-import {AppContext} from "adapter";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import CachedIcon from "@mui/icons-material/Cached";
-import moment from "moment";
-import configs from 'config'
-import clsx from "clsx";
-import {createUseStyles, useTheme} from "react-jss";
+  Alert,
+  AlertTitle,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  IconButton,
+  Popover,
+  Typography,
+} from '@mui/material';
+import { AppContext } from 'adapter';
+import { useTranslation } from 'react-i18next';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import CachedIcon from '@mui/icons-material/Cached';
+import moment from 'moment';
+import configs from 'config';
+import clsx from 'clsx';
+import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
-    root: {
-        height: "100%"
+  root: {
+    height: '100%',
+    border: 'none',
+    boxShadow: 'none',
+  },
+  header: {
+    padding: ({ theme }) => theme.spacing(3),
+    paddingBottom: ({ theme }) => theme.spacing(2),
+    '& .MuiCardHeader-title': {
+      fontSize: '1.25rem',
+      fontWeight: 600,
+      color: '#2c3e50',
     },
-    content: {
-        alignItems: "center",
-        display: "flex"
+  },
+  content: {
+    padding: ({ theme }) => theme.spacing(0, 3, 3, 3),
+  },
+  tokenContainer: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    padding: ({ theme }) => theme.spacing(2),
+    border: '1px solid #e9ecef',
+  },
+  url: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '14px',
+    lineHeight: '1.4em',
+    wordBreak: 'break-all',
+    fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+    color: '#495057',
+    backgroundColor: 'transparent',
+    padding: 0,
+    margin: 0,
+  },
+  actionButtons: {
+    display: 'flex',
+    gap: ({ theme }) => theme.spacing(1),
+    marginLeft: ({ theme }) => theme.spacing(2),
+  },
+  iconButton: {
+    padding: ({ theme }) => theme.spacing(1),
+    borderRadius: '6px',
+    backgroundColor: '#ffffff',
+    border: '1px solid #dee2e6',
+    '&:hover': {
+      backgroundColor: '#f8f9fa',
+      borderColor: '#4facfe',
     },
-    title: {
-        fontWeight: 700
+    '& .MuiSvgIcon-root': {
+      fontSize: '18px',
+      color: '#6c757d',
     },
-    avatar: {
-        backgroundColor: ({theme}) => theme.palette.success.main,
-        height: 56,
-        width: 56
-    },
-    icon: {
-        height: 32,
-        width: 32
-    },
-    mt: {
-        marginTop: ({theme}) => theme.spacing(4)
-    },
-    mr: {
-        marginRight: ({theme}) => theme.spacing(6)
-    },
-    pd: {
-        width: ({theme}) => theme.spacing(18),
-        paddingLeft: ({theme}) => theme.spacing(1),
-        textAlign: "center"
-    },
-    url: {
-        display: "flex",
-        alignItems: "center",
-        fontSize: 16,
-        lineHeight: "1.2em",
-        wordBreak: "break-all",
-        cursor: "pointer"
-    },
-    padding: {
-        padding: ({theme}) => theme.spacing(2)
-    },
-    formControl: {
-        width: ({theme}) => theme.spacing(20),
-        margin: ({theme}) => theme.spacing(2)
-    },
-    pop: {
-        padding: ({theme}) => theme.spacing(2)
-    },
-    popBtns: {
-        marginTop: ({theme}) => theme.spacing(2),
-        textAlign: "center"
-    }
+  },
+  pop: {
+    padding: ({ theme }) => theme.spacing(3),
+    maxWidth: '400px',
+  },
+  popBtns: {
+    marginTop: ({ theme }) => theme.spacing(2),
+    display: 'flex',
+    gap: ({ theme }) => theme.spacing(1),
+    justifyContent: 'flex-end',
+  },
+  alertTitle: {
+    fontSize: '16px',
+    fontWeight: 600,
+  },
+  alertContent: {
+    fontSize: '14px',
+    lineHeight: '1.5',
+  },
 });
 
 const UserDashboard = props => {
-    const {className, ...rest} = props;
-    const {user, setUser} = useContext(AppContext);
-    const {api} = useContext(AppContext);
-    const apiUrl = user.apiToken;
+  const { className, ...rest } = props;
+  const { user, setUser } = useContext(AppContext);
+  const { api } = useContext(AppContext);
+  const apiUrl = user.apiToken;
+  const { t } = useTranslation();
 
-    const theme = useTheme();
-    const classes = useStyles({theme});
+  const theme = useTheme();
+  const classes = useStyles({ theme });
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const doRefreshApiToken = () => {
-        api.regenerateAPIToken().then(res => {
-            if (res.status === 0) {
-                let user = api.getStore();
-                user.apiToken = res.data.apiToken;
-                api.setStore(user);
-                setUser({
-                    ...user,
-                    time: moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
-                });
-            }
+  const doRefreshApiToken = () => {
+    api.regenerateAPIToken().then(res => {
+      if (res.status === 0) {
+        let user = api.getStore();
+        user.apiToken = res.data.apiToken;
+        api.setStore(user);
+        setUser({
+          ...user,
+          time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
         });
-    };
+      }
+    });
+  };
 
-    return (
-        <Card
-            {...rest}
-            className={clsx(classes.root, className)}
-        >
-            <CardHeader title="API TOKEN"/>
-            <Divider/>
-            <CardContent>
-                <Grid
-                    container
-                    spacing={2}
+  return (
+    <Card className={classes.root}>
+      <CardHeader
+        className={classes.header}
+        title="API Token"
+        titleTypographyProps={{
+          variant: 'h6',
+        }}
+      />
+      <CardContent className={classes.content}>
+        <div className={classes.tokenContainer}>
+          <div className={classes.url}>
+            {apiUrl}
+            <div className={classes.actionButtons}>
+              <CopyToClipboard
+                text={apiUrl}
+                onCopy={() => api.successToast(t('common.copySuccess'))}
+              >
+                <IconButton
+                  className={classes.iconButton}
+                  title="复制到剪贴板"
                 >
-                    <Grid item xs={12}>
-                        <Typography
-                            className={classes.url}
-                            color="textSecondary"
-                            variant="caption"
-                        >
-                            {apiUrl}
-                            <CopyToClipboard text={apiUrl}
-                                             onCopy={() => api.successToast("复制成功")}>
-                                <IconButton style={{marginLeft: 15}} color="primary" aria-label="upload picture"
-                                            component="span">
-                                    <FileCopyIcon/>
-                                </IconButton>
-                            </CopyToClipboard>
-                            <IconButton
-                                onClick={handleClick}
-                                style={{marginLeft: 15}}
-                                color="primary"
-                                aria-label="upload picture"
-                                component="span">
-                                <CachedIcon/>
-                            </IconButton>
-                            <Popover
-                                open={Boolean(anchorEl)}
-                                anchorEl={anchorEl}
-                                onClose={handleClose}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "center"
-                                }}
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "center"
-                                }}
-                            >
-                                <div className={classes.pop}>
-                                    <Alert severity="warning">
-                                        <AlertTitle>APIToken 刷新后，通过 API
-                                            访问 {configs.app} 后台的请求将会被阻断</AlertTitle>
-                                        如果 APIToken 没有泄漏，不建议重制 Token
-                                    </Alert>
-                                    <div className={classes.popBtns}>
-                                        <Button
-                                            onClick={handleClose}
-                                            color="primary"
-                                            aria-label="upload picture"
-                                            component="span">
-                                            取消
-                                        </Button>
-                                        <Button
-                                            onClick={() => {
-                                                doRefreshApiToken();
-                                                handleClose();
-                                            }}
-                                            style={{marginLeft: 15}}
-                                            color="primary"
-                                            aria-label="upload picture"
-                                            component="span">
-                                            确定
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Popover>
-                        </Typography>
-                    </Grid>
-                </Grid>
-            </CardContent>
-        </Card>
-    );
+                  <FileCopyIcon />
+                </IconButton>
+              </CopyToClipboard>
+              <IconButton 
+                className={classes.iconButton}
+                onClick={handleClick}
+                title="刷新Token"
+              >
+                <CachedIcon />
+              </IconButton>
+            </div>
+          </div>
+        </div>
+        
+        <Popover
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <div className={classes.pop}>
+            <Alert severity="warning">
+              <AlertTitle className={classes.alertTitle}>
+                {t('userDashboard.apiTokenRefreshWarning', { appName: configs.app })}
+              </AlertTitle>
+              <div className={classes.alertContent}>
+                {t('userDashboard.apiTokenAdvice')}
+              </div>
+            </Alert>
+            <div className={classes.popBtns}>
+              <Button onClick={handleClose} color="primary" variant="outlined">
+                {t('common.cancel')}
+              </Button>
+              <Button 
+                onClick={() => {
+                  doRefreshApiToken();
+                  handleClose();
+                }} 
+                color="error" 
+                variant="contained"
+              >
+                {t('common.confirm')}
+              </Button>
+            </div>
+          </div>
+        </Popover>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default UserDashboard;

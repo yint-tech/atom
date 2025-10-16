@@ -1,90 +1,132 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
-import React, {forwardRef} from 'react';
-import {NavLink as RouterLink} from 'react-router-dom';
+import React, { forwardRef } from 'react';
+import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Button, colors, List, ListItem} from '@mui/material';
-import {createUseStyles, useTheme} from "react-jss";
+import { Button, colors, List, ListItem, Divider } from '@mui/material';
+import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
-    root: {},
-    item: {
-        display: 'flex',
-        paddingTop: 0,
-        paddingBottom: 0
+  root: {
+    padding: 0,
+  },
+  item: {
+    display: 'flex',
+    paddingTop: 0,
+    paddingBottom: 0,
+    marginBottom: ({ theme }) => theme.spacing(0.8),
+    '&:last-child': {
+      marginBottom: 0,
     },
-    button: {
-        color: colors.blueGrey[800],
-        padding: '10px 8px',
-        justifyContent: 'flex-start',
-        textTransform: 'none',
-        letterSpacing: 0,
-        width: '100%',
-        fontWeight: ({theme}) => theme.typography.fontWeightMedium
+  },
+  button: {
+    color: '#5a6c7d',
+    padding: ({ theme }) => theme.spacing(1.2, 1.5),
+    justifyContent: 'flex-start',
+    textTransform: 'none',
+    letterSpacing: 0,
+    width: '100%',
+    fontWeight: 500,
+    fontSize: '14px',
+    borderRadius: '8px',
+    margin: ({ theme }) => theme.spacing(0, 0.5),
+    transition: 'all 0.2s ease',
+    position: 'relative',
+    background: 'transparent',
+    border: 'none',
+    boxShadow: 'none',
+    '&:hover': {
+      backgroundColor: 'rgba(79, 172, 254, 0.08)',
+      color: '#4facfe',
+      '& $icon': {
+        color: '#4facfe',
+      },
     },
-    icon: {
-        color: ({theme}) => theme.palette.icon,
-        width: 24,
-        height: 24,
-        display: 'flex',
-        alignItems: 'center',
-        marginRight: ({theme}) => theme.spacing(1)
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: '3px',
+      backgroundColor: 'transparent',
+      borderRadius: '0 2px 2px 0',
+      transition: 'background-color 0.2s ease',
     },
-    active: {
-        color: ({theme}) => theme.palette.primary.main,
-        fontWeight: ({theme}) => theme.typography.fontWeightMedium,
-        '& $icon': {
-            color: ({theme}) => theme.palette.primary.main
-        }
-    }
+  },
+  icon: {
+    color: '#5a6c7d',
+    width: 20,
+    height: 20,
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: ({ theme }) => theme.spacing(1.5),
+    transition: 'color 0.2s ease',
+  },
+  active: {
+    color: '#4facfe',
+    fontWeight: 600,
+    backgroundColor: 'rgba(79, 172, 254, 0.1)',
+    '&::before': {
+      backgroundColor: '#4facfe',
+    },
+    '& $icon': {
+      color: '#4facfe',
+    },
+    '&:hover': {
+      backgroundColor: 'rgba(79, 172, 254, 0.12)',
+    },
+  },
+  divider: {
+    margin: ({ theme }) => theme.spacing(1, 2),
+    backgroundColor: '#e9ecef',
+    height: '1px',
+  },
 });
 
 const CustomRouterLink = forwardRef((props, ref) => (
-    <div
-        ref={ref}
-        style={{flexGrow: 1}}
-    >
-        <RouterLink {...props} />
-    </div>
+  <div ref={ref} style={{ flexGrow: 1 }}>
+    <RouterLink {...props} />
+  </div>
 ));
 
 const SidebarNav = props => {
-    const {pages, className, ...rest} = props;
+  const { pages, className, ...rest } = props;
 
-    const theme = useTheme();
-    const classes = useStyles({theme});
+  const theme = useTheme();
+  const classes = useStyles({ theme });
 
-    return (
-        <List
-            {...rest}
-            className={clsx(classes.root, className)}
-        >
-            {pages.map(page => (
-                <ListItem
-                    className={classes.item}
-                    disableGutters
-                    key={page.title}
-                    divider={!!page.divider}
-                >
-                    <Button
-                        activeClassName={classes.active}
-                        className={classes.button}
-                        component={CustomRouterLink}
-                        to={page.href}
-                    >
-                        <div className={classes.icon}>{page.icon}</div>
-                        {page.title}
-                    </Button>
-                </ListItem>
-            ))}
-        </List>
-    );
+  return (
+    <List {...rest} className={clsx(classes.root, className)}>
+      {pages.map((page, index) => (
+        <React.Fragment key={page.title}>
+          <ListItem
+            className={classes.item}
+            disableGutters
+          >
+            <Button
+              activeClassName={classes.active}
+              className={classes.button}
+              component={CustomRouterLink}
+              to={page.href}
+            >
+              <div className={classes.icon}>{page.icon}</div>
+              {page.title}
+            </Button>
+          </ListItem>
+          {page.divider && index < pages.length - 1 && (
+            <Divider className={classes.divider} />
+          )}
+        </React.Fragment>
+      ))}
+    </List>
+  );
 };
 
 SidebarNav.propTypes = {
-    className: PropTypes.string,
-    pages: PropTypes.array.isRequired
+  className: PropTypes.string,
+  pages: PropTypes.array.isRequired,
 };
 
 export default SidebarNav;

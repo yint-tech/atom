@@ -1,67 +1,75 @@
-import React, {useContext} from 'react';
-import {AppContext} from 'adapter';
+import React, { useContext } from 'react';
+import { AppContext } from 'adapter';
 import PropTypes from 'prop-types';
-import {Alert, Avatar, Typography} from "@mui/material";
-import {Link as RouterLink} from 'react-router-dom';
-import {createUseStyles, useTheme} from "react-jss";
+import { Alert, Avatar, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
-    avatar: {
-        width: 60,
-        height: 60
+  container: {
+    padding: ({ theme }) => theme.spacing(1.5),
+    borderRadius: '8px',
+    background: '#f8f9fa',
+    border: '1px solid #e9ecef',
+    marginBottom: ({ theme }) => theme.spacing(1.5),
+  },
+  user: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: ({ theme }) => theme.spacing(1.5),
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#4facfe',
+    color: '#ffffff',
+    fontSize: '16px',
+    fontWeight: 500,
+  },
+  name: {
+    color: '#495057',
+    fontSize: '14px',
+    fontWeight: 500,
+    flex: 1,
+  },
+  notice: {
+    marginTop: ({ theme }) => theme.spacing(1),
+    '& .MuiAlert-root': {
+      borderRadius: '6px',
+      fontSize: '12px',
+      padding: ({ theme }) => theme.spacing(0.5, 1),
     },
-    user: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: ({theme}) => theme.spacing(1),
-    },
-    line: {
-        height: ({theme}) => theme.spacing(2),
-        marginLeft: ({theme}) => theme.spacing(1),
-        marginRight: ({theme}) => theme.spacing(1)
-    },
-    name: {
-        marginLeft: ({theme}) => theme.spacing(1),
-    },
-    setting: {
-        fontSize: 14,
-        display: 'flex',
-        alignItems: 'center',
-    }
+  },
 });
 
 const Profile = () => {
-    const {user, notice} = useContext(AppContext);
-    const theme = useTheme();
-    const classes = useStyles({theme});
+  const { user, notice } = useContext(AppContext);
+  const theme = useTheme();
+  const classes = useStyles({ theme });
 
-    return (
-        <div>
-            <div className={classes.user}>
-                <Avatar
-                    className={classes.purple}
-                    component={RouterLink}
-                    to="/"
-                >
-                    {user.userName ? user.userName[0] : ''}
-                </Avatar>
-                <Typography
-                    className={classes.name}
-                    variant="h3"
-                >
-                    {user.userName}
-                </Typography>
-            </div>
-            {notice ? (
-                <Alert severity="info">{notice}</Alert>
-            ) : null}
+  return (
+    <div>
+      <div className={classes.container}>
+        <div className={classes.user}>
+          <Avatar className={classes.avatar} component={RouterLink} to='/'>
+            {user.userName ? user.userName[0].toUpperCase() : 'U'}
+          </Avatar>
+          <Typography className={classes.name} variant='h6'>
+            {user.userName || 'User'}
+          </Typography>
         </div>
-    );
+      </div>
+      {notice ? (
+        <div className={classes.notice}>
+          <Alert severity='info'>{notice}</Alert>
+        </div>
+      ) : null}
+    </div>
+  );
 };
 
 Profile.propTypes = {
-    className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default Profile;

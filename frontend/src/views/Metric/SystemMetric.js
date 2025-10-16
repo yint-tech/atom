@@ -1,92 +1,102 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import MetricPage from './MetricPage'
+import MetricPage from './MetricPage';
 
-const systemMQL = [
+const SystemMetrics = () => {
+  const { t } = useTranslation();
+  
+  const systemMQL = [
     {
-        title: "looper线程大盘",
-        mql: `# looper线程
+      title: t('metrics.looperThreadDashboard'),
+      mql: `# ${t('metrics.looperThread')}
 looperTaskQueueSize = metric(looper.taskQueueSize);
-looper线程积压量 = aggregate(looperTaskQueueSize,'serverId','name');
+${t('metrics.looperThreadBacklog')} = aggregate(looperTaskQueueSize,'serverId','name');
 
 looperTime = metric(looper.time);
-线程 = aggregate(looperTime,'serverId','name');
-show(looper线程积压量,线程);
-        `
-    }, {
-        title: "线程池大盘",
-        bottomLegend: true,
-        mql: `
+${t('metrics.thread')} = aggregate(looperTime,'serverId','name');
+show(${t('metrics.looperThreadBacklog')},${t('metrics.thread')});
+        `,
+    },
+    {
+      title: t('metrics.threadPoolDashboard'),
+      bottomLegend: true,
+      mql: `
         
-# 线程池
+# ${t('metrics.threadPool')}
 threadPoolCount = metric(thread.pool.count);
 threadPoolCount = aggregate(threadPoolCount,'serverId','name');
-任务拒绝 = threadPoolCount[type='reject']
-任务异常 = threadPoolCount[type='exception']
-show(任务拒绝,任务异常);
+${t('metrics.taskReject')} = threadPoolCount[type='reject']
+${t('metrics.taskException')} = threadPoolCount[type='exception']
+show(${t('metrics.taskReject')},${t('metrics.taskException')});
 
 threadPoolGauge =  metric(thread.pool.gauge)
 threadPoolGauge = aggregate(threadPoolGauge,'serverId','name');
-核心线程量 = threadPoolGauge[type='coreSize']
-活跃量 = threadPoolGauge[type='activeCount']
-排队任务量 = threadPoolGauge[type='queueSize']
-show(核心线程量,活跃量,排队任务量)
+${t('metrics.coreThreadCount')} = threadPoolGauge[type='coreSize']
+${t('metrics.activeCount')} = threadPoolGauge[type='activeCount']
+${t('metrics.queueTaskCount')} = threadPoolGauge[type='queueSize']
+show(${t('metrics.coreThreadCount')},${t('metrics.activeCount')},${t('metrics.queueTaskCount')})
 
 threadPoolTime =  metric(thread.pool.timer)
 threadPoolTime = aggregate(threadPoolTime,'serverId','name');
-任务执行量 = threadPoolTime[timer_type='count']
-最长任务时间 =  threadPoolTime[timer_type='max']
-平均任务时间 =  threadPoolTime[timer_type='time'] / 任务执行量
-show(任务执行量,最长任务时间,平均任务时间)
-        `
-    }, {
-        title: "磁盘",
-        mql: `
-# 磁盘
-可用空间 = metric(disk.free);
-总空间 = metric(disk.total);
+${t('metrics.taskExecutionCount')} = threadPoolTime[timer_type='count']
+${t('metrics.maxTaskTime')} =  threadPoolTime[timer_type='max']
+${t('metrics.avgTaskTime')} =  threadPoolTime[timer_type='time'] / ${t('metrics.taskExecutionCount')}
+show(${t('metrics.taskExecutionCount')},${t('metrics.maxTaskTime')},${t('metrics.avgTaskTime')})
+        `,
+    },
+    {
+      title: t('metrics.disk'),
+      mql: `
+# ${t('metrics.disk')}
+${t('metrics.availableSpace')} = metric(disk.free);
+${t('metrics.totalSpace')} = metric(disk.total);
 
-可用空间 = aggregate(可用空间,'serverId','path'); 
-总空间 = aggregate(总空间,'serverId','path')
+${t('metrics.availableSpace')} = aggregate(${t('metrics.availableSpace')},'serverId','path'); 
+${t('metrics.totalSpace')} = aggregate(${t('metrics.totalSpace')},'serverId','path')
 
-磁盘使用率 = ((总空间 - 可用空间) * 100) / 总空间;
+${t('metrics.diskUsage')} = ((${t('metrics.totalSpace')} - ${t('metrics.availableSpace')}) * 100) / ${t('metrics.totalSpace')};
 
-可用空间 = 可用空间/1048576; 
-总空间 = 总空间/1048576; 
+${t('metrics.availableSpace')} = ${t('metrics.availableSpace')}/1048576; 
+${t('metrics.totalSpace')} = ${t('metrics.totalSpace')}/1048576; 
 
-show(可用空间,总空间,磁盘使用率);
+show(${t('metrics.availableSpace')},${t('metrics.totalSpace')},${t('metrics.diskUsage')});
 
-        `
-    }, {
-        title: "负载（Load）",
-        mql: `
-服务器分钟负载 = metric(system.load.average.1m);
-服务器分钟负载 = aggregate(服务器分钟负载,'serverId')
-show(服务器分钟负载);
+        `,
+    },
+    {
+      title: t('metrics.loadTitle'),
+      mql: `
+${t('metrics.serverMinuteLoad')} = metric(system.load.average.1m);
+${t('metrics.serverMinuteLoad')} = aggregate(${t('metrics.serverMinuteLoad')},'serverId')
+show(${t('metrics.serverMinuteLoad')});
 
-系统CPU使用率 = metric(system.cpu.usage);
-系统CPU使用率 = aggregate(系统CPU使用率,'serverId')
-进程CPU使用率 = metric(process.cpu.usage);
-进程CPU使用率 = aggregate(进程CPU使用率,'serverId')
-show(系统CPU使用率,进程CPU使用率);
-        `
-    }, {
-        title: "jvm内存",
-        bottomLegend: true,
-        mql: `
-        jvm内存 = metric(jvm.memory.used);
-jvm内存 = aggregate(jvm内存,'area','serverId');
-show(jvm内存);
-        `
-    }
-]
+${t('metrics.systemCpuUsage')} = metric(system.cpu.usage);
+${t('metrics.systemCpuUsage')} = aggregate(${t('metrics.systemCpuUsage')},'serverId')
+${t('metrics.processCpuUsage')} = metric(process.cpu.usage);
+${t('metrics.processCpuUsage')} = aggregate(${t('metrics.processCpuUsage')},'serverId')
+show(${t('metrics.systemCpuUsage')},${t('metrics.processCpuUsage')});
+        `,
+    },
+    {
+      title: t('metrics.jvmMemory'),
+      bottomLegend: true,
+      mql: `
+        ${t('metrics.jvmMemory')} = metric(jvm.memory.used);
+${t('metrics.jvmMemory')} = aggregate(${t('metrics.jvmMemory')},'area','serverId');
+show(${t('metrics.jvmMemory')});
+        `,
+    },
+  ];
 
-const SystemMetrics = () => {
-    return (<div>
-        <p>请注意：为避免系统指标过多污染，系统监控应该根据业务倾向选择更加应该关注的指标，所以本处没有展示所有的系统指标情况，
-            更加详细的指标请通过mql编辑器手动查看</p>
-        <MetricPage configs={systemMQL}/>
-    </div>);
-}
+  return (
+    <div>
+      <p>
+        {t('metrics.systemMetricsNote')}
+      </p>
+      <MetricPage configs={systemMQL} />
+    </div>
+  );
+};
 
 export default SystemMetrics;

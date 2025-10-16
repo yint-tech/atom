@@ -1,1 +1,1 @@
-export {default} from './RouteWithLayout';
+export { default } from './RouteWithLayout';
