@@ -67,4 +67,6 @@ ssh -o StrictHostKeyChecking=no root@atom.iinti.cn "/opt/atom/bin/startup.sh"
 echo "clean file"
 rm -f ${shell_dir}/docker/AtomMain.zip
 
+AmsCli publishNotify
+
 echo "all done"
