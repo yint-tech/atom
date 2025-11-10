@@ -166,6 +166,13 @@ application {
 
     applicationDistribution.from("${projectDir}/src/main/resources/application.properties") {
         into("conf/")
+        filter<ReplaceTokens>(
+            mapOf<String, Any>(
+                "tokens" to mapOf("env.localDebug=true" to "env.localDebug=false"),
+                "beginToken" to "",
+                "endToken" to ""
+            )
+        )
     }
     applicationDistribution.from("${projectDir}/assets/startup.sh") {
         into("bin/")
