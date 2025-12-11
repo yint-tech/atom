@@ -16,9 +16,6 @@ const useStyles = createUseStyles({
     paddingTop: ({ theme }) => theme.spacing(3),
     paddingBottom: ({ theme }) => theme.spacing(3),
   },
-  container: {
-    maxWidth: '1200px',
-  },
   card: {
     borderRadius: '12px',
     boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',

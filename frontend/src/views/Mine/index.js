@@ -11,9 +11,6 @@ const useStyles = createUseStyles({
     paddingTop: ({ theme }) => theme.spacing(3),
     paddingBottom: ({ theme }) => theme.spacing(3),
   },
-  container: {
-    maxWidth: '1200px',
-  },
   section: {
     marginBottom: ({ theme }) => theme.spacing(3),
   },
