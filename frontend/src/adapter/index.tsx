@@ -47,7 +47,13 @@ export const AppContext = createContext<AppContextValue>({
   systemInfo: DEFAULT_SYSTEM_INFO,
 });
 
-/** 给原始 api 包一层失败时的 toast 提示，包装后的签名不变 */
+/**
+ * 给原始 api 加一层失败 toast 的客户端代理：
+ * - 请求方法在调用时包一层错误提示，方法签名保持不变
+ * - getStore/setStore/errorToast/successToast 不是请求方法，直接透传
+ * 使用 Proxy + 逐属性缓存，避免手工循环包装的顺序覆盖问题，
+ * 同时保证同一方法多次取到的函数引用稳定（表格组件的 effect 依赖该引用）
+ */
 function buildApi(
   enqueueSnackbar: ReturnType<typeof useSnackbar>['enqueueSnackbar']
 ): Api {
@@ -57,41 +63,33 @@ function buildApi(
       anchorOrigin: { vertical: 'top', horizontal: 'center' },
     });
 
-  const impl: Record<string, unknown> = {
-    getStore: () => apis.getStore(),
-    setStore: (user: AppUser, key?: string) => apis.setStore(user, key),
-    errorToast: (msg: string) => toast(msg, 'error'),
-    successToast: (msg: string) => toast(msg, 'success'),
-  };
+  const passThrough = new Set(['getStore', 'setStore']);
+  const wrapped = new Map<string | symbol, unknown>();
 
-  const origin = apis as unknown as Record<
-    string,
-    (...args: Query[]) => Promise<CommonRes<unknown>>
-  >;
-  // getStore/setStore/errorToast/successToast 不是请求方法，上面已直接透传，
-  // 循环里必须跳过，否则包装器会对非 Promise 返回值调用 .then 直接抛错
-  const passThrough = new Set(['getStore', 'setStore', 'errorToast', 'successToast']);
-  for (const key of Object.keys(origin)) {
-    if (passThrough.has(key)) {
-      continue;
-    }
-    const fn = origin[key];
-    if (typeof fn !== 'function') {
-      continue;
-    }
-    impl[key] = (...args: Query[]) =>
-      fn(...args).then(res => {
-        if (res.status !== 0) {
-          console.log('call api ' + key + ' error :' + res.message);
-          toast(
-            (res.message || 'unknown error').substring(0, 50),
-            'error'
-          );
-        }
-        return res;
-      });
-  }
-  return impl as unknown as Api;
+  return new Proxy(apis as unknown as Api, {
+    get(target, prop, receiver) {
+      if (typeof prop === 'symbol' || passThrough.has(String(prop))) {
+        return Reflect.get(target, prop, receiver);
+      }
+      if (wrapped.has(prop)) {
+        return wrapped.get(prop);
+      }
+      const fn = Reflect.get(target, prop, receiver) as unknown;
+      if (typeof fn !== 'function') {
+        return fn;
+      }
+      const wrappedFn = (...args: Query[]) =>
+        (fn(...args) as Promise<CommonRes<unknown>>).then(res => {
+          if (res.status !== 0) {
+            console.log('call api ' + String(prop) + ' error :' + res.message);
+            toast((res.message || 'unknown error').substring(0, 50), 'error');
+          }
+          return res;
+        });
+      wrapped.set(prop, wrappedFn);
+      return wrappedFn;
+    },
+  });
 }
 
 const Adapter = (props: { children?: React.ReactNode }) => {
