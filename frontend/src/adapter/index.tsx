@@ -68,7 +68,13 @@ function buildApi(
     string,
     (...args: Query[]) => Promise<CommonRes<unknown>>
   >;
+  // getStore/setStore/errorToast/successToast 不是请求方法，上面已直接透传，
+  // 循环里必须跳过，否则包装器会对非 Promise 返回值调用 .then 直接抛错
+  const passThrough = new Set(['getStore', 'setStore', 'errorToast', 'successToast']);
   for (const key of Object.keys(origin)) {
+    if (passThrough.has(key)) {
+      continue;
+    }
     const fn = origin[key];
     if (typeof fn !== 'function') {
       continue;
