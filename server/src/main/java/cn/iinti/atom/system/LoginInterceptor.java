@@ -30,9 +30,14 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Resource
     private UserInfoService userInfoService;
 
-    private static final byte[] needLoginResponse = JSONObject.toJSONString(CommonRes.failed("请登录后访问")).getBytes(Charsets.UTF_8);
-    private static final byte[] loginExpire = JSONObject.toJSONString(CommonRes.failed("请重新登录")).getBytes(Charsets.UTF_8);
-    private static final byte[] onlyForAdminResponse = JSONObject.toJSONString(CommonRes.failed("非管理员")).getBytes(Charsets.UTF_8);
+    // 登录态异常返回码与前端约定：statusNeedLogin 为未携带token，statusLoginExpire 为token失效，
+    // 前端检测到这两个状态码会清除本地登录态并跳转登录页
+    private static final byte[] needLoginResponse = JSONObject
+            .toJSONString(CommonRes.failed(CommonRes.statusNeedLogin, "请登录后访问")).getBytes(Charsets.UTF_8);
+    private static final byte[] loginExpire = JSONObject
+            .toJSONString(CommonRes.failed(CommonRes.statusLoginExpire, "请重新登录")).getBytes(Charsets.UTF_8);
+    private static final byte[] onlyForAdminResponse = JSONObject
+            .toJSONString(CommonRes.failed(CommonRes.statusDeny, "非管理员")).getBytes(Charsets.UTF_8);
 
     private List<String> collectTokenList(HttpServletRequest request) {
         List<String> tokenList = Lists.newArrayList();

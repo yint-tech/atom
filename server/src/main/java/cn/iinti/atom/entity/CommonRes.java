@@ -96,7 +96,7 @@ public class CommonRes<T> {
     }
 
     public void changeFailed(String msg) {
-        this.status = -1;
+        this.status = statusError;
         this.message = msg;
     }
 

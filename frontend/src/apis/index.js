@@ -30,6 +30,9 @@ let reqs = {
   },
 };
 
+// 与后端 CommonRes 约定的登录态异常码：statusNeedLogin / statusLoginExpire
+const NEED_LOGIN_STATUS = [-4, -5];
+
 function doRequest(request) {
   let user = reqs.getStore();
   return new Promise((resolve, reject) => {
@@ -43,11 +46,7 @@ function doRequest(request) {
       headers: newHeaders,
     })
       .then(response => {
-        if (
-          response.data.status === -1 &&
-          response.data.message.indexOf('请') >= 0 &&
-          response.data.message.indexOf('登录') > 0
-        ) {
+        if (NEED_LOGIN_STATUS.indexOf(response.data.status) >= 0) {
           localStorage.removeItem(config.login_user_key);
           timer && clearTimeout(timer);
           timer = setTimeout(() => {
