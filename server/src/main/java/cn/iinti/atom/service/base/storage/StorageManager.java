@@ -1,5 +1,6 @@
 package cn.iinti.atom.service.base.storage;
 
+import cn.iinti.atom.service.base.config.Settings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,63 +9,63 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
- * 统一管理文件资源
+ * 统一管理文件资源，直接落本地磁盘（面向单体部署，不引入云存储抽象）
  */
 @Slf4j
 public class StorageManager {
-    private static final LocalStorage localStorage = new LocalStorage();
-
 
     public static void store(String path, File file) {
+        File targetFile = toLocalFile(path);
         try {
-            localStorage.store(path, file);
+            if (!file.equals(targetFile)) {
+                FileUtils.copyFile(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
             throw new IllegalStateException("can not save file: " + path, e);
         }
     }
 
     public static File get(String path) {
-        File file = getImpl(path);
-        if (file == null) {
-            return null;
-        }
-        if (!file.exists()) {
-            return null;
-        }
-        return file;
-    }
-
-    private static File getImpl(String path) {
         if (StringUtils.isBlank(path)) {
             return null;
         }
-        try {
-            File file = localStorage.getFile(path, null);
-            if (file != null && file.exists()) {
-                return file;
-            }
-
-            return file;
-        } catch (IOException e) {
-            throw new IllegalStateException("can not get file: " + path);
-        }
+        File file = toLocalFile(path);
+        return file.exists() ? file : null;
     }
-
-
 
     public static void deleteFile(String path) {
         if (StringUtils.isBlank(path)) {
             return;
         }
-        localStorage.delete(path);
+        File targetFile = toLocalFile(path);
+        if (targetFile.exists() && !targetFile.delete()) {
+            log.error("can not remove file:{}", targetFile);
+        }
+        cleanEmptyDir(Settings.Storage.localStorage, targetFile.getParentFile());
+    }
+
+    /**
+     * 文件删除后，父目录如果已经被清空，则递归清理掉，避免存储目录碎片化
+     */
+    private static void cleanEmptyDir(File root, File dir) {
+        if (dir == null || dir.equals(root)) {
+            return;
+        }
+        String[] list = dir.list();
+        if (list == null || list.length > 0) {
+            return;
+        }
+        FileUtils.deleteQuietly(dir);
+        cleanEmptyDir(root, dir.getParentFile());
     }
 
 
-    public static String retrieveContent(String filePathView) {
-        File file = get(filePathView);
-        if (file == null || !file.exists()) {
+    public static String retrieveContent(String path) {
+        File file = get(path);
+        if (file == null) {
             return "";
         }
         try {
@@ -75,12 +76,12 @@ public class StorageManager {
         }
     }
 
-    public static boolean storeWithViewPath(String filePathView, String content) {
+    public static boolean storeWithViewPath(String path, String content) {
         File resultFile = null;
         try {
             resultFile = Files.createTempFile("result", ".atom").toFile();
             FileUtils.writeStringToFile(resultFile, content, StandardCharsets.UTF_8);
-            store(filePathView, resultFile);
+            store(path, resultFile);
             return true;
         } catch (Exception e) {
             log.error("save result failed", e);
@@ -88,6 +89,10 @@ public class StorageManager {
         } finally {
             FileUtils.deleteQuietly(resultFile);
         }
+    }
+
+    private static File toLocalFile(String path) {
+        return new File(Settings.Storage.localStorage, path);
     }
 
 }

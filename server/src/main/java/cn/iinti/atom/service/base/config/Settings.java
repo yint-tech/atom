@@ -179,7 +179,7 @@ public class Settings {
     public static class Storage {
         public static final File root = Environment.storageRoot;
 
-        // 本地存储方案资源目录，如果用户没有配置任何云存储方案，那么系统默认是使用本地存储方案
+        // 业务文件存储目录，系统直接使用本地磁盘存储
         public static final File localStorage = CommonUtils.forceMkdir(new File(root, "storage"));
     }
 }
