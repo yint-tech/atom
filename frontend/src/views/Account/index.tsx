@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
-import { OpeDialog, SimpleTable } from '../../components';
+import { OpeDialog, Page, PageCard, SimpleTable } from '../../components';
 import { AppContext } from '../../adapter';
-import { Button, Grid, TextField, Typography, Container, Card } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import {
   DirectionsRailway,
   PermIdentity,
@@ -25,20 +25,6 @@ const LOGIN_USER_MOCK_KEY = config.login_user_key + '-MOCK';
  */
 
 const useStyles = createUseStyles({
-  root: {
-    minHeight: '100vh',
-    backgroundColor: '#f8f9fa',
-    paddingTop: ({ theme }) => theme.spacing(3),
-    paddingBottom: ({ theme }) => theme.spacing(3),
-  },
-  card: {
-    borderRadius: '12px',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
-    border: '1px solid rgba(0, 0, 0, 0.06)',
-    overflow: 'hidden',
-  },
-  content: {
-  },
   nameContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -201,10 +187,9 @@ const AccountList = () => {
   };
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth={false}>
-        <Card className={classes.card}>
-          <div className={classes.content}>
+    <Page>
+      <PageCard>
+            
             <SimpleTable
               refresh={refresh}
               actionEl={
@@ -270,9 +255,7 @@ const AccountList = () => {
           },
         ]}
               />
-            </div>
-          </Card>
-        </Container>
+    </PageCard>
 
         <CreateUserDialog
           openCreateUserDialog={openCreateUserDialog}
@@ -290,8 +273,8 @@ const AccountList = () => {
             <Permission account={permOpAccount} setRefresh={setRefresh} />
           }
         />
-      </div>
-    );
+    </Page>
+  );
 };
 
 export default AccountList;

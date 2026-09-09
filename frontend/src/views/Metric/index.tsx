@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Tab, Tabs, Container, Card } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
+import { Page, PageCard } from '../../components';
 import {
   TabPanel,
   usePersistedTab,
@@ -14,18 +15,6 @@ import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 
 const useStyles = createUseStyles({
-  root: {
-    minHeight: '100vh',
-    backgroundColor: '#f8f9fa',
-    paddingTop: ({ theme }) => theme.spacing(3),
-    paddingBottom: ({ theme }) => theme.spacing(3),
-  },
-  card: {
-    borderRadius: '12px',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
-    border: '1px solid rgba(0, 0, 0, 0.06)',
-    overflow: 'hidden',
-  },
   tabs: {
     '& .MuiTab-root': {
       fontSize: '14px',
@@ -55,9 +44,8 @@ function Metrics() {
   const [value, handleChange] = usePersistedTab(metricConfigTabKey);
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth={false}>
-        <Card className={classes.card}>
+    <Page>
+      <PageCard>
           <Tabs
             value={value}
             indicatorColor='primary'
@@ -84,9 +72,8 @@ function Metrics() {
               <MetricList />
             </TabPanel>
           </div>
-        </Card>
-      </Container>
-    </div>
+      </PageCard>
+    </Page>
   );
 }
 

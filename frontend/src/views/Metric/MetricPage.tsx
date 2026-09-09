@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, MenuItem, Select } from '@mui/material';
-import MetricCharsV2 from '../../components/MetricCharts';
+import MetricChart from '../../components/MetricCharts';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 
@@ -11,7 +11,7 @@ interface MetricPageConfig {
 }
 
 /**
- * MetricCharsV2 的 propTypes 未覆盖 className / title 等实际使用的属性，
+ * MetricChart 的 propTypes 未覆盖 className / title 等实际使用的属性，
  * 这里以类型断言补全视图层用到的 props（纯类型层面，不影响运行时行为）。
  */
 
@@ -75,7 +75,7 @@ const MetricPage = (props: {
       />
       <CardContent>
         {configs.map(config => (
-          <MetricCharsV2
+          <MetricChart
             className={classes.item}
             key={config.title}
             title={config.title}

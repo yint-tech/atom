@@ -114,7 +114,7 @@ const useStyles = createUseStyles({
   },
 });
 
-interface MetricCharsV2Props {
+interface MetricChartProps {
   height?: string;
   title?: string;
   mql?: string;
@@ -124,7 +124,7 @@ interface MetricCharsV2Props {
   className?: string;
 }
 
-const MetricCharsV2 = (props: MetricCharsV2Props) => {
+const MetricChart = (props: MetricChartProps) => {
   const {
     height = props.bottomLegend ? '350px' : '300px',
     title,
@@ -179,4 +179,4 @@ const MetricCharsV2 = (props: MetricCharsV2Props) => {
   );
 };
 
-export default MetricCharsV2;
+export default MetricChart;

@@ -1,5 +1,5 @@
 
-import { Tab, Tabs, Container, Card } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import {
   TabPanel,
   usePersistedTab,
@@ -12,20 +12,9 @@ import configs from '../../config';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 import { useTranslation } from 'react-i18next';
+import { Page, PageCard } from '../../components';
 
 const useStyles = createUseStyles({
-  root: {
-    minHeight: '100vh',
-    backgroundColor: '#f8f9fa',
-    paddingTop: ({ theme }) => theme.spacing(3),
-    paddingBottom: ({ theme }) => theme.spacing(3),
-  },
-  card: {
-    borderRadius: '12px',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
-    border: '1px solid rgba(0, 0, 0, 0.06)',
-    overflow: 'hidden',
-  },
   tabs: {
     borderBottom: '1px solid #e9ecef',
     '& .MuiTab-root': {
@@ -59,9 +48,8 @@ function System() {
   const [value, handleChange] = usePersistedTab(systemDashboardConfigTabKey);
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth={false}>
-        <Card className={classes.card}>
+    <Page>
+      <PageCard>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -86,9 +74,8 @@ function System() {
               <BuildInfo />
             </TabPanel>
           </div>
-        </Card>
-      </Container>
-    </div>
+      </PageCard>
+    </Page>
   );
 }
 

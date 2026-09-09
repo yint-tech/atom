@@ -8,14 +8,14 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
-import MetricCharsV2 from '../../components/MetricCharts';
+import MetricChart from '../../components/MetricCharts';
 import CodeMirror from '@uiw/react-codemirror';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 import { useTranslation } from 'react-i18next';
 
 /**
- * MetricCharsV2 的 propTypes 未覆盖 className / title 等实际使用的属性，
+ * MetricChart 的 propTypes 未覆盖 className / title 等实际使用的属性，
  * 这里以类型断言补全视图层用到的 props（纯类型层面，不影响运行时行为）。
  */
 
@@ -150,7 +150,7 @@ show(${t('metrics.systemCpuUsage')},${t('metrics.processCpuUsage')});
           {errMsg ? (
             <CodeMirror height='200px' value={errMsg} />
           ) : (
-            <MetricCharsV2
+            <MetricChart
               onLoadMsg={setErrMsg}
               className={classes.item}
               title={t('systemMetrics.mqlDebugMetrics')}

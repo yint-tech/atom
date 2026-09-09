@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../adapter';
-import { MetricCharsV2, OpeDialog, SimpleTable } from '../../components';
+import { MetricChart, OpeDialog, SimpleTable } from '../../components';
 import {
   Button,
   Card,
@@ -18,7 +18,7 @@ import { useTheme } from '../../common/theme';
 import { MetricTag } from '../../types/api';
 
 /**
- * MetricCharsV2 / OpeDialog 的 propTypes 未覆盖 title、className、doDialog 等
+ * MetricChart / OpeDialog 的 propTypes 未覆盖 title、className、doDialog 等
  * 实际使用的属性，这里以类型断言补全视图层用到的 props（纯类型层面，不影响运行时行为）。
  */
 
@@ -105,7 +105,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const MetricChart = (props: { showMetric: MetricTag; height?: string }) => {
+const MetricChartPanel = (props: { showMetric: MetricTag; height?: string }) => {
   const { showMetric, height } = props;
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -188,7 +188,7 @@ const MetricChart = (props: { showMetric: MetricTag; height?: string }) => {
         }
       />
       <CardContent className={classes.content}>
-        <MetricCharsV2
+        <MetricChart
           height={height}
           title={showMetric.name}
           mql={
@@ -241,7 +241,7 @@ const MetricList = () => {
             maxWidth={'lg'}
             title={t('metrics.viewMetric') + showMetric.name}
             opeContent={
-              <MetricChart showMetric={showMetric} height={'500px'} />
+              <MetricChartPanel showMetric={showMetric} height={'500px'} />
             }
             openDialog={openDialog}
             setOpenDialog={setOpenDialog}
