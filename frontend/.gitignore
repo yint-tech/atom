@@ -22,5 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# yarn berry 内部状态（每台机器各自生成，不需要入库）
+.yarn/
+
 .idea/
 package-lock.json
