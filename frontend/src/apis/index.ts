@@ -121,7 +121,12 @@ function doRequest(request: AxiosRequestConfig): Promise<CommonRes<never>> {
     })
       .then(response => {
         const res = response.data as CommonRes<never>;
-        if (NEED_LOGIN_STATUS.indexOf(res.status) >= 0) {
+        // 只有本地确实存过登录态时，-4/-5 才代表"会话过期"；
+        // 未登录状态（如注册/登录页轮询）不做清理和跳转，否则会把正在填表单的用户踹回登录页
+        const hadLoginSession =
+          !!localStorage.getItem(config.login_user_key) ||
+          !!localStorage.getItem(LOGIN_USER_MOCK_KEY);
+        if (hadLoginSession && NEED_LOGIN_STATUS.indexOf(res.status) >= 0) {
           localStorage.removeItem(config.login_user_key);
           if (timer) {
             clearTimeout(timer);
