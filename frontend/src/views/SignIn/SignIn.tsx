@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import React, { useContext, useEffect, useState, ComponentType } from 'react';
 import { Link as RouterLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Button, Link, TextField, Typography } from '@mui/material';
@@ -32,7 +33,7 @@ const useStyles = createUseStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+    background: tokens.authPageGradient,
     position: 'relative',
     overflow: 'hidden',
     padding: ({ theme }) => theme.spacing(2),
@@ -87,29 +88,29 @@ const useStyles = createUseStyles({
     '& .MuiOutlinedInput-root': {
       borderRadius: '12px',
       '&:hover fieldset': {
-        borderColor: '#4facfe',
+        borderColor: tokens.primary,
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#4facfe',
+        borderColor: tokens.primary,
       },
     },
   },
   signInButton: {
     margin: ({ theme }) => theme.spacing(2, 0),
     borderRadius: '12px',
-    background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    background: tokens.brandGradient,
     color: 'white',
     fontWeight: 600,
     textTransform: 'none',
     fontSize: '16px',
     padding: ({ theme }) => theme.spacing(1.5),
     '&:hover': {
-      background: 'linear-gradient(135deg, #43a3f5 0%, #00d9fe 100%)',
+      background: tokens.brandGradientHover,
       boxShadow: '0 10px 20px rgba(79, 172, 254, 0.3)',
     },
     '&:disabled': {
-      background: '#ccc',
-      color: '#666',
+      background: tokens.disabledBg,
+      color: tokens.textMuted,
     },
   },
 });
@@ -248,7 +249,7 @@ const SignIn = (props: RouteComponentProps) => {
           </Button>
           <Typography color='textSecondary' variant='body2' align='center'>
             {t('auth.noAccount')}{' '}
-            <Link component={RouterLink} to='/sign-up' variant='body2' style={{color: '#4facfe', textDecoration: 'none', fontWeight: 600}}>
+            <Link component={RouterLink} to='/sign-up' variant='body2' style={{color: tokens.primary, textDecoration: 'none', fontWeight: 600}}>
               {t('auth.registerNow')}
             </Link>
           </Typography>

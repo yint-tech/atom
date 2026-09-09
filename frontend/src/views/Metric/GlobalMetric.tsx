@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { createUseStyles } from 'react-jss';
@@ -20,12 +21,12 @@ const useStyles = createUseStyles({
   title: {
     fontSize: '18px',
     fontWeight: 600,
-    color: '#1a1a1a',
+    color: tokens.textDark,
     marginBottom: ({ theme }) => theme.spacing(1),
   },
   description: {
     fontSize: '14px',
-    color: '#546e7a',
+    color: tokens.textMuted,
     lineHeight: 1.6,
   },
 });

@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useContext, useState } from 'react';
 import { OpeDialog, Page, PageCard, SimpleTable } from '../../components';
 import { AppContext } from '../../adapter';
@@ -67,7 +68,7 @@ const useStyles = createUseStyles({
   dialogTitle: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#1a1a1a',
+    color: tokens.textDark,
     marginBottom: ({ theme }) => theme.spacing(1),
   },
   dialogGrid: {

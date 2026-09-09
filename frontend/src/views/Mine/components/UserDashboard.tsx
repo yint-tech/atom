@@ -1,3 +1,4 @@
+import { tokens } from '../../../theme/tokens';
 import React, { useContext } from 'react';
 import {
   Alert,
@@ -31,17 +32,17 @@ const useStyles = createUseStyles({
     '& .MuiCardHeader-title': {
       fontSize: '1.25rem',
       fontWeight: 600,
-      color: '#2c3e50',
+      color: tokens.textTitle,
     },
   },
   content: {
     padding: ({ theme }) => theme.spacing(0, 3, 3, 3),
   },
   tokenContainer: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: tokens.pageBg,
     borderRadius: '8px',
     padding: ({ theme }) => theme.spacing(2),
-    border: '1px solid #e9ecef',
+    border: `1px solid ${tokens.border}`,
   },
   url: {
     display: 'flex',
@@ -50,7 +51,7 @@ const useStyles = createUseStyles({
     lineHeight: '1.4em',
     wordBreak: 'break-all',
     fontFamily: 'Monaco, Consolas, "Courier New", monospace',
-    color: '#495057',
+    color: tokens.textBody,
     backgroundColor: 'transparent',
     padding: 0,
     margin: 0,
@@ -66,12 +67,12 @@ const useStyles = createUseStyles({
     backgroundColor: '#ffffff',
     border: '1px solid #dee2e6',
     '&:hover': {
-      backgroundColor: '#f8f9fa',
-      borderColor: '#4facfe',
+      backgroundColor: tokens.pageBg,
+      borderColor: tokens.primary,
     },
     '& .MuiSvgIcon-root': {
       fontSize: '18px',
-      color: '#6c757d',
+      color: tokens.textMuted,
     },
   },
   pop: {

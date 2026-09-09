@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
@@ -15,22 +16,22 @@ const useStyles = createUseStyles({
   card: {
     borderRadius: '8px',
     boxShadow: 'none',
-    border: '1px solid #e9ecef',
+    border: `1px solid ${tokens.border}`,
     marginBottom: ({ theme }) => theme.spacing(2),
   },
   cardHeader: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: tokens.pageBg,
     '& .MuiCardHeader-title': {
       fontSize: '14px',
       fontWeight: 600,
-      color: '#495057',
+      color: tokens.textBody,
     },
   },
   cardContent: {
     padding: ({ theme }) => theme.spacing(2),
   },
   groupButton: {
-    border: '1px solid #e9ecef',
+    border: `1px solid ${tokens.border}`,
     backgroundColor: '#fff3cd',
     color: '#856404',
     marginRight: ({ theme }) => theme.spacing(1),
@@ -46,8 +47,8 @@ const useStyles = createUseStyles({
     },
   },
   groupButtonActive: {
-    border: '1px solid #4facfe',
-    backgroundColor: '#4facfe',
+    border: `1px solid ${tokens.primary}`,
+    backgroundColor: tokens.primary,
     color: '#ffffff',
     marginRight: ({ theme }) => theme.spacing(1),
     marginTop: ({ theme }) => theme.spacing(1),

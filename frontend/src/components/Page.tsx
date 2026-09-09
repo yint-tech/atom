@@ -1,3 +1,4 @@
+import { tokens } from '../theme/tokens';
 import React from 'react';
 import clsx from 'clsx';
 import { Card, Container } from '@mui/material';
@@ -7,7 +8,7 @@ import { useTheme } from '../common/theme';
 const useStyles = createUseStyles({
   root: {
     minHeight: '100vh',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: tokens.pageBg,
     paddingTop: ({ theme }) => theme.spacing(3),
     paddingBottom: ({ theme }) => theme.spacing(3),
   },

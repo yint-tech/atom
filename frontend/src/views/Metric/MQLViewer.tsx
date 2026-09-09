@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useEffect, useState } from 'react';
 import {
   Button,
@@ -32,7 +33,7 @@ const useStyles = createUseStyles({
     '& .MuiCardHeader-title': {
       fontSize: '16px',
       fontWeight: 600,
-      color: '#1a1a1a',
+      color: tokens.textDark,
     },
   },
   content: {

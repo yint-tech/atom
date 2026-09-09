@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../adapter';
@@ -35,7 +36,7 @@ const useStyles = createUseStyles({
     '& .MuiCardHeader-title': {
       fontSize: '16px',
       fontWeight: 600,
-      color: '#1a1a1a',
+      color: tokens.textDark,
     },
   },
   content: {
@@ -63,7 +64,7 @@ const useStyles = createUseStyles({
   groupButton: {
     border: '1px solid #e0e0e0',
     backgroundColor: '#fff',
-    color: '#546e7a',
+    color: tokens.textMuted,
     marginRight: ({ theme }) => theme.spacing(1),
     marginBottom: ({ theme }) => theme.spacing(1),
     fontSize: '14px',
@@ -77,8 +78,8 @@ const useStyles = createUseStyles({
     },
   },
   groupButtonActive: {
-    border: '1px solid #2196f3',
-    backgroundColor: '#2196f3',
+    border: `1px solid ${tokens.primary}`,
+    backgroundColor: tokens.primary,
     color: '#fff',
     marginRight: ({ theme }) => theme.spacing(1),
     marginBottom: ({ theme }) => theme.spacing(1),
@@ -88,7 +89,7 @@ const useStyles = createUseStyles({
     borderRadius: '8px',
     padding: ({ theme }) => theme.spacing(0.5, 1.5),
     '&:hover': {
-      backgroundColor: '#1976d2',
+      backgroundColor: tokens.primaryDark,
     },
   },
   select: {
@@ -163,7 +164,7 @@ const MetricChartPanel = (props: { showMetric: MetricTag; height?: string }) => 
                 <Typography
                   variant='subtitle2'
                   style={{
-                    color: aggregateTags.includes(item) ? '#fff' : '#546e7a',
+                    color: aggregateTags.includes(item) ? '#fff' : tokens.textMuted,
                   }}
                 >
                   {item}

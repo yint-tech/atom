@@ -1,3 +1,4 @@
+import { tokens } from '../../../../../../theme/tokens';
 import React, { forwardRef } from 'react';
 import { NavLink as RouterLink, NavLinkProps } from 'react-router-dom';
 import clsx from 'clsx';
@@ -19,7 +20,7 @@ const useStyles = createUseStyles({
     },
   },
   button: {
-    color: '#5a6c7d',
+    color: tokens.textMuted,
     padding: ({ theme }) => theme.spacing(1.2, 1.5),
     justifyContent: 'flex-start',
     textTransform: 'none',
@@ -35,10 +36,10 @@ const useStyles = createUseStyles({
     border: 'none',
     boxShadow: 'none',
     '&:hover': {
-      backgroundColor: 'rgba(79, 172, 254, 0.08)',
-      color: '#4facfe',
+      backgroundColor: `rgba(${tokens.primaryRgb}, 0.08)`,
+      color: tokens.primary,
       '& $icon': {
-        color: '#4facfe',
+        color: tokens.primary,
       },
     },
     '&::before': {
@@ -54,7 +55,7 @@ const useStyles = createUseStyles({
     },
   },
   icon: {
-    color: '#5a6c7d',
+    color: tokens.textMuted,
     width: 20,
     height: 20,
     display: 'flex',
@@ -63,22 +64,22 @@ const useStyles = createUseStyles({
     transition: 'color 0.2s ease',
   },
   active: {
-    color: '#4facfe',
+    color: tokens.primary,
     fontWeight: 600,
-    backgroundColor: 'rgba(79, 172, 254, 0.1)',
+    backgroundColor: `rgba(${tokens.primaryRgb}, 0.1)`,
     '&::before': {
-      backgroundColor: '#4facfe',
+      backgroundColor: tokens.primary,
     },
     '& $icon': {
-      color: '#4facfe',
+      color: tokens.primary,
     },
     '&:hover': {
-      backgroundColor: 'rgba(79, 172, 254, 0.12)',
+      backgroundColor: `rgba(${tokens.primaryRgb}, 0.12)`,
     },
   },
   divider: {
     margin: ({ theme }) => theme.spacing(1, 2),
-    backgroundColor: '#e9ecef',
+    backgroundColor: tokens.border,
     height: '1px',
   },
 });

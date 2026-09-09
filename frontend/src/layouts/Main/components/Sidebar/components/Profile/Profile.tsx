@@ -1,3 +1,4 @@
+import { tokens } from '../../../../../../theme/tokens';
 import { useContext } from 'react';
 import { AppContext } from '../../../../../../adapter';
 import { Alert, Avatar, Typography } from '@mui/material';
@@ -9,8 +10,8 @@ const useStyles = createUseStyles({
   container: {
     padding: ({ theme }) => theme.spacing(1.5),
     borderRadius: '8px',
-    background: '#f8f9fa',
-    border: '1px solid #e9ecef',
+    background: tokens.pageBg,
+    border: `1px solid ${tokens.border}`,
     marginBottom: ({ theme }) => theme.spacing(1.5),
   },
   user: {
@@ -21,13 +22,13 @@ const useStyles = createUseStyles({
   avatar: {
     width: 40,
     height: 40,
-    backgroundColor: '#4facfe',
+    backgroundColor: tokens.primary,
     color: '#ffffff',
     fontSize: '16px',
     fontWeight: 500,
   },
   name: {
-    color: '#495057',
+    color: tokens.textBody,
     fontSize: '14px',
     fontWeight: 500,
     flex: 1,

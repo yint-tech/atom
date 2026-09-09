@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import React, { useContext, useEffect, useState, ComponentType } from 'react';
 import { Link as RouterLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import {
@@ -42,7 +43,7 @@ const useStyles = createUseStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+    background: tokens.authPageGradient,
     position: 'relative',
     overflow: 'hidden',
     padding: ({ theme }) => theme.spacing(2),
@@ -89,17 +90,17 @@ const useStyles = createUseStyles({
   subtitle: {
     textAlign: 'center',
     marginBottom: ({ theme }) => theme.spacing(3),
-    color: '#666',
+    color: tokens.textMuted,
   },
   textField: {
     marginBottom: ({ theme }) => theme.spacing(2),
     '& .MuiOutlinedInput-root': {
       borderRadius: '12px',
       '&:hover fieldset': {
-        borderColor: '#4facfe',
+        borderColor: tokens.primary,
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#4facfe',
+        borderColor: tokens.primary,
       },
     },
   },
@@ -111,9 +112,9 @@ const useStyles = createUseStyles({
   policyCheckbox: {
     marginLeft: '-9px',
     marginTop: '-9px',
-    color: '#4facfe',
+    color: tokens.primary,
     '&.Mui-checked': {
-      color: '#4facfe',
+      color: tokens.primary,
     },
   },
   policyText: {
@@ -125,25 +126,25 @@ const useStyles = createUseStyles({
   signInButton: {
     marginBottom: ({ theme }) => theme.spacing(2),
     borderRadius: '12px',
-    background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    background: tokens.brandGradient,
     color: 'white',
     fontWeight: 600,
     textTransform: 'none',
     fontSize: '16px',
     padding: ({ theme }) => theme.spacing(1.5),
     '&:hover': {
-      background: 'linear-gradient(135deg, #43a3f5 0%, #00d9fe 100%)',
+      background: tokens.brandGradientHover,
       boxShadow: '0 10px 20px rgba(79, 172, 254, 0.3)',
     },
     '&:disabled': {
-      background: '#ccc',
-      color: '#666',
+      background: tokens.disabledBg,
+      color: tokens.textMuted,
     },
   },
   loginLink: {
     textAlign: 'center',
     '& a': {
-      color: '#4facfe',
+      color: tokens.primary,
       textDecoration: 'none',
       fontWeight: 600,
       '&:hover': {

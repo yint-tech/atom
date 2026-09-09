@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useTranslation } from 'react-i18next';
 import { Tab, Tabs } from '@mui/material';
 import { Page, PageCard } from '../../components';
@@ -20,7 +21,7 @@ const useStyles = createUseStyles({
       fontSize: '14px',
       fontWeight: 500,
       textTransform: 'none',
-      color: '#546e7a',
+      color: tokens.textMuted,
       '&.Mui-selected': {
         color: ({ theme }) => theme.palette.primary.main,
       },

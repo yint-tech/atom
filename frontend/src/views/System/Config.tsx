@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,13 +27,13 @@ const useStyles = createUseStyles({
   heading: {
     fontSize: '14px',
     fontWeight: 600,
-    color: '#495057',
+    color: tokens.textBody,
     flexBasis: '33.33%',
     flexShrink: 0,
   },
   secondaryHeading: {
     fontSize: '14px',
-    color: '#6c757d',
+    color: tokens.textMuted,
     maxWidth: '300px',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -40,7 +41,7 @@ const useStyles = createUseStyles({
   },
   desc: {
     fontSize: '14px',
-    color: '#6c757d',
+    color: tokens.textMuted,
     lineHeight: 1.5,
   },
   input: {

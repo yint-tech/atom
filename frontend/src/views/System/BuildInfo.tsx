@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../adapter';
@@ -9,22 +10,22 @@ const useStyles = createUseStyles({
   card: {
     borderRadius: '8px',
     boxShadow: 'none',
-    border: '1px solid #e9ecef',
+    border: `1px solid ${tokens.border}`,
   },
   title: {
     fontSize: '14px',
     fontWeight: 600,
-    color: '#495057',
+    color: tokens.textBody,
     marginBottom: ({ theme }) => theme.spacing(1),
   },
   content: {
     fontSize: '14px',
-    color: '#6c757d',
+    color: tokens.textMuted,
     marginBottom: ({ theme }) => theme.spacing(2),
   },
   divider: {
     margin: ({ theme }) => theme.spacing(2, 0),
-    backgroundColor: '#e9ecef',
+    backgroundColor: tokens.border,
   },
 });
 

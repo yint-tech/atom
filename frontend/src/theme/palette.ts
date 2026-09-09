@@ -1,16 +1,18 @@
 import { colors } from '@mui/material';
+import { tokens } from './tokens';
 
 const white = '#FFFFFF';
 const black = '#000000';
 
+// 颜色取值全部来自 tokens.ts（唯一出处），MUI 组件与业务 jss 样式共享同一套品牌色
 const palette = {
   black,
   white,
   primary: {
     contrastText: white,
-    dark: colors.indigo[900],
-    main: colors.indigo[500],
-    light: colors.indigo[100],
+    dark: tokens.primaryDark,
+    main: tokens.primary,
+    light: tokens.primaryLight,
   },
   secondary: {
     contrastText: white,
@@ -44,15 +46,15 @@ const palette = {
   },
   text: {
     primary: colors.blueGrey[900],
-    secondary: colors.blueGrey[600],
+    secondary: tokens.textMuted,
     link: colors.blue[600],
   },
   background: {
-    default: '#F4F6F8',
+    default: tokens.pageBg,
     paper: white,
   },
   icon: colors.blueGrey[600],
-  divider: colors.grey[200],
+  divider: tokens.border,
 };
 
 export default palette;

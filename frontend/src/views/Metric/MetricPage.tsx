@@ -1,3 +1,4 @@
+import { tokens } from '../../theme/tokens';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, MenuItem, Select } from '@mui/material';
 import MetricChart from '../../components/MetricCharts';
@@ -25,7 +26,7 @@ const useStyles = createUseStyles({
     '& .MuiCardHeader-title': {
       fontSize: '16px',
       fontWeight: 600,
-      color: '#1a1a1a',
+      color: tokens.textDark,
     },
   },
   select: {

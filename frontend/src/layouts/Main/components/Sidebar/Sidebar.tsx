@@ -1,3 +1,4 @@
+import { tokens } from '../../../../theme/tokens';
 import React, { useContext } from 'react';
 import clsx from 'clsx';
 import {
@@ -68,10 +69,10 @@ const useStyles = createUseStyles({
     marginTop: 'auto',
     padding: ({ theme }) => theme.spacing(2, 1),
     textAlign: 'center',
-    borderTop: '1px solid #e9ecef',
+    borderTop: `1px solid ${tokens.border}`,
     '& .MuiTypography-root': {
       fontSize: '12px',
-      color: '#6c757d',
+      color: tokens.textMuted,
       fontWeight: 400,
     },
   },

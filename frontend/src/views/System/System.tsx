@@ -1,4 +1,5 @@
 
+import { tokens } from '../../theme/tokens';
 import { Tab, Tabs } from '@mui/material';
 import {
   TabPanel,
@@ -16,20 +17,20 @@ import { Page, PageCard } from '../../components';
 
 const useStyles = createUseStyles({
   tabs: {
-    borderBottom: '1px solid #e9ecef',
+    borderBottom: `1px solid ${tokens.border}`,
     '& .MuiTab-root': {
       fontSize: '14px',
       fontWeight: 500,
       textTransform: 'none',
       minHeight: '48px',
-      color: '#5a6c7d',
+      color: tokens.textMuted,
       '&.Mui-selected': {
-        color: '#4facfe',
+        color: tokens.primary,
         fontWeight: 600,
       },
     },
     '& .MuiTabs-indicator': {
-      backgroundColor: '#4facfe',
+      backgroundColor: tokens.primary,
       height: '2px',
     },
   },

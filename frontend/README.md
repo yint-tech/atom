@@ -33,6 +33,28 @@ yarn lint
 yarn format
 ```
 
+## 样式规范（不写 CSS 也能做页面）
+
+后台页面的样式已全部收敛，新增一个业务页面的标准姿势：
+
+```tsx
+import { Page, PageCard, SimpleTable } from 'components';
+
+const MyPage = () => (
+  <Page>
+    <PageCard>
+      <SimpleTable loadDataFun={() => api.myList({ page: 1, pageSize: 10 })} columns={[...]} />
+    </PageCard>
+  </Page>
+);
+```
+
+- 颜色一律从 `src/theme/tokens.ts` 取（`tokens.primary`、`tokens.border`、`tokens.textMuted`...），
+  **禁止手写十六进制**；换品牌色只需改这一个文件，MUI 组件和业务样式会同步变化
+- 页面骨架用 `<Page>` + `<PageCard>`；表格用 `<SimpleTable>`（客户端分页/搜索）或
+  `<BackendPagedTable>`（服务端分页）；弹窗用 `<OpeDialog>`；搜索框用 `<SearchInput>`
+- 确实需要自定义样式时用 `createUseStyles`，值引用 tokens；少量一次性装饰色（如插画配色）可留在组件内
+
 ## 目录约定
 
 - `src/apis/` 接口注册表与类型化的请求层，接口签名与后端 controller 对应

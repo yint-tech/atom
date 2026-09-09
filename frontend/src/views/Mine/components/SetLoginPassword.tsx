@@ -1,3 +1,4 @@
+import { tokens } from '../../../theme/tokens';
 import { useContext, useState } from 'react';
 import {
   Button,
@@ -24,7 +25,7 @@ const useStyles = createUseStyles({
     '& .MuiCardHeader-title': {
       fontSize: '1.25rem',
       fontWeight: 600,
-      color: '#2c3e50',
+      color: tokens.textTitle,
     },
   },
   content: {
@@ -40,21 +41,21 @@ const useStyles = createUseStyles({
       borderRadius: '8px',
       fontSize: '14px',
       '& fieldset': {
-        borderColor: '#e9ecef',
+        borderColor: tokens.border,
       },
       '&:hover fieldset': {
-        borderColor: '#4facfe',
+        borderColor: tokens.primary,
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#4facfe',
+        borderColor: tokens.primary,
         borderWidth: '2px',
       },
     },
     '& .MuiInputLabel-root': {
       fontSize: '14px',
-      color: '#6c757d',
+      color: tokens.textMuted,
       '&.Mui-focused': {
-        color: '#4facfe',
+        color: tokens.primary,
       },
     },
   },
@@ -65,15 +66,15 @@ const useStyles = createUseStyles({
     fontSize: '14px',
     fontWeight: 600,
     textTransform: 'none',
-    background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    background: tokens.brandGradient,
     color: '#ffffff',
     border: 'none',
     '&:hover': {
-      background: 'linear-gradient(135deg, #3b8bfe 0%, #00d4fe 100%)',
+      background: tokens.brandGradientHover,
     },
     '&:disabled': {
-      background: '#e9ecef',
-      color: '#6c757d',
+      background: tokens.border,
+      color: tokens.textMuted,
     },
   },
   alert: {
