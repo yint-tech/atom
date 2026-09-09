@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import type { DialogProps } from '@mui/material';
 import Loading from '../Loading';
-import PropTypes from 'prop-types';
 import { AppContext } from '../../adapter';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
@@ -119,16 +118,6 @@ const OpeDialog = (props: OpeDialogProps) => {
       </DialogActions>
     </Dialog>
   );
-};
-
-OpeDialog.propTypes = {
-  title: PropTypes.string.isRequired,
-  opeText: PropTypes.string,
-  opeContent: PropTypes.element,
-  openDialog: PropTypes.bool.isRequired,
-  setOpenDialog: PropTypes.func.isRequired,
-  okText: PropTypes.string,
-  okType: PropTypes.oneOf(['inherit', 'primary', 'secondary', 'default']),
 };
 
 export default OpeDialog;

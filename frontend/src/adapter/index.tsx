@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import apis, { ApiMethods, AppUser, Query } from '../apis';
 import { useSnackbar } from 'notistack';
@@ -91,15 +91,11 @@ function buildApi(
 const Adapter = (props: { children?: React.ReactNode }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [user, setUser] = useState<AppUser>({});
-  const [api, setApi] = useState<Api>({} as Api);
+  const api = useMemo(() => buildApi(enqueueSnackbar), [enqueueSnackbar]);
   const [notice, setNotice] = useState('');
   const [systemInfo, setSystemInfo] = useState<SystemInfo>(DEFAULT_SYSTEM_INFO);
   // 在调用任何业务代码之前，确保完成第一次的登录token刷新，避免到业务模块时，token刷新还未完成产生鉴权失败问题
   const [firstLogin, setFirstLogin] = useState(false);
-
-  useEffect(() => {
-    setApi(buildApi(enqueueSnackbar));
-  }, [enqueueSnackbar]);
 
   useEffect(() => {
     let u = apis.getStore();

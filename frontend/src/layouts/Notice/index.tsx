@@ -35,6 +35,10 @@ const Notice = () => {
   const [certificate, setCertificate] = useState<CertificateInfo>({});
 
   useEffect(() => {
+    if (import.meta.env.ENABLE_AMS_NOTICE !== 'true') {
+      // 开源部署没有因体授权 stub，请求必然 404，直接跳过
+      return;
+    }
     apis
       .getIntPushMsg()
       .then(res => {

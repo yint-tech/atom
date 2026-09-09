@@ -10,7 +10,6 @@ import {
   Pagination,
 } from '@mui/material';
 import Table, { Column } from '../Table/Table';
-import PropTypes from 'prop-types';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 import type { CommonRes, IPage } from '../../types/api';
@@ -208,15 +207,6 @@ const BackendPagedTable = (props: BackendPagedTableProps) => {
       </div>
     </div>
   );
-};
-
-BackendPagedTable.propTypes = {
-  loadDataFun: PropTypes.func.isRequired,
-  columns: PropTypes.array.isRequired,
-  searchParam: PropTypes.object.isRequired,
-  toolbar: PropTypes.element,
-  refresh: PropTypes.number,
-  renderCollapse: PropTypes.func,
 };
 
 export default BackendPagedTable;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Topbar } from './components';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
@@ -26,11 +25,6 @@ const Minimal = (props: React.PropsWithChildren<{ className?: string }>) => {
       <main className={classes.content}>{children}</main>
     </div>
   );
-};
-
-Minimal.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
 };
 
 export default Minimal;

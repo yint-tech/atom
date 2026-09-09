@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
-import PropTypes from 'prop-types';
 import { AppContext } from '../../adapter';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
@@ -245,10 +244,5 @@ function Permission(props: { account: UserInfo; setRefresh: (refresh: number) =>
     </div>
   );
 }
-
-Permission.propTypes = {
-  account: PropTypes.object.isRequired,
-  setRefresh: PropTypes.func.isRequired,
-};
 
 export default Permission;

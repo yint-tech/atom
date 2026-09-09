@@ -3,7 +3,6 @@ import { createUseStyles } from 'react-jss';
 import type { Theme as MuiTheme } from '@mui/material/styles';
 import { useTheme } from '../../common/theme';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 
 const useStyles = createUseStyles<string, { theme: MuiTheme; variant?: string }>({
   container: {
@@ -82,10 +81,6 @@ const LanguageToggle = ({ variant = 'light' }: { variant?: string }) => {
       ))}
     </Box>
   );
-};
-
-LanguageToggle.propTypes = {
-  variant: PropTypes.oneOf(['light', 'dark']),
 };
 
 export default LanguageToggle;

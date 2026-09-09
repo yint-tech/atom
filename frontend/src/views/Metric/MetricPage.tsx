@@ -1,7 +1,6 @@
 import { useState, ComponentType } from 'react';
 import { Card, CardContent, CardHeader, MenuItem, Select } from '@mui/material';
 import MetricCharsV2Component from '../../components/MetricCharts';
-import PropTypes from 'prop-types';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 
@@ -99,11 +98,6 @@ const MetricPage = (props: {
       </CardContent>
     </Card>
   );
-};
-
-MetricPage.propTypes = {
-  configs: PropTypes.array.isRequired,
-  bottomLegend: PropTypes.bool,
 };
 
 export default MetricPage;

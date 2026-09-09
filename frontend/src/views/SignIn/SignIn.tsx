@@ -3,7 +3,6 @@ import { Link as RouterLink, withRouter, RouteComponentProps } from 'react-route
 import { Button, Link, TextField, Typography } from '@mui/material';
 import { AppContext } from '../../adapter';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import configs from '../../config';
 import { createUseStyles } from 'react-jss';
@@ -253,10 +252,6 @@ const SignIn = (props: RouteComponentProps) => {
       </div>
     </div>
   );
-};
-
-SignIn.propTypes = {
-  history: PropTypes.object,
 };
 
 // propTypes 声明的 history: PropTypes.object 与 withRouter 期望的

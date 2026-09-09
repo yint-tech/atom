@@ -3,7 +3,6 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { AppBar, Hidden, IconButton, Toolbar, Typography } from '@mui/material';
 import { AppContext } from '../../../../adapter';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import MenuIcon from '@mui/icons-material/Menu';
 import InputIcon from '@mui/icons-material/Input';
 import EmojiNatureIcon from '@mui/icons-material/EmojiNature';
@@ -229,11 +228,6 @@ const Topbar = (props: TopbarProps) => {
       </Toolbar>
     </AppBar>
   );
-};
-
-Topbar.propTypes = {
-  className: PropTypes.string,
-  onSidebarOpen: PropTypes.func,
 };
 
 export default Topbar;

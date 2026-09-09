@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Route, RouteProps } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 interface RouteWithLayoutProps extends RouteProps {
   component: React.ComponentType<any>;
@@ -22,12 +21,6 @@ const RouteWithLayout = ({
       )}
     />
   );
-};
-
-RouteWithLayout.propTypes = {
-  component: PropTypes.any.isRequired,
-  layout: PropTypes.any.isRequired,
-  path: PropTypes.string,
 };
 
 export default RouteWithLayout;

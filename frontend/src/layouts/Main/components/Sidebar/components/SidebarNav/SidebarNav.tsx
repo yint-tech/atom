@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react';
 import { NavLink as RouterLink, NavLinkProps } from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { Button, List, ListItem, Divider } from '@mui/material';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../../../../../common/theme';
@@ -135,11 +134,6 @@ const SidebarNav = (props: SidebarNavProps) => {
       ))}
     </List>
   );
-};
-
-SidebarNav.propTypes = {
-  className: PropTypes.string,
-  pages: PropTypes.array.isRequired,
 };
 
 export default SidebarNav;

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { AppContext } from '../../adapter';
 import { createUseStyles } from 'react-jss';
@@ -178,15 +177,6 @@ const MetricCharsV2 = (props: MetricCharsV2Props) => {
       />
     </div>
   );
-};
-
-MetricCharsV2.propTypes = {
-  height: PropTypes.string,
-  mql: PropTypes.string.isRequired,
-  accuracy: PropTypes.string.isRequired,
-  onLoadMsg: PropTypes.func,
-  legend: PropTypes.object,
-  bottomLegend: PropTypes.bool,
 };
 
 export default MetricCharsV2;

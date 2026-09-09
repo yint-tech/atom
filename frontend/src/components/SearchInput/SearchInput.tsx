@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { IconButton, Input, MenuItem, Paper } from '@mui/material';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Select from '@mui/material/Select';
 import { Search } from '@mui/icons-material';
@@ -90,13 +89,6 @@ const SearchInput = (props: SearchInputProps) => {
       </IconButton>
     </Paper>
   );
-};
-
-SearchInput.propTypes = {
-  className: PropTypes.string,
-  onChange: PropTypes.func,
-  style: PropTypes.object,
-  initValue: PropTypes.string,
 };
 
 export default SearchInput;

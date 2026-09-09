@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useMediaQuery } from '@mui/material';
 
@@ -68,10 +67,6 @@ const Main = (props: React.PropsWithChildren<{ className?: string }>) => {
       </main>
     </div>
   );
-};
-
-Main.propTypes = {
-  children: PropTypes.node,
 };
 
 export default Main;

@@ -237,7 +237,7 @@ const AccountList = () => {
 
   return (
     <div className={classes.root}>
-      <Container className={(classes as Record<string, string>).container}>
+      <Container >
         <Card className={classes.card}>
           <div className={classes.content}>
             <SimpleTable

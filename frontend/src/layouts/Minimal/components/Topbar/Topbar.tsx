@@ -1,7 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar } from '@mui/material';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { LanguageToggle } from '../../../../components';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../../../common/theme';
@@ -66,10 +65,6 @@ const Topbar = (props: TopbarProps) => {
       </Toolbar>
     </AppBar>
   );
-};
-
-Topbar.propTypes = {
-  className: PropTypes.string,
 };
 
 export default Topbar;

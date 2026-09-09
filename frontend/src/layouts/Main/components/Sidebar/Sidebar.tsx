@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {
   AccountBox,
   Home,
@@ -166,13 +165,6 @@ const Sidebar = (props: SidebarProps) => {
       </div>
     </Drawer>
   );
-};
-
-Sidebar.propTypes = {
-  className: PropTypes.string,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
-  variant: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

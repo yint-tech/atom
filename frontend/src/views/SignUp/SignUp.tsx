@@ -8,7 +8,6 @@ import {
   Typography,
 } from '@mui/material';
 import { AppContext } from '../../adapter';
-import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import moment from 'moment';
 import configs from '../../config';
@@ -315,10 +314,6 @@ const SignIn = (props: RouteComponentProps) => {
       </div>
     </div>
   );
-};
-
-SignIn.propTypes = {
-  history: PropTypes.object,
 };
 
 // propTypes 声明的 history: PropTypes.object 与 withRouter 期望的

@@ -5,7 +5,6 @@ import type {
   CSSProperties,
   ReactNode,
 } from 'react';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -228,11 +227,6 @@ const DataTable = (props: DataTableProps) => {
       )}
     </PerfectScrollbar>
   );
-};
-
-DataTable.propTypes = {
-  data: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired,
 };
 
 export default DataTable;

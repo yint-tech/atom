@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { Loading, SearchInput } from '../index';
 import { Card, CardActions, CardContent, Pagination } from '@mui/material';
 import Table, { Column } from '../Table/Table';
-import PropTypes from 'prop-types';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 
@@ -187,14 +186,6 @@ const SimpleTable = (props: SimpleTableProps) => {
       </div>
     </div>
   );
-};
-
-SimpleTable.propTypes = {
-  loadDataFun: PropTypes.func.isRequired,
-  actionEl: PropTypes.element,
-  columns: PropTypes.array.isRequired,
-  refresh: PropTypes.number,
-  renderCollapse: PropTypes.func,
 };
 
 export default SimpleTable;

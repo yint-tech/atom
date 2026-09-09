@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
 
 import { Tab, Tabs, Container, Card } from '@mui/material';
+import {
+  TabPanel,
+  usePersistedTab,
+} from '../../components';
 import Config from './Config';
 import Log from './Log';
 import BuildInfo from './BuildInfo';
@@ -46,15 +49,6 @@ const useStyles = createUseStyles({
   },
 });
 
-function TabPanel(props: {
-  children?: React.ReactNode;
-  value: number;
-  index: number;
-}) {
-  const { children, value, index } = props;
-  return value === index ? children : null;
-}
-
 const systemDashboardConfigTabKey = configs.app + '-system-dashboard-tab';
 
 function System() {
@@ -62,20 +56,11 @@ function System() {
   const classes = useStyles({ theme });
   const { t } = useTranslation();
 
-  let initValue =
-    Number(localStorage.getItem(systemDashboardConfigTabKey)) || 0;
-  const [value, setValue] = useState(initValue);
-  useEffect(() => {
-    localStorage.setItem(systemDashboardConfigTabKey, value + '');
-  }, [value]);
-
-  const handleChange = (_event: React.SyntheticEvent, val: number) => {
-    setValue(val);
-  };
+  const [value, handleChange] = usePersistedTab(systemDashboardConfigTabKey);
 
   return (
     <div className={classes.root}>
-      <Container className={(classes as Record<string, string>).container}>
+      <Container>
         <Card className={classes.card}>
           <Tabs
             value={value}

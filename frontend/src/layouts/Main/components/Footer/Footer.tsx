@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../../../common/theme';
@@ -20,10 +19,6 @@ const Footer = (props: React.HTMLAttributes<HTMLDivElement>) => {
     <div {...rest} className={clsx(classes.root, className)}>
     </div>
   );
-};
-
-Footer.propTypes = {
-  className: PropTypes.string,
 };
 
 export default Footer;

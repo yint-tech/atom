@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { CardHeader, Grid, IconButton, Popover } from '@mui/material';
 import { ArrowBackIos, Dehaze } from '@mui/icons-material';
 
-import PropTypes from 'prop-types';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 
@@ -90,10 +89,6 @@ const Goback = ({ title, subheader, extra }: GobackProps) => {
     );
   }
   return selfHeader;
-};
-
-Goback.propTypes = {
-  title: PropTypes.string.isRequired,
 };
 
 export default Goback;

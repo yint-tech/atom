@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tab, Tabs, Container, Card } from '@mui/material';
+import {
+  TabPanel,
+  usePersistedTab,
+} from '../../components';
 
 import GlobalMetric from './GlobalMetric';
 import SystemMetrics from './SystemMetric';
@@ -42,15 +45,6 @@ const useStyles = createUseStyles({
   },
 });
 
-function TabPanel(props: {
-  children?: React.ReactNode;
-  value: number;
-  index: number;
-}) {
-  const { children, value, index } = props;
-  return value === index ? children : null;
-}
-
 const metricConfigTabKey = configs.app + '-metric-tab';
 
 function Metrics() {
@@ -58,19 +52,11 @@ function Metrics() {
   const theme = useTheme();
   const classes = useStyles({ theme });
 
-  let initValue = Number(localStorage.getItem(metricConfigTabKey)) || 0;
-  const [value, setValue] = useState(initValue);
-  useEffect(() => {
-    localStorage.setItem(metricConfigTabKey, value + '');
-  }, [value]);
-
-  const handleChange = (_event: React.SyntheticEvent, val: number) => {
-    setValue(val);
-  };
+  const [value, handleChange] = usePersistedTab(metricConfigTabKey);
 
   return (
     <div className={classes.root}>
-      <Container className={(classes as Record<string, string>).container}>
+      <Container >
         <Card className={classes.card}>
           <Tabs
             value={value}

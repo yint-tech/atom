@@ -9,3 +9,4 @@ export { default as Table } from './Table';
 export { default as SimpleTable } from './SimpleTable';
 export { default as BackendPagedTable } from './BackendPagedTable';
 export { default as LanguageToggle } from './LanguageToggle';
+export { TabPanel, usePersistedTab } from './PersistedTabs';
