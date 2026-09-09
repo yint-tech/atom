@@ -3,6 +3,7 @@ package cn.iinti.atom.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +38,9 @@ public class UserInfo implements Serializable {
     @Schema(name = "用户名")
     private String userName;
 
+    // 密码只允许作为登录参数传入，任何接口都不能把密码返回给前端
     @Schema(name = "密码")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Schema(name = "最后登陆时间")

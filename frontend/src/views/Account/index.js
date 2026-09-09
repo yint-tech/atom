@@ -234,10 +234,6 @@ const AccountList = () => {
             key: 'userName',
           },
           {
-            label: t('userManagement.password'),
-            key: 'password',
-          },
-          {
             label: t('userManagement.admin'),
             render: item => (item.isAdmin ? <p>{t('common.yes')}</p> : <p>{t('common.no')}</p>),
           },

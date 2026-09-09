@@ -154,7 +154,13 @@ public class AdminController {
         if (page < 1) {
             page = 1;
         }
-        return CommonRes.success(userInfoMapper.selectPage(new Page<>(page, pageSize), new QueryWrapper<>()));
+        IPage<UserInfo> userPage = userInfoMapper.selectPage(new Page<>(page, pageSize), new QueryWrapper<>());
+        // 用户列表不需要凭证类字段，避免不必要的信息泄露（密码字段由序列化层统一屏蔽）
+        userPage.getRecords().forEach(user -> {
+            user.setLoginToken(null);
+            user.setApiToken(null);
+        });
+        return CommonRes.success(userPage);
 
     }
 
