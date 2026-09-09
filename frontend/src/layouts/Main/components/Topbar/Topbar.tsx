@@ -49,6 +49,9 @@ const useStyles = createUseStyles({
     transition: 'all 0.3s ease',
     color: '#fff',
     minHeight: 40,
+    // 固定最小宽度并居中，保证中英文切换时按钮几何尺寸一致，菜单不跳动
+    minWidth: 110,
+    justifyContent: 'center',
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
       transform: 'translateY(-1px)',
