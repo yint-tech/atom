@@ -212,6 +212,8 @@ const SignIn = (props: RouteComponentProps) => {
             helperText={hasError('oa') ? formState.errors.oa[0] : null}
             label={t('userManagement.account')}
             name='oa'
+            autoComplete='username'
+            InputLabelProps={{ shrink: true }}
             onChange={handleChange}
             type='text'
             value={formState.values.oa || ''}
@@ -226,6 +228,8 @@ const SignIn = (props: RouteComponentProps) => {
             }
             label={t('userManagement.password')}
             name='password'
+            autoComplete='current-password'
+            InputLabelProps={{ shrink: true }}
             onChange={handleChange}
             type='password'
             value={formState.values.password || ''}
