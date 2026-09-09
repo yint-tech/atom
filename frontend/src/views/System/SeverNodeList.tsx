@@ -1,43 +1,12 @@
-import { useContext, useState, ComponentType, ReactNode } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AppContext } from '../../adapter';
-import {
-  BackendPagedTable as BackendPagedTableComponent,
-  SearchInput as SearchInputComponent,
-} from '../../components';
+import { BackendPagedTable, SearchInput } from '../../components';
 import { Switch } from '@mui/material';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
-import { CommonRes, IPage, ServerNode } from '../../types/api';
-
-/**
- * SearchInput / BackendPagedTable 的 propTypes 未覆盖 placeholder、setSearchParam
- * 等实际使用的属性，这里以类型断言补全视图层用到的 props（纯类型层面，不影响运行时行为）。
- */
-interface SearchInputProps {
-  className?: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}
-
-interface BackendPagedTableProps {
-  toolbar?: ReactNode;
-  loadDataFun: (
-    params: { page: number; pageSize: number; key?: string }
-  ) => Promise<CommonRes<IPage<ServerNode>>>;
-  searchParam: { key: string };
-  setSearchParam: (param: { key: string }) => void;
-  refresh?: number;
-  columns: {
-    label: string;
-    key?: string;
-    render?: (item: ServerNode) => ReactNode;
-  }[];
-}
-
-const SearchInput = SearchInputComponent as unknown as ComponentType<SearchInputProps>;
-const BackendPagedTable = BackendPagedTableComponent as unknown as ComponentType<BackendPagedTableProps>;
+import { ServerNode } from '../../types/api';
 
 const useStyles = createUseStyles({
   root: {},
@@ -102,7 +71,6 @@ const SeverNodeList = () => {
       }
       loadDataFun={api.listServer}
       searchParam={searchParam}
-      setSearchParam={setSearchParam}
       refresh={refresh}
       columns={[
         {

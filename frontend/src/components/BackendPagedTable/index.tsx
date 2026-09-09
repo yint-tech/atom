@@ -22,18 +22,17 @@ interface PagedParams {
   [key: string]: unknown;
 }
 
-interface DataTableProps {
+interface DataTableProps<T> {
   className?: string;
-  data: unknown[];
+  data: T[];
   total: number;
   page: number;
   pageSize: number;
   loading: boolean;
   pageChangeFunc: (event: unknown, page: number) => void;
-  renderCollapse?: (row: any) => ReactNode;
-  columns: Column[];
+  renderCollapse?: (row: T) => ReactNode;
+  columns: Column<T>[];
   title?: ReactNode;
-  setRefresh?: (value: number) => void;
 }
 
 const useStyles = createUseStyles({
@@ -65,7 +64,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const DataTable = (props: DataTableProps) => {
+const DataTable = <T,>(props: DataTableProps<T>) => {
   const {
     className,
     data,
@@ -77,7 +76,6 @@ const DataTable = (props: DataTableProps) => {
     renderCollapse,
     columns,
     title,
-    ...rest
   } = props;
 
   const theme = useTheme();
@@ -88,7 +86,6 @@ const DataTable = (props: DataTableProps) => {
       {title && <CardHeader title={title} />}
       <CardContent className={classes.tableContent}>
         <Table
-          {...rest}
           loading={loading}
           collapse={!!renderCollapse}
           renderCollapse={renderCollapse}
@@ -122,18 +119,20 @@ const DataTable = (props: DataTableProps) => {
   );
 };
 
-interface BackendPagedTableProps {
-  loadDataFun: (params: PagedParams) => Promise<CommonRes<IPage<unknown>>>;
-  searchParam: Query;
+interface BackendPagedTableProps<T = unknown> {
+  /** 服务端分页的数据加载函数，page/pageSize 由组件注入 */
+  loadDataFun: (params: PagedParams) => Promise<CommonRes<IPage<T>>>;
+  /** 额外查询条件，变化时自动回到数据刷新 */
+  searchParam?: Query;
   toolbar?: ReactNode;
-  columns: Column[];
+  columns: Column<T>[];
   refresh?: number;
-  renderCollapse?: (row: any) => ReactNode;
-  searchParamBuilder?: (param: any) => Query;
-  setSearchParam?: (param: any) => void;
+  renderCollapse?: (row: T) => ReactNode;
+  /** 查询条件预处理（如剔除空字段），默认原样透传 */
+  searchParamBuilder?: (param: Query) => Query;
 }
 
-const BackendPagedTable = (props: BackendPagedTableProps) => {
+const BackendPagedTable = <T,>(props: BackendPagedTableProps<T>) => {
   const theme = useTheme();
   const classes = useStyles({ theme });
 
@@ -148,18 +147,17 @@ const BackendPagedTable = (props: BackendPagedTableProps) => {
     refresh,
     renderCollapse,
     searchParamBuilder = defaultSearchParamBuilder,
-    ...rest
   } = props;
 
   const [loading, setLoading] = useState(false);
-  const [records, setRecords] = useState<unknown[]>([]);
+  const [records, setRecords] = useState<T[]>([]);
   const [total, setTotal] = useState(0);
 
   const [innerRefresh, setInnerRefresh] = useState(refresh || +new Date());
 
   useEffect(() => {
     setLoading(true);
-    const param = searchParamBuilder(searchParam);
+    const param = searchParamBuilder(searchParam ?? {});
     loadDataFun({
       ...param,
       page: page,
@@ -192,8 +190,7 @@ const BackendPagedTable = (props: BackendPagedTableProps) => {
     <div className={classes.root}>
       {toolbar ? <div className={classes.row}>{toolbar}</div> : <></>}
       <div className={classes.content}>
-        <DataTable
-          {...rest}
+        <DataTable<T>
           renderCollapse={renderCollapse}
           pageChangeFunc={handlePageChange}
           loading={loading}
@@ -202,7 +199,6 @@ const BackendPagedTable = (props: BackendPagedTableProps) => {
           total={total}
           page={page}
           pageSize={10}
-          setRefresh={setInnerRefresh}
         />
       </div>
     </div>

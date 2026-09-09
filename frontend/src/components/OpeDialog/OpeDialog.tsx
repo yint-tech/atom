@@ -14,7 +14,8 @@ import { AppContext } from '../../adapter';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
 
-interface OpeDialogProps extends DialogProps {
+// open 由 openDialog 接管，不透传 DialogProps 里的 open
+interface OpeDialogProps extends Omit<DialogProps, 'open'> {
   /** DialogProps 从 HTML 属性继承了 title?: string，这里保持一致 */
   title?: string;
   opeText?: ReactNode;

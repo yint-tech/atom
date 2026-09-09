@@ -6,6 +6,7 @@ import { Card, CardActions, CardContent, Pagination } from '@mui/material';
 import Table, { Column } from '../Table/Table';
 import { createUseStyles } from 'react-jss';
 import { useTheme } from '../../common/theme';
+import type { CommonRes, IPage } from '../../types/api';
 
 const useStyles = createUseStyles({
   root: {
@@ -40,7 +41,6 @@ const useStyles = createUseStyles({
 
 interface ToolbarProps {
   onInputChange: (value: string) => void;
-  setRefresh: (value: number) => void;
   ActionEl?: ReactNode;
 }
 
@@ -63,28 +63,25 @@ const Toolbar = (props: ToolbarProps) => {
   );
 };
 
-interface DataTableProps {
+interface DataTableProps<T> {
   className?: string;
-  data: any[];
+  data: T[];
   total: number;
   rowsPerPage: number;
   pageState: [number, (page: number) => void];
-  setRefresh: (value: number) => void;
-  columns: Column[];
-  renderCollapse?: (row: any) => ReactNode;
+  columns: Column<T>[];
+  renderCollapse?: (row: T) => ReactNode;
 }
 
-const DataTable = (props: DataTableProps) => {
+const DataTable = <T,>(props: DataTableProps<T>) => {
   const {
     className,
     data,
     total,
     rowsPerPage,
     pageState,
-    setRefresh: _setRefresh,
     columns,
     renderCollapse,
-    ...rest
   } = props;
   const [page, setPage] = pageState;
 
@@ -96,7 +93,7 @@ const DataTable = (props: DataTableProps) => {
   };
 
   return (
-    <Card {...rest} className={clsx(classes.tableRoot, className)}>
+    <Card className={clsx(classes.tableRoot, className)}>
       <CardContent className={classes.tableContent}>
         <Table
           collapse={!!renderCollapse}
@@ -117,21 +114,25 @@ const DataTable = (props: DataTableProps) => {
   );
 };
 
-interface SimpleTableProps {
-  /** 加载数据的异步函数，调用方可用原始 Promise 或返回 CommonRes 的 api 方法 */
-  loadDataFun: () => Promise<any>;
+interface SimpleTableProps<T = any> {
+  /**
+   * 加载数据的异步函数。data 兼容两种返回：
+   * - T[]：全部数据由组件做客户端分页与关键词过滤
+   * - IPage<T>：取 records 后同样做客户端分页
+   */
+  loadDataFun: () => Promise<CommonRes<T[] | IPage<T>>>;
   actionEl?: ReactNode;
-  columns: Column[];
+  columns: Column<T>[];
   refresh?: number;
-  renderCollapse?: (row: any) => ReactNode;
+  renderCollapse?: (row: T) => ReactNode;
 }
 
-const SimpleTable = (props: SimpleTableProps) => {
+const SimpleTable = <T,>(props: SimpleTableProps<T>) => {
   const theme = useTheme();
   const classes = useStyles({ theme });
   const { loadDataFun, actionEl, columns, refresh, renderCollapse } = props;
 
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<T[]>([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [keyword, setKeyword] = useState('');
@@ -143,7 +144,7 @@ const SimpleTable = (props: SimpleTableProps) => {
     loadDataFun()
       .then(res => {
         if (res.status === 0) {
-          setData(res.data);
+          setData(Array.isArray(res.data) ? res.data : (res.data?.records ?? []));
         }
       })
       .finally(() => {
@@ -166,21 +167,19 @@ const SimpleTable = (props: SimpleTableProps) => {
           setKeyword(k);
           setPage(1);
         }}
-        setRefresh={setInnerRefresh}
         ActionEl={actionEl}
       />
       <div className={classes.content}>
         {loading ? (
           <Loading />
         ) : (
-          <DataTable
+          <DataTable<T>
             renderCollapse={renderCollapse}
             data={showData.slice((page - 1) * limit, page * limit)}
             total={showData.length}
             columns={columns}
             rowsPerPage={limit}
             pageState={[page, setPage]}
-            setRefresh={setInnerRefresh}
           />
         )}
       </div>

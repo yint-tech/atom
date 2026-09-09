@@ -25,21 +25,21 @@ import Empty from '../Empty';
 import Loading from '../../components/Loading';
 
 /** 表格列定义：render 与 key 二选一 */
-export interface Column {
+export interface Column<T = any> {
   label: string;
   key?: string;
-  render?: (row: any) => ReactNode;
+  render?: (row: T) => ReactNode;
   style?: CSSProperties;
   sx?: SxProps<Theme>;
 }
 
-interface CollapseRowProps {
-  row: any;
-  columns: Column[];
+interface CollapseRowProps<T = any> {
+  row: T;
+  columns: Column<T>[];
   checkbox?: boolean;
   checked?: boolean;
   onCheckboxChange?: ChangeEventHandler<HTMLInputElement>;
-  renderCollapse: (row: any) => ReactNode;
+  renderCollapse: (row: T) => ReactNode;
 }
 
 const defaultEllipsisStyle = {
@@ -47,7 +47,7 @@ const defaultEllipsisStyle = {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
 };
-const CollapseRow = (props: CollapseRowProps) => {
+const CollapseRow = <T,>(props: CollapseRowProps<T>) => {
   const { row, columns, checkbox, checked, onCheckboxChange, renderCollapse } =
     props;
   const [open, setOpen] = useState(false);
@@ -80,7 +80,9 @@ const CollapseRow = (props: CollapseRowProps) => {
             sx={col.sx} // 如果需要支持 MUI 的 sx 属性
             key={col.label}
           >
-            {typeof col.render === 'function' ? col.render(row) : row[col.key!]}
+            {typeof col.render === 'function'
+              ? col.render(row)
+              : (row as Record<string, any>)[col.key!]}
           </TableCell>
         ))}
       </TableRow>
@@ -95,12 +97,12 @@ const CollapseRow = (props: CollapseRowProps) => {
   );
 };
 
-interface DataTableProps {
-  data: any[];
-  columns: Column[];
+interface DataTableProps<T = any> {
+  data: T[];
+  columns: Column<T>[];
   size?: 'small' | 'medium';
   collapse?: boolean;
-  renderCollapse?: (row: any) => ReactNode;
+  renderCollapse?: (row: T) => ReactNode;
   checkbox?: boolean;
   checkedKey?: string;
   checked?: any[];
@@ -110,7 +112,7 @@ interface DataTableProps {
   loading?: boolean;
 }
 
-const DataTable = (props: DataTableProps) => {
+const DataTable = <T = any,>(props: DataTableProps<T>) => {
   let {
     data,
     columns,
@@ -166,10 +168,10 @@ const DataTable = (props: DataTableProps) => {
                     <CollapseRow
                       checkbox={checkbox}
                       checked={(() => {
-                        return checked.indexOf(row[checkedKey]) !== -1;
+                        return checked.indexOf((row as Record<string, any>)[checkedKey]) !== -1;
                       })()}
                       onCheckboxChange={event =>
-                        handleSelectOne(event, row[checkedKey])
+                        handleSelectOne(event, (row as Record<string, any>)[checkedKey])
                       }
                       key={String(index)}
                       row={row}
@@ -191,11 +193,11 @@ const DataTable = (props: DataTableProps) => {
                       <TableCell padding='checkbox'>
                         <Checkbox
                           checked={(() => {
-                            return checked.indexOf(row[checkedKey]) !== -1;
+                            return checked.indexOf((row as Record<string, any>)[checkedKey]) !== -1;
                           })()}
                           color='primary'
                           onChange={event =>
-                            handleSelectOne(event, row[checkedKey])
+                            handleSelectOne(event, (row as Record<string, any>)[checkedKey])
                           }
                           value='true'
                         />
@@ -209,7 +211,7 @@ const DataTable = (props: DataTableProps) => {
                       >
                         {typeof col.render === 'function'
                           ? col.render(row)
-                          : row[col.key!]}
+                          : (row as Record<string, any>)[col.key!]}
                       </TableCell>
                     ))}
                   </TableRow>

@@ -1,5 +1,5 @@
-import { useCallback, useContext, useState, ComponentType, ReactNode } from 'react';
-import { OpeDialog as OpeDialogComponent, SimpleTable } from '../../components';
+import { useContext, useState } from 'react';
+import { OpeDialog, SimpleTable } from '../../components';
 import { AppContext } from '../../adapter';
 import { Button, Grid, TextField, Typography, Container, Card } from '@mui/material';
 import {
@@ -23,21 +23,6 @@ const LOGIN_USER_MOCK_KEY = config.login_user_key + '-MOCK';
  * OpeDialog 的 propTypes 未覆盖 doDialog / fullScreen 等实际使用的属性，
  * 这里以类型断言补全视图层用到的 props（纯类型层面，不影响运行时行为）。
  */
-interface OpeDialogProps {
-  title: string;
-  opeText?: string;
-  opeContent?: ReactNode;
-  openDialog: boolean;
-  setOpenDialog: (open: boolean) => void;
-  doDialog?: () => unknown;
-  okText?: string;
-  okType?: 'inherit' | 'primary' | 'secondary' | 'default';
-  fullScreen?: boolean;
-  fullWidth?: boolean;
-  maxWidth?: string;
-}
-
-const OpeDialog = OpeDialogComponent as unknown as ComponentType<OpeDialogProps>;
 
 const useStyles = createUseStyles({
   root: {
@@ -215,26 +200,6 @@ const AccountList = () => {
       });
   };
 
-  const loadApi = useCallback(() => {
-    return new Promise((resolve, reject) => {
-      api
-        .userList({ page: 1, pageSize: 1000 })
-        .then(res => {
-          if (res.status === 0) {
-            resolve({
-              data: res.data!.records,
-              status: 0,
-            });
-            return;
-          }
-          reject(res.message);
-        })
-        .catch(e => {
-          reject(e);
-        });
-    });
-  }, [api]);
-
   return (
     <div className={classes.root}>
       <Container >
@@ -253,7 +218,7 @@ const AccountList = () => {
                   {t('userManagement.addUser')}
                 </Button>
               }
-        loadDataFun={loadApi}
+        loadDataFun={() => api.userList({ page: 1, pageSize: 1000 })}
         columns={[
           {
             label: t('userManagement.account'),

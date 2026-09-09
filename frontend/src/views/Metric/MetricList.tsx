@@ -1,11 +1,7 @@
-import { useContext, useEffect, useState, ComponentType, ReactNode } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../adapter';
-import {
-  MetricCharsV2 as MetricCharsV2Component,
-  OpeDialog as OpeDialogComponent,
-  SimpleTable,
-} from '../../components';
+import { MetricCharsV2, OpeDialog, SimpleTable } from '../../components';
 import {
   Button,
   Card,
@@ -25,32 +21,6 @@ import { MetricTag } from '../../types/api';
  * MetricCharsV2 / OpeDialog 的 propTypes 未覆盖 title、className、doDialog 等
  * 实际使用的属性，这里以类型断言补全视图层用到的 props（纯类型层面，不影响运行时行为）。
  */
-interface MetricChartProps {
-  height?: string;
-  title?: string;
-  mql: string;
-  accuracy: string;
-  bottomLegend?: boolean;
-  className?: string;
-  onLoadMsg?: (msg: string) => void;
-}
-
-interface OpeDialogProps {
-  title: string;
-  opeText?: string;
-  opeContent?: ReactNode;
-  openDialog: boolean;
-  setOpenDialog: (open: boolean) => void;
-  doDialog?: () => unknown;
-  okText?: string;
-  okType?: 'inherit' | 'primary' | 'secondary' | 'default';
-  fullScreen?: boolean;
-  fullWidth?: boolean;
-  maxWidth?: string;
-}
-
-const MetricCharsV2 = MetricCharsV2Component as unknown as ComponentType<MetricChartProps>;
-const OpeDialog = OpeDialogComponent as unknown as ComponentType<OpeDialogProps>;
 
 const useStyles = createUseStyles({
   root: {
