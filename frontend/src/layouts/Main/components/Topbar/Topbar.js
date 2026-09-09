@@ -144,11 +144,11 @@ const Topbar = props => {
       onClick={() => window.open(config.main_site, '_blank')}
     >
       <GitHubIcon className={classes.modernButtonIcon} />
-      <Hidden xsDown>
-        <Typography className={classes.modernButtonText}>
-          GitLab
-        </Typography>
-      </Hidden>
+        <Hidden xsDown>
+          <Typography className={classes.modernButtonText}>
+            GitHub
+          </Typography>
+        </Hidden>
     </IconButton>
   );
 

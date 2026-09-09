@@ -60,22 +60,6 @@
     "agreeToTerms": "By checking, you have read and agreed to",
     "userAgreement": "{{appName}} User Agreement"
   },
-  "user": {
-    "normalUser": "Normal User",
-    "admin": "Administrator",
-    "addUser": "Add User",
-    "userList": "User List",
-    "isAdmin": "Administrator",
-    "yes": "Yes",
-    "no": "No",
-    "upgradeToAdmin": "Upgrade to Admin",
-    "removeAdmin": "Remove Admin",
-    "configPermissions": "Configure Permissions",
-    "editPermissions": "Edit Permissions",
-    "permissionType": "Permission Type",
-    "availablePermissions": "Available Permissions",
-    "heldPermissions": "Held Permissions"
-  },
   "userManagement": {
     "users": "Users",
     "addUser": "Add User",

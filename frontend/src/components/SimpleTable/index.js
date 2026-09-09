@@ -99,7 +99,7 @@ const DataTable = props => {
   );
 };
 
-const SimbleTable = props => {
+const SimpleTable = props => {
   const theme = useTheme();
   const classes = useStyles({ theme });
   const { loadDataFun, actionEl, columns, refresh, renderCollapse } = props;
@@ -161,7 +161,7 @@ const SimbleTable = props => {
   );
 };
 
-SimbleTable.propTypes = {
+SimpleTable.propTypes = {
   loadDataFun: PropTypes.func.isRequired,
   actionEl: PropTypes.element,
   columns: PropTypes.array.isRequired,
@@ -169,4 +169,4 @@ SimbleTable.propTypes = {
   renderCollapse: PropTypes.func,
 };
 
-export default SimbleTable;
+export default SimpleTable;

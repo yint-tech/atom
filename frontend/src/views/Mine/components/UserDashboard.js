@@ -6,11 +6,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
-  Grid,
   IconButton,
   Popover,
-  Typography,
 } from '@mui/material';
 import { AppContext } from 'adapter';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +16,6 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CachedIcon from '@mui/icons-material/Cached';
 import moment from 'moment';
 import configs from 'config';
-import clsx from 'clsx';
 import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({
@@ -97,8 +93,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const UserDashboard = props => {
-  const { className, ...rest } = props;
+const UserDashboard = () => {
   const { user, setUser } = useContext(AppContext);
   const { api } = useContext(AppContext);
   const apiUrl = user.apiToken;

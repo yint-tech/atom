@@ -4,7 +4,7 @@ import React, { forwardRef } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { Button, colors, List, ListItem, Divider } from '@mui/material';
+import { Button, List, ListItem, Divider } from '@mui/material';
 import { createUseStyles, useTheme } from 'react-jss';
 
 const useStyles = createUseStyles({

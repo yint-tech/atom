@@ -2,7 +2,7 @@ import config from 'config';
 
 const api_prefix = config.api_prefix;
 
-export default {
+const uri = {
   // system
   systemInfo: api_prefix + '/system/systemInfo', // 系统信息，后台系统配置，页面加载加载一次
   notice: api_prefix + '/system/systemNotice', //系统通告信息
@@ -43,3 +43,5 @@ export default {
 
   // 下列为各业务自定义接口
 };
+
+export default uri;

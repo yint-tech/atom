@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
 import { AppContext } from 'adapter';
 import { createUseStyles, useTheme } from 'react-jss';
 

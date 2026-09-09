@@ -8,7 +8,7 @@ import moment from 'moment/moment';
 const LogPanel = () => {
   const { t } = useTranslation();
   const { api } = useContext(AppContext);
-  const [searchParam, setSearchParam] = useState({
+  const [searchParam] = useState({
     key: '',
   });
   return (

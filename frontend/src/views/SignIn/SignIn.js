@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Button, Link, TextField, Typography } from '@mui/material';
 import { AppContext } from 'adapter';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -136,7 +136,7 @@ const SignIn = props => {
       isValid: !errors,
       errors: errors || {},
     }));
-  }, [formState.values]);
+  }, [formState.values, t]);
 
   const handleChange = event => {
     event.persist();

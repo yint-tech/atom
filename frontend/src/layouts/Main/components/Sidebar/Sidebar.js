@@ -8,11 +8,12 @@ import {
   ShowChart,
 } from '@mui/icons-material';
 import { AppContext } from 'adapter';
-import { Divider, Drawer, Typography } from '@mui/material';
+import { Drawer, Typography } from '@mui/material';
 
 import { Profile, SidebarNav } from './components';
 import { createUseStyles, useTheme } from 'react-jss';
 import { useTranslation } from 'react-i18next';
+import configs from 'config';
 
 const useStyles = createUseStyles({
   drawer: ({ theme }) => ({
@@ -112,11 +113,11 @@ const Sidebar = props => {
         <SidebarNav className={classes.nav} pages={pages} />
         <div className={classes.footer}>
           <Typography variant="caption">
-            Atom-系统框架
+            {configs.footer}
           </Typography>
           <br />
           <Typography variant="caption">
-            © 2025 因体信息公司
+            © {configs.copyRight}
           </Typography>
           <br />
           <Typography variant='caption'>

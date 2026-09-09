@@ -3,11 +3,9 @@ import {
   Button,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   TextField,
   Box,
-  Alert,
 } from '@mui/material';
 import { createUseStyles, useTheme } from 'react-jss';
 import { AppContext } from 'adapter';

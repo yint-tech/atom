@@ -43,7 +43,7 @@ const Adapter = props => {
             .then(res => {
               if (res.status !== 0) {
                 console.log('call api ' + i + ' error :' + res.message);
-                enqueueSnackbar(res.message.substring(0, 50), {
+                enqueueSnackbar((res.message || 'unknown error').substring(0, 50), {
                   variant: 'error',
                   anchorOrigin: {
                     vertical: 'top',

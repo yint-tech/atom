@@ -139,6 +139,9 @@ const BackendPagedTable = props => {
       .finally(() => {
         setLoading(false);
       });
+    // 翻页通过 handlePageChange 中的 innerRefresh 触发重新加载，
+    // 这里不能直接依赖 page，否则一次翻页会触发两次请求
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadDataFun, innerRefresh, searchParam, searchParamBuilder]);
 
   useEffect(() => {

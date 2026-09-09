@@ -78,7 +78,7 @@ const OpeDialog = props => {
 
                   if (!failed && typeof message === 'object') {
                     failed =
-                      typeof message.status !== undefined &&
+                      message.status !== undefined &&
                       message.status !== 0;
                   }
 

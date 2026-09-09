@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Paper, Tab, Tabs, Container, Card } from '@mui/material';
+import { Tab, Tabs, Container, Card } from '@mui/material';
 
 import GlobalMetric from './GlobalMetric';
 import SystemMetrics from './SystemMetric';

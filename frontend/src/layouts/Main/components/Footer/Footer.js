@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Typography } from '@mui/material';
-import config from 'config';
 import { createUseStyles, useTheme } from 'react-jss';
-import { useTranslation } from 'react-i18next';
 
 const useStyles = createUseStyles({
   root: {

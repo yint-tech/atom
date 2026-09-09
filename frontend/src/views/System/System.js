@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Paper, Tab, Tabs, Container, Card } from '@mui/material';
+import { Tab, Tabs, Container, Card } from '@mui/material';
 import Config from './Config';
 import Log from './Log';
 import BuildInfo from './BuildInfo';

@@ -4,6 +4,8 @@ const checked = (value, options) => {
   }
 };
 
-export default {
+const validators = {
   checked,
 };
+
+export default validators;

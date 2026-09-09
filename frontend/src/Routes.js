@@ -17,7 +17,8 @@ const MetricsView = loadable(() => import('./views/Metric'));
 
 const PrivateRoute = ({ ...rest }) => {
   const { user } = useContext(AppContext);
-  return !user.overdue ? (
+  // adapter 在首次登录态刷新完成后才会渲染路由，此处 user.id 即真实的登录状态
+  return user.id ? (
     <RouteWithLayout {...rest} />
   ) : (
     <Redirect
