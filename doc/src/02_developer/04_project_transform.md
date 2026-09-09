@@ -15,13 +15,13 @@
 ## 使用
 在idea中，执行文件：``server/src/test/java/cn/iinti/atom/ProjectMaker.java``即可
 
-![](imgs/project_maker.png)
+![](./imgs/project_maker.png)
 运行完成后，可以看到在桌面产生了一个新的项目
 
-![](imgs/project_maker_2.png)
+![](./imgs/project_maker_2.png)
 我们打开生成的项目，可以看到他可以正常完成项目编译。一般情况下，生成项目可以直接作为新产品骨架使用。
 
-![](imgs/project_maker_3.png)
+![](./imgs/project_maker_3.png)
 
 
 ## 使用场景

@@ -3,7 +3,7 @@
 ## 代码结构
 整体代码结构如下图
 
-![整体代码介绍](imgs/atom_code_structure.svg)
+![整体代码介绍](./imgs/atom_code_structure.svg)
 
 - 以springboot为容器的后端系统
 - 以react+mui为容器的前端系统
@@ -34,12 +34,12 @@ atom整体前后分离开发，前端使用react作为框架，以[Material-UI](
 - host：127.0.0.1
 - 端口：4416
 
-![startup_mysql](imgs/startup_mysql.png)
+![startup_mysql](./imgs/startup_mysql.png)
 
 所以使用mysql客户端连接此数据库，进行数据库相关设计，这里我使用的是mysql官方的``mysql workbench``，你也可以选择自己熟悉的mysql客户端。
 
-![coding_login_mysql](imgs/coding_login_mysql.png)
-![coding_mysql_workspace](imgs/coding_mysql_workspace.png)
+![coding_login_mysql](./imgs/coding_login_mysql.png)
+![coding_mysql_workspace](./imgs/coding_mysql_workspace.png)
 
 ### 表结构设计
 根据业务模型，创建数据表结构，用于承载底层存储。这里假定有一张设备资产表，记录公司的办公设备。他有如下字段
@@ -53,9 +53,9 @@ atom整体前后分离开发，前端使用react作为框架，以[Material-UI](
 - purchase_date:采购时间
 我们根据上述业务情况进行表结构设计
 
-![](imgs/coding_mysql_ddl.png)
+![](./imgs/coding_mysql_ddl.png)
 最终表结构如下
-```mysql
+```sql
 CREATE TABLE `device` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `serial` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '序列号',
@@ -73,10 +73,10 @@ CREATE TABLE `device` (
 ### 代码生成
 对于数据库模型到代码，常见模版代码大家都是自动生成的，atom则是对于mybatis-plus-generator进行了简单的配置，即可以完成自动代码生成。
 
-![](imgs/coding_code_gen.png)
+![](./imgs/coding_code_gen.png)
 然后可以我们可以看到自动生成的代码
 
-![](imgs/coding_code_gen2.png)
+![](./imgs/coding_code_gen2.png)
 
 和普通的``mybatis-plus-generator``不同，atom不会生成如下文件：
 - controller
@@ -92,10 +92,10 @@ CREATE TABLE `device` (
 
 **注意，按理来说，DeviceController可以自动生成，但是atom没有这么做，原因在上一小节进行了解释**
 
-![](imgs/coding_controller.png)
+![](./imgs/coding_controller.png)
 之后打开后端API接口,可以看到我们创建的API被swagger渲染
 
-![](imgs/coding_swagger_api.png)
+![](./imgs/coding_swagger_api.png)
 
 ## 从后到前-前端
 我们没有对前端进行过度封装，您需要手动配置菜单、路由、页面。不过好在这些工作也不再复杂。
@@ -105,7 +105,7 @@ CREATE TABLE `device` (
 ### api路由
 在``atom-frontend/src/apis/url.js``增加刚刚添加的两个API接口
 
-![](imgs/coding_frontend_api.png)
+![](./imgs/coding_frontend_api.png)
 
 ### 表格页面
 我们新建页面文件，并填入如下代码，这里大家参考页面修改，然后最终看页面展示情况调整效果即可。在刚开始使用时不用理解代码原理，
@@ -117,7 +117,7 @@ CREATE TABLE `device` (
   - 数据格式没有检查
   - 没有支持数据删除
 
-![](imgs/coding_frontend_view_page.png)
+![](./imgs/coding_frontend_view_page.png)
 ```javascript
 import React, {useContext, useState} from 'react';
 import {OpeDialog, SimpleTable} from "components";
@@ -304,26 +304,26 @@ export default DeviceList;
 ### 配置路由
 页面组件注册到路由后，才会成为一个react的页面路径。否则我们无法从浏览器看到页面效果
 
-![](imgs/coding_frontend_add_route.png)
+![](./imgs/coding_frontend_add_route.png)
 
 注册完成后，访问URL:[http://localhost:3000/#/deviceList](http://localhost:3000/#/deviceList)可以看到我们刚刚编写的页面
 
-![](imgs/coding_frontend_show_table.png)
+![](./imgs/coding_frontend_show_table.png)
 
 ### 配置菜单
 我们需要对页面功能进行分组，而菜单就是进行第一步大类功能分组方法。这里假定``设备资产管理``是我们的一个核心功能，所以需要将刚刚的页面挂到左侧菜单上，
 则进行如下配置
 
-![](imgs/coding_frontend_menu.png)
+![](./imgs/coding_frontend_menu.png)
 
 之后我们回到网页页面，可以看到页面被加入到菜单上
 
-![](imgs/coding_frontend_menu_page.png)
+![](./imgs/coding_frontend_menu_page.png)
 
 ### 结尾
 简单操作一下前端，录入一条数据看看效果
 
-![](imgs/coding_frontend_input_device.png)
+![](./imgs/coding_frontend_input_device.png)
 
 
 ## 总结

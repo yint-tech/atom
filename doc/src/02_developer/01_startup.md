@@ -23,22 +23,22 @@
 ### 打开项目
 运行main入口``server/src/main/java/cn/iinti/atom/AtomMain.java``
 
-![startup_backend](imgs/startup_backend.png)
+![startup_backend](./imgs/startup_backend.png)
 之后可以看到启动完成
 
-![started_backend.png](imgs/started_backend.png)
+![started_backend.png](./imgs/started_backend.png)
 ### 启动前端
 使用webstorm打开前端子工程，执行入口即可
 
-![startup_frontend.png](imgs/startup_frontend.png)
+![startup_frontend.png](./imgs/startup_frontend.png)
 
 之后会自动打开浏览器，进入登录页面。你可以进行首次账号注册，进入系统
 
-![started_frontend.png](imgs/started_frontend.png)
+![started_frontend.png](./imgs/started_frontend.png)
 
 网站打开，即代表整个系统开发模式启动完成
 
-![started_frontend_main_page.png](imgs/started_frontend_main_page.png)
+![started_frontend_main_page.png](./imgs/started_frontend_main_page.png)
 
 ### 启动文档
 执行doc的文档入口即可
