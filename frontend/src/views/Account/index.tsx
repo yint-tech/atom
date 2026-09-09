@@ -202,7 +202,7 @@ const AccountList = () => {
 
   return (
     <div className={classes.root}>
-      <Container >
+      <Container maxWidth={false}>
         <Card className={classes.card}>
           <div className={classes.content}>
             <SimpleTable

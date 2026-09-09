@@ -56,7 +56,7 @@ function Metrics() {
 
   return (
     <div className={classes.root}>
-      <Container >
+      <Container maxWidth={false}>
         <Card className={classes.card}>
           <Tabs
             value={value}

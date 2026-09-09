@@ -28,7 +28,7 @@ const Mine = () => {
 
   return (
     <div className={classes.root}>
-      <Container >
+      <Container maxWidth={false}>
         <Box className={classes.section}>
           <Card className={classes.card}>
             <UserDashboard />
